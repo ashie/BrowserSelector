@@ -1,0 +1,34 @@
+// BrowserSelectorBHO.idl : BrowserSelectorBHO の IDL ソース
+//
+
+// このファイルは、タイプ ライブラリ (BrowserSelectorBHO.tlb) およびマーシャリング コードを
+// 作成するために MIDL ツールによって処理されます。
+
+import "oaidl.idl";
+import "ocidl.idl";
+
+[
+	object,
+	uuid(40D0A36B-D935-4C95-954E-4BFC63C75E98),
+	dual,
+	nonextensible,
+	pointer_default(unique)
+]
+interface IBrowserSelector : IDispatch{
+};
+[
+	uuid(B0903AD1-5996-46FF-82CA-6E51182651CD),
+	version(1.0),
+]
+library BrowserSelectorBHOLib
+{
+	importlib("stdole2.tlb");
+	[
+		uuid(204D767E-FEA2-46DA-A88F-52F6C0C38EF1)		
+	]
+	coclass BrowserSelector
+	{
+		[default] interface IBrowserSelector;
+	};
+};
+

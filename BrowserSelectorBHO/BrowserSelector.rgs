@@ -1,0 +1,16 @@
+HKCR
+{
+	NoRemove CLSID
+	{
+		ForceRemove {204D767E-FEA2-46DA-A88F-52F6C0C38EF1} = s 'BrowserSelector'
+		{
+			ForceRemove Programmable
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Apartment'
+			}
+			TypeLib = s '{B0903AD1-5996-46FF-82CA-6E51182651CD}'
+			Version = s '1.0'
+		}
+	}
+}

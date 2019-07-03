@@ -1,0 +1,22 @@
+HKLM
+{
+	NoRemove SOFTWARE
+	{
+		NoRemove Microsoft
+		{
+			NoRemove Windows
+			{
+				NoRemove CurrentVersion
+				{
+					NoRemove Explorer
+					{
+						NoRemove 'Browser Helper Objects'
+						{
+							{204D767E-FEA2-46DA-A88F-52F6C0C38EF1}
+						}
+					}
+				}
+			}
+		}
+	}
+}
