@@ -1,0 +1,9 @@
+BrowserSelector.opensdf
+BrowserSelector.sdf
+BrowserSelector.suo
+Debug/
+Release/
+ipch/
+*.aps
+*.vcxproj.filters
+*.vcxproj.user
