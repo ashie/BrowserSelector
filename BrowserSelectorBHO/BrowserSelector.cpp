@@ -21,9 +21,33 @@ STDMETHODIMP CBrowserSelector::Invoke(
 {
 	switch(dispidMember) {
 	case DISPID_BEFORENAVIGATE2:
+		OnBeforeNavigate2(
+			pdispparams->rgvarg[6].pdispVal,
+			pdispparams->rgvarg[5].pvarVal,
+			pdispparams->rgvarg[4].pvarVal,
+			pdispparams->rgvarg[3].pvarVal,
+			pdispparams->rgvarg[2].pvarVal,
+			pdispparams->rgvarg[1].pvarVal,
+			pdispparams->rgvarg[0].pboolVal);
 		break;
 	default:
 		break;
 	}
 	return S_OK;
+}
+
+void CBrowserSelector::OnBeforeNavigate2(
+		IDispatch *pDisop,
+		VARIANT *url,
+		VARIANT *flags,
+		VARIANT *targetFlagName,
+		VARIANT *postData,
+		VARIANT *headers,
+		VARIANT_BOOL *cancel)
+{
+	if (true /* check the URL */)
+		return;
+
+	*cancel = VARIANT_TRUE;
+	// Open the URL by an external browser
 }

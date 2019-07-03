@@ -49,8 +49,17 @@ public:
 		UINT* puArgErr);
 
 private:
-	CComQIPtr<IWebBrowser2, &IID_IWebBrowser2> m_webBrowser2;
+	void OnBeforeNavigate2(
+		IDispatch *pDisop,
+		VARIANT *url,
+		VARIANT *flags,
+		VARIANT *targetFlagName,
+		VARIANT *postData,
+		VARIANT *headers,
+		VARIANT_BOOL *cancel);
 
+private:
+	CComQIPtr<IWebBrowser2, &IID_IWebBrowser2> m_webBrowser2;
 };
 
 OBJECT_ENTRY_AUTO(__uuidof(BrowserSelector), CBrowserSelector)
