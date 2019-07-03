@@ -1,5 +1,3 @@
-; BrowserSelectorBHO.def : モジュール パラメーターを宣言します。
-
 LIBRARY
 
 EXPORTS

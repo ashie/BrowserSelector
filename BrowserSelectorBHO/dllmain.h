@@ -1,5 +1,3 @@
-// dllmain.h : モジュール クラスの宣言
-
 class CBrowserSelectorBHOModule : public ATL::CAtlDllModuleT< CBrowserSelectorBHOModule >
 {
 public :

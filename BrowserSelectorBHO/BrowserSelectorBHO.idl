@@ -1,9 +1,3 @@
-// BrowserSelectorBHO.idl : BrowserSelectorBHO の IDL ソース
-//
-
-// このファイルは、タイプ ライブラリ (BrowserSelectorBHO.tlb) およびマーシャリング コードを
-// 作成するために MIDL ツールによって処理されます。
-
 import "oaidl.idl";
 import "ocidl.idl";
 
