@@ -152,7 +152,6 @@
     <None Include="BrowserSelector.rgs" />
     <None Include="BrowserSelectorBHO.def" />
     <None Include="BrowserSelectorBHO.rgs" />
-    <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
     <Midl Include="BrowserSelectorBHO.idl" />
