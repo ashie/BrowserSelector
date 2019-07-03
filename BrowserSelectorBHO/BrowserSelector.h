@@ -25,8 +25,6 @@ BEGIN_COM_MAP(CBrowserSelector)
 	COM_INTERFACE_ENTRY(IObjectWithSite)
 END_COM_MAP()
 
-
-
 	DECLARE_PROTECT_FINAL_CONSTRUCT()
 
 	HRESULT FinalConstruct()
@@ -39,8 +37,19 @@ END_COM_MAP()
 	}
 
 public:
+	STDMETHOD(SetSite)(IUnknown *pUnkSite);
+	STDMETHOD(Invoke)(
+		DISPID dispidMember, 
+		REFIID riid,
+		LCID lcid, 
+		WORD wFlags, 
+		DISPPARAMS* pdispparams, 
+		VARIANT* pvarResult,
+		EXCEPINFO* pexcepinfo, 
+		UINT* puArgErr);
 
-
+private:
+	CComQIPtr<IWebBrowser2, &IID_IWebBrowser2> m_webBrowser2;
 
 };
 
