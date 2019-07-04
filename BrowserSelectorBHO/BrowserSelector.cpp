@@ -2,7 +2,8 @@
 #include "BrowserSelector.h"
 #include <exdispid.h>
 
-STDMETHODIMP CBrowserSelector::SetSite(IUnknown *pUnkSite) {
+STDMETHODIMP CBrowserSelector::SetSite(IUnknown *pUnkSite)
+{
 	m_webBrowser2 = pUnkSite;
 	if (m_webBrowser2 == NULL)
 		return E_INVALIDARG;
