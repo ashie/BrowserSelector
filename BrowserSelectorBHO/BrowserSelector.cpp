@@ -1,6 +1,9 @@
 #include "stdafx.h"
 #include "BrowserSelector.h"
 #include <exdispid.h>
+#include <string>
+
+using namespace std;
 
 static HRESULT GetConnectionPoint(
 	CComPtr<IWebBrowser2> browser,
@@ -81,9 +84,13 @@ void CBrowserSelector::OnBeforeNavigate2(
 		VARIANT *headers,
 		VARIANT_BOOL *cancel)
 {
-	if (true /* check the URL */)
-		return;
+	CComVariant varURL(*url);
+	varURL.ChangeType(VT_BSTR);
+	wstring URL(varURL.bstrVal);
 
-	*cancel = VARIANT_TRUE;
-	// Open the URL by an external browser
+	if (URL.find(L"http://www.clear-code.com") == 0 ||
+		URL.find(L"https://www.clear-code.com") == 0)
+	{
+		*cancel = VARIANT_TRUE;
+	}
 }
