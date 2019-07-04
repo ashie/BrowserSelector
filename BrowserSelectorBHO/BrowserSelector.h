@@ -49,6 +49,8 @@ public:
 		UINT* puArgErr);
 
 private:
+	HRESULT Connect(void);
+	HRESULT Disconnect(void);
 	void OnBeforeNavigate2(
 		IDispatch *pDisop,
 		VARIANT *url,
@@ -60,6 +62,7 @@ private:
 
 private:
 	CComQIPtr<IWebBrowser2, &IID_IWebBrowser2> m_webBrowser2;
+	DWORD m_cookie;
 };
 
 OBJECT_ENTRY_AUTO(__uuidof(BrowserSelector), CBrowserSelector)

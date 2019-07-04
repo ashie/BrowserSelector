@@ -2,12 +2,45 @@
 #include "BrowserSelector.h"
 #include <exdispid.h>
 
+static HRESULT GetConnectionPoint(
+	CComPtr<IWebBrowser2> browser,
+	CComPtr<IConnectionPoint> &connectionPoint)
+{
+	CComQIPtr<IConnectionPointContainer, &IID_IConnectionPointContainer> container(browser);
+	if (container == NULL)
+		return E_POINTER;
+
+	HRESULT hr = container->FindConnectionPoint(DIID_DWebBrowserEvents2, &connectionPoint);
+	if (!SUCCEEDED(!hr))
+		return hr;
+
+	return S_OK;
+}
+
+HRESULT CBrowserSelector::Connect(void)
+{
+	CComPtr<IConnectionPoint> connectionPoint;
+	HRESULT hr = GetConnectionPoint(m_webBrowser2, connectionPoint);
+	if (!SUCCEEDED(!hr))
+		return hr;
+	return connectionPoint->Advise((IDispatch*)this, &m_cookie);
+}
+
+HRESULT CBrowserSelector::Disconnect(void)
+{
+	CComPtr<IConnectionPoint> connectionPoint;
+	HRESULT hr = GetConnectionPoint(m_webBrowser2, connectionPoint);
+	if (!SUCCEEDED(!hr))
+		return hr;
+	return connectionPoint->Unadvise(m_cookie);
+}
+
 STDMETHODIMP CBrowserSelector::SetSite(IUnknown *pUnkSite)
 {
 	m_webBrowser2 = pUnkSite;
 	if (m_webBrowser2 == NULL)
 		return E_INVALIDARG;
-	return S_OK;
+	return Connect();
 }
 
 STDMETHODIMP CBrowserSelector::Invoke(
@@ -31,6 +64,8 @@ STDMETHODIMP CBrowserSelector::Invoke(
 			pdispparams->rgvarg[1].pvarVal,
 			pdispparams->rgvarg[0].pboolVal);
 		break;
+	case DISPID_QUIT:
+		return Disconnect();
 	default:
 		break;
 	}
