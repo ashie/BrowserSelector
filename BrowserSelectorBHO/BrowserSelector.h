@@ -39,14 +39,14 @@ END_COM_MAP()
 public:
 	STDMETHOD(SetSite)(IUnknown *pUnkSite);
 	STDMETHOD(Invoke)(
-		DISPID dispidMember, 
+		DISPID dispidMember,
 		REFIID riid,
-		LCID lcid, 
-		WORD wFlags, 
-		DISPPARAMS* pdispparams, 
-		VARIANT* pvarResult,
-		EXCEPINFO* pexcepinfo, 
-		UINT* puArgErr);
+		LCID lcid,
+		WORD wFlags,
+		DISPPARAMS *pdispparams,
+		VARIANT *pvarResult,
+		EXCEPINFO *pexcepinfo,
+		UINT *puArgErr);
 
 private:
 	HRESULT Connect(void);

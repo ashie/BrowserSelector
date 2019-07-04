@@ -44,14 +44,14 @@ STDMETHODIMP CBrowserSelector::SetSite(IUnknown *pUnkSite)
 }
 
 STDMETHODIMP CBrowserSelector::Invoke(
-		DISPID dispidMember, 
+		DISPID dispidMember,
 		REFIID riid,
-		LCID lcid, 
-		WORD wFlags, 
-		DISPPARAMS* pdispparams, 
-		VARIANT* pvarResult,
-		EXCEPINFO* pexcepinfo, 
-		UINT* puArgErr)
+		LCID lcid,
+		WORD wFlags,
+		DISPPARAMS *pdispparams,
+		VARIANT *pvarResult,
+		EXCEPINFO *pexcepinfo,
+		UINT *puArgErr)
 {
 	switch(dispidMember) {
 	case DISPID_BEFORENAVIGATE2:
