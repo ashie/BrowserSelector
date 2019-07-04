@@ -11,7 +11,7 @@ extern "C" BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpRes
 	if (dwReason == DLL_PROCESS_ATTACH) {
 		TCHAR loader[MAX_PATH];
 		GetModuleFileName(NULL, loader, MAX_PATH);
-		if (_tcsicmp(loader, _T("explorer.exe"))) {
+		if (!_tcsicmp(loader, _T("explorer.exe"))) {
 			return FALSE;
 		}
 	}
