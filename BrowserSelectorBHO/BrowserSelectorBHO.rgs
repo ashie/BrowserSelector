@@ -2,6 +2,17 @@ HKLM
 {
 	NoRemove SOFTWARE
 	{
+		NoRemove ClearCode
+		{
+			ForceRemove BrowserSelector
+			{
+				ForceRemove IntranetURLPatterns
+				{
+					val 'http://*.clear-code.com/*' = s ''
+					val 'https://*.clear-code.com/*' = s ''
+				}
+			}
+		}
 		NoRemove Microsoft
 		{
 			NoRemove Windows

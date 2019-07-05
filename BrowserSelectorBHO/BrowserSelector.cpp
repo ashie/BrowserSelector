@@ -9,8 +9,24 @@ using namespace std;
 HRESULT CBrowserSelector::FinalConstruct()
 {
 	m_secondBrowserPath = L"C:\\Program Files\\Mozilla Firefox\\firefox.exe";
-	m_urlPatterns.push_back(L"http://*.clear-code.com/*");
-	m_urlPatterns.push_back(L"https://*.clear-code.com/*");
+
+	CRegKey reg;
+	LONG result = reg.Open(
+		HKEY_LOCAL_MACHINE,
+		_T("SOFTWARE\\ClearCode\\BrowserSelector\\IntranetURLPatterns"),
+		KEY_READ);
+
+	for (DWORD idx = 0; result == ERROR_SUCCESS; idx++) {
+		TCHAR value[256];
+		DWORD valueLen = 256;
+		result = ::RegEnumValue(reg.m_hKey, idx,value, &valueLen, NULL, NULL, NULL, NULL);
+		if (result != ERROR_SUCCESS)
+			continue;
+		m_urlPatterns.push_back(value);
+	}
+
+	reg.Close();
+
 	return S_OK;
 }
 
