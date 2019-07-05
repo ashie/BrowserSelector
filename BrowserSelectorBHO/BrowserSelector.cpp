@@ -92,5 +92,23 @@ void CBrowserSelector::OnBeforeNavigate2(
 		URL.find(L"https://www.clear-code.com") == 0)
 	{
 		*cancel = VARIANT_TRUE;
+		wstring browser(L"C:\\Program Files\\Mozilla Firefox\\firefox.exe");
+		wstring commandLine(L"\"");
+		commandLine += browser;
+		commandLine += L"\" ";
+		commandLine += URL;
+		STARTUPINFO startupInfo = { 0 };
+		PROCESS_INFORMATION processInfo = { 0 };
+		::CreateProcessW(
+			browser.c_str(),
+			(LPWSTR)commandLine.c_str(),
+			NULL,
+			NULL,
+			FALSE,
+			CREATE_NEW_PROCESS_GROUP,
+			NULL,
+			NULL,
+			&startupInfo,
+			&processInfo);
 	}
 }
