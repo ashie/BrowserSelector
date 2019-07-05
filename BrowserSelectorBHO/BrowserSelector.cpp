@@ -5,6 +5,18 @@
 
 using namespace std;
 
+HRESULT CBrowserSelector::FinalConstruct()
+{
+	m_secondBrowserPath = L"C:\\Program Files\\Mozilla Firefox\\firefox.exe";
+	m_urlPatterns.push_back(L"http://www.clear-code.com");
+	m_urlPatterns.push_back(L"https://www.clear-code.com");
+	return S_OK;
+}
+
+void CBrowserSelector::FinalRelease()
+{
+}
+
 static HRESULT GetConnectionPoint(
 	CComPtr<IWebBrowser2> browser,
 	CComPtr<IConnectionPoint> &connectionPoint)
@@ -88,27 +100,52 @@ void CBrowserSelector::OnBeforeNavigate2(
 	varURL.ChangeType(VT_BSTR);
 	wstring URL(varURL.bstrVal);
 
-	if (URL.find(L"http://www.clear-code.com") == 0 ||
-		URL.find(L"https://www.clear-code.com") == 0)
-	{
+	if (ShouldOpenBySecondBrowser(URL)) {
 		*cancel = VARIANT_TRUE;
-		wstring browser(L"C:\\Program Files\\Mozilla Firefox\\firefox.exe");
-		wstring commandLine(L"\"");
-		commandLine += browser;
-		commandLine += L"\" ";
-		commandLine += URL;
-		STARTUPINFO startupInfo = { 0 };
-		PROCESS_INFORMATION processInfo = { 0 };
-		::CreateProcessW(
-			browser.c_str(),
-			(LPWSTR)commandLine.c_str(),
-			NULL,
-			NULL,
-			FALSE,
-			CREATE_NEW_PROCESS_GROUP,
-			NULL,
-			NULL,
-			&startupInfo,
-			&processInfo);
+		OpenBySecondBrowser(URL);
 	}
+}
+
+bool CBrowserSelector::ShouldOpenBySecondBrowser(const wstring &url)
+{
+	vector<wstring>::iterator it = m_urlPatterns.begin();
+
+	for (; it != m_urlPatterns.end(); it++) {
+		if (url.find(*it) == 0)
+			return true;
+	}
+
+	return false;
+}
+
+static void BuildCommandLine(const wstring &browserPath, const wstring &url, wstring &commandLine)
+{
+	commandLine = L"\"";
+	commandLine += browserPath;
+	commandLine += L"\" \"";
+	commandLine += url;
+	commandLine += L"\"";
+}
+
+void CBrowserSelector::OpenBySecondBrowser(const wstring &url)
+{
+	if (m_secondBrowserPath.empty() || url.empty())
+		return;
+
+	wstring commandLine;
+	BuildCommandLine(m_secondBrowserPath, url, commandLine);
+
+	STARTUPINFO startupInfo = { 0 };
+	PROCESS_INFORMATION processInfo = { 0 };
+	::CreateProcessW(
+		m_secondBrowserPath.c_str(),
+		(LPWSTR)commandLine.c_str(),
+		NULL,
+		NULL,
+		FALSE,
+		CREATE_NEW_PROCESS_GROUP,
+		NULL,
+		NULL,
+		&startupInfo,
+		&processInfo);
 }

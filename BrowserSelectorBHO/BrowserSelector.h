@@ -2,6 +2,8 @@
 #include "resource.h"
 
 #include "BrowserSelectorBHO_i.h"
+#include <string>
+#include <vector>
 
 using namespace ATL;
 
@@ -27,14 +29,8 @@ END_COM_MAP()
 
 	DECLARE_PROTECT_FINAL_CONSTRUCT()
 
-	HRESULT FinalConstruct()
-	{
-		return S_OK;
-	}
-
-	void FinalRelease()
-	{
-	}
+	HRESULT FinalConstruct();
+	void FinalRelease();
 
 public:
 	STDMETHOD(SetSite)(IUnknown *pUnkSite);
@@ -59,10 +55,14 @@ private:
 		VARIANT *postData,
 		VARIANT *headers,
 		VARIANT_BOOL *cancel);
+	bool ShouldOpenBySecondBrowser(const std::wstring &url);
+	void OpenBySecondBrowser(const std::wstring &url);
 
 private:
 	CComQIPtr<IWebBrowser2, &IID_IWebBrowser2> m_webBrowser2;
 	DWORD m_cookie;
+	std::wstring m_secondBrowserPath;
+	std::vector<std::wstring> m_urlPatterns;
 };
 
 OBJECT_ENTRY_AUTO(__uuidof(BrowserSelector), CBrowserSelector)
