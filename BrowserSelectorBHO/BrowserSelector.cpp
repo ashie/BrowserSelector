@@ -2,14 +2,17 @@
 #include "BrowserSelector.h"
 #include <exdispid.h>
 #include <string>
+#include <DbgHelp.h>
 
 using namespace std;
+
+static CComAutoCriticalSection s_symMatchSection;
 
 HRESULT CBrowserSelector::FinalConstruct()
 {
 	m_secondBrowserPath = L"C:\\Program Files\\Mozilla Firefox\\firefox.exe";
-	m_urlPatterns.push_back(L"http://www.clear-code.com");
-	m_urlPatterns.push_back(L"https://www.clear-code.com");
+	m_urlPatterns.push_back(L"http://*.clear-code.com/*");
+	m_urlPatterns.push_back(L"https://*.clear-code.com/*");
 	return S_OK;
 }
 
@@ -111,7 +114,10 @@ bool CBrowserSelector::ShouldOpenBySecondBrowser(const wstring &url)
 	vector<wstring>::iterator it = m_urlPatterns.begin();
 
 	for (; it != m_urlPatterns.end(); it++) {
-		if (url.find(*it) == 0)
+		s_symMatchSection.Lock();
+		BOOL matched = SymMatchStringW(url.c_str(), it->c_str(), FALSE);
+		s_symMatchSection.Unlock();
+		if (matched)
 			return true;
 	}
 
