@@ -14,7 +14,7 @@ static HRESULT GetConnectionPoint(
 		return E_POINTER;
 
 	HRESULT hr = container->FindConnectionPoint(DIID_DWebBrowserEvents2, &connectionPoint);
-	if (!SUCCEEDED(!hr))
+	if (!SUCCEEDED(hr))
 		return hr;
 
 	return S_OK;
@@ -24,7 +24,7 @@ HRESULT CBrowserSelector::Connect(void)
 {
 	CComPtr<IConnectionPoint> connectionPoint;
 	HRESULT hr = GetConnectionPoint(m_webBrowser2, connectionPoint);
-	if (!SUCCEEDED(!hr))
+	if (!SUCCEEDED(hr))
 		return hr;
 	return connectionPoint->Advise((IDispatch*)this, &m_cookie);
 }
@@ -33,7 +33,7 @@ HRESULT CBrowserSelector::Disconnect(void)
 {
 	CComPtr<IConnectionPoint> connectionPoint;
 	HRESULT hr = GetConnectionPoint(m_webBrowser2, connectionPoint);
-	if (!SUCCEEDED(!hr))
+	if (!SUCCEEDED(hr))
 		return hr;
 	return connectionPoint->Unadvise(m_cookie);
 }
