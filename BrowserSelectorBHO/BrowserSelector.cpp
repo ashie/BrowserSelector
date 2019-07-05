@@ -6,8 +6,6 @@
 
 using namespace std;
 
-static CComAutoCriticalSection s_symMatchSection;
-
 HRESULT CBrowserSelector::FinalConstruct()
 {
 	m_secondBrowserPath = L"C:\\Program Files\\Mozilla Firefox\\firefox.exe";
@@ -111,12 +109,13 @@ void CBrowserSelector::OnBeforeNavigate2(
 
 bool CBrowserSelector::ShouldOpenBySecondBrowser(const wstring &url)
 {
+	static CComAutoCriticalSection symMatchSection;
 	vector<wstring>::iterator it = m_urlPatterns.begin();
 
 	for (; it != m_urlPatterns.end(); it++) {
-		s_symMatchSection.Lock();
+		symMatchSection.Lock();
 		BOOL matched = SymMatchStringW(url.c_str(), it->c_str(), FALSE);
-		s_symMatchSection.Unlock();
+		symMatchSection.Unlock();
 		if (matched)
 			return true;
 	}
