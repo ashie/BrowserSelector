@@ -6,13 +6,12 @@
 
 using namespace std;
 
-HRESULT CBrowserSelector::FinalConstruct()
+void CBrowserSelector::LoadURLPatterns(bool systemWide)
 {
-	m_secondBrowserPath = L"C:\\Program Files\\Mozilla Firefox\\firefox.exe";
-
 	CRegKey reg;
+
 	LONG result = reg.Open(
-		HKEY_LOCAL_MACHINE,
+		systemWide ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
 		_T("SOFTWARE\\ClearCode\\BrowserSelector\\IntranetURLPatterns"),
 		KEY_READ);
 
@@ -26,6 +25,15 @@ HRESULT CBrowserSelector::FinalConstruct()
 	}
 
 	reg.Close();
+}
+
+HRESULT CBrowserSelector::FinalConstruct()
+{
+	m_secondBrowserPath = L"C:\\Program Files\\Mozilla Firefox\\firefox.exe";
+
+	bool systemWide = true;
+	LoadURLPatterns(systemWide);
+	LoadURLPatterns();
 
 	return S_OK;
 }

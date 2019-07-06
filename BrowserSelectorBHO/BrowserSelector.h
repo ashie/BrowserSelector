@@ -45,6 +45,7 @@ public:
 		UINT *puArgErr);
 
 private:
+	void LoadURLPatterns(bool systemWide = false);
 	HRESULT Connect(void);
 	HRESULT Disconnect(void);
 	void OnBeforeNavigate2(
