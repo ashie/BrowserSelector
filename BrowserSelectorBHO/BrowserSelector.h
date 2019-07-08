@@ -52,7 +52,7 @@ private:
 		IDispatch *pDisop,
 		VARIANT *url,
 		VARIANT *flags,
-		VARIANT *targetFlagName,
+		VARIANT *targetFrameName,
 		VARIANT *postData,
 		VARIANT *headers,
 		VARIANT_BOOL *cancel);

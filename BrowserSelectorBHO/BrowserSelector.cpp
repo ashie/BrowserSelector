@@ -117,7 +117,7 @@ void CBrowserSelector::OnBeforeNavigate2(
 		IDispatch *pDisop,
 		VARIANT *url,
 		VARIANT *flags,
-		VARIANT *targetFlagName,
+		VARIANT *targetFrameName,
 		VARIANT *postData,
 		VARIANT *headers,
 		VARIANT_BOOL *cancel)
