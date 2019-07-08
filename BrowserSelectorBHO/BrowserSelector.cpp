@@ -6,6 +6,26 @@
 
 using namespace std;
 
+void CBrowserSelector::LoadFirefoxPath(void)
+{
+	CRegKey reg;
+
+	LONG result = reg.Open(
+		HKEY_LOCAL_MACHINE,
+		_T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths"),
+		KEY_READ);
+	if (result != ERROR_SUCCESS)
+		return;
+
+	TCHAR path[MAX_PATH];
+	ULONG pathSize = MAX_PATH;
+	result = reg.QueryStringValue(L"firefox.exe", path, &pathSize);
+	if (result == ERROR_SUCCESS)
+		m_secondBrowserPath = path;
+
+	reg.Close();
+}
+
 void CBrowserSelector::LoadURLPatterns(bool systemWide)
 {
 	CRegKey reg;
@@ -135,6 +155,11 @@ void CBrowserSelector::OnBeforeNavigate2(
 
 bool CBrowserSelector::ShouldOpenByIE(const wstring &url)
 {
+	if (m_secondBrowserPath.empty())
+		return false;
+	if (url.empty())
+		return false;
+
 	static CComAutoCriticalSection symMatchSection;
 	vector<wstring>::iterator it = m_urlPatterns.begin();
 
