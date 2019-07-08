@@ -8,8 +8,10 @@ HKLM
 			{
 				ForceRemove IntranetURLPatterns
 				{
-					val 'http://*.clear-code.com/*' = s ''
-					val 'https://*.clear-code.com/*' = s ''
+					val 'http://example.com/*' = s ''
+					val 'https://example.com/*' = s ''
+					val 'http://*.example.com/*' = s ''
+					val 'https://*.example.com/*' = s ''
 				}
 			}
 		}

@@ -56,7 +56,7 @@ private:
 		VARIANT *postData,
 		VARIANT *headers,
 		VARIANT_BOOL *cancel);
-	bool ShouldOpenBySecondBrowser(const std::wstring &url);
+	bool ShouldOpenByIE(const std::wstring &url);
 	void OpenBySecondBrowser(const std::wstring &url);
 
 private:

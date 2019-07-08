@@ -32,6 +32,7 @@ HRESULT CBrowserSelector::FinalConstruct()
 	m_secondBrowserPath = L"C:\\Program Files\\Mozilla Firefox\\firefox.exe";
 
 	bool systemWide = true;
+	m_urlPatterns.push_back(L"about:*");
 	LoadURLPatterns(systemWide);
 	LoadURLPatterns();
 
@@ -125,13 +126,14 @@ void CBrowserSelector::OnBeforeNavigate2(
 	varURL.ChangeType(VT_BSTR);
 	wstring URL(varURL.bstrVal);
 
-	if (ShouldOpenBySecondBrowser(URL)) {
-		*cancel = VARIANT_TRUE;
-		OpenBySecondBrowser(URL);
-	}
+	if (ShouldOpenByIE(URL))
+		return;
+
+	*cancel = VARIANT_TRUE;
+	OpenBySecondBrowser(URL);
 }
 
-bool CBrowserSelector::ShouldOpenBySecondBrowser(const wstring &url)
+bool CBrowserSelector::ShouldOpenByIE(const wstring &url)
 {
 	static CComAutoCriticalSection symMatchSection;
 	vector<wstring>::iterator it = m_urlPatterns.begin();
