@@ -134,7 +134,7 @@ STDMETHODIMP CBrowserSelector::Invoke(
 }
 
 void CBrowserSelector::OnBeforeNavigate2(
-		IDispatch *pDisop,
+		IDispatch *pDisp,
 		VARIANT *url,
 		VARIANT *flags,
 		VARIANT *targetFrameName,

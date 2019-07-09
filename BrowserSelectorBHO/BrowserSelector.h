@@ -50,7 +50,7 @@ private:
 	HRESULT Connect(void);
 	HRESULT Disconnect(void);
 	void OnBeforeNavigate2(
-		IDispatch *pDisop,
+		IDispatch *pDisp,
 		VARIANT *url,
 		VARIANT *flags,
 		VARIANT *targetFrameName,
