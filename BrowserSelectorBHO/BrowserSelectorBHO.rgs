@@ -12,6 +12,10 @@ HKLM
 					val 'https://example.com/*' = s ''
 					val 'http://*.example.com/*' = s ''
 					val 'https://*.example.com/*' = s ''
+					val 'http://example.org/*' = s ''
+					val 'https://example.org/*' = s ''
+					val 'http://*.example.org/*' = s ''
+					val 'https://*.example.org/*' = s ''
 				}
 			}
 		}
