@@ -12,14 +12,14 @@ void CBrowserSelector::LoadFirefoxPath(void)
 
 	LONG result = reg.Open(
 		HKEY_LOCAL_MACHINE,
-		_T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths"),
+		_T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths\\firefox.exe"),
 		KEY_READ);
 	if (result != ERROR_SUCCESS)
 		return;
 
 	TCHAR path[MAX_PATH];
 	ULONG pathSize = MAX_PATH;
-	result = reg.QueryStringValue(L"firefox.exe", path, &pathSize);
+	result = reg.QueryStringValue(NULL, path, &pathSize);
 	if (result == ERROR_SUCCESS)
 		m_secondBrowserPath = path;
 
@@ -49,7 +49,7 @@ void CBrowserSelector::LoadURLPatterns(bool systemWide)
 
 HRESULT CBrowserSelector::FinalConstruct()
 {
-	m_secondBrowserPath = L"C:\\Program Files\\Mozilla Firefox\\firefox.exe";
+	LoadFirefoxPath();
 
 	bool systemWide = true;
 	m_urlPatterns.push_back(L"about:*");
