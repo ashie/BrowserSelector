@@ -8,6 +8,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		COPYING.MIT = COPYING.MIT
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BrowserSelector", "BrowserSelector\BrowserSelector.vcxproj", "{AE9FFFAA-81B6-4B4D-BC28-D6E2B9D3B7C4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -18,6 +20,10 @@ Global
 		{5AC47C86-1BED-4FA4-9A12-FC88A11459D3}.Debug|Win32.Build.0 = Debug|Win32
 		{5AC47C86-1BED-4FA4-9A12-FC88A11459D3}.Release|Win32.ActiveCfg = Release|Win32
 		{5AC47C86-1BED-4FA4-9A12-FC88A11459D3}.Release|Win32.Build.0 = Release|Win32
+		{AE9FFFAA-81B6-4B4D-BC28-D6E2B9D3B7C4}.Debug|Win32.ActiveCfg = Debug|Win32
+		{AE9FFFAA-81B6-4B4D-BC28-D6E2B9D3B7C4}.Debug|Win32.Build.0 = Debug|Win32
+		{AE9FFFAA-81B6-4B4D-BC28-D6E2B9D3B7C4}.Release|Win32.ActiveCfg = Release|Win32
+		{AE9FFFAA-81B6-4B4D-BC28-D6E2B9D3B7C4}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
