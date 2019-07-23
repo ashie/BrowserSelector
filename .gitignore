@@ -7,3 +7,5 @@ ipch/
 *.aps
 *.vcxproj.filters
 *.vcxproj.user
+*_i.[ch]
+*_p.[ch]
