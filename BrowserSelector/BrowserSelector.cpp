@@ -56,13 +56,11 @@ static HDDEDATA CALLBACK DDECallback(WORD wType, WORD wFmt, HCONV hConv, HSZ hsz
 bool OpenByExistingIE(const wstring &url)
 {
 	DWORD dwDDEID = 0;
-	UINT err;
 
-	err = DdeInitializeW(
+	UINT err = DdeInitializeW(
 			&dwDDEID,
 			(PFNCALLBACK)MakeProcInstance((FARPROC)DDECallback, ghInstance),
 			CBF_SKIP_ALLNOTIFICATIONS | APPCMD_CLIENTONLY, 0L);
-
 	if (err != DMLERR_NO_ERROR)
 		return false;
 
