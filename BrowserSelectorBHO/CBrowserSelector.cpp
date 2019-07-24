@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "BrowserSelector.h"
+#include "CBrowserSelector.h"
 #include <exdispid.h>
 #include <string>
 #include <DbgHelp.h>

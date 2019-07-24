@@ -118,7 +118,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="BrowserSelector.cpp" />
+    <ClCompile Include="CBrowserSelector.cpp" />
     <ClCompile Include="BrowserSelectorBHO.cpp" />
     <ClCompile Include="BrowserSelectorBHO_i.c">
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
@@ -142,7 +142,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BrowserSelector.h" />
+    <ClInclude Include="CBrowserSelector.h" />
     <ClInclude Include="BrowserSelectorBHO_i.h" />
     <ClInclude Include="dllmain.h" />
     <ClInclude Include="Resource.h" />
