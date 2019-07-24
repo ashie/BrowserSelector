@@ -133,6 +133,19 @@ STDMETHODIMP CBrowserSelector::Invoke(
 	return S_OK;
 }
 
+bool CBrowserSelector::IsTopLevelFrame(IDispatch* pDisp)
+{
+	if(!m_webBrowser2)
+		return false;
+
+	CComPtr<IDispatch> spDispatch;
+	HRESULT hr = m_webBrowser2->QueryInterface(IID_IDispatch, (void**)&spDispatch);
+	if (FAILED(hr))
+		return false;
+
+	return (pDisp == spDispatch);
+}
+
 void CBrowserSelector::OnBeforeNavigate2(
 		IDispatch *pDisp,
 		VARIANT *url,
@@ -145,6 +158,9 @@ void CBrowserSelector::OnBeforeNavigate2(
 	CComVariant varURL(*url);
 	varURL.ChangeType(VT_BSTR);
 	wstring URL(varURL.bstrVal);
+
+	if (!IsTopLevelFrame(pDisp))
+		return;
 
 	if (ShouldOpenByIE(URL))
 		return;
