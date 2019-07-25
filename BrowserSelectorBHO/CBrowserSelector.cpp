@@ -2,7 +2,7 @@
 #include "CBrowserSelector.h"
 #include <exdispid.h>
 #include <string>
-#include <DbgHelp.h>
+#include <atlutil.h>
 
 using namespace std;
 
@@ -22,6 +22,27 @@ void CBrowserSelector::LoadFirefoxPath(void)
 	result = reg.QueryStringValue(NULL, path, &pathSize);
 	if (result == ERROR_SUCCESS)
 		m_secondBrowserPath = path;
+
+	reg.Close();
+}
+
+void CBrowserSelector::LoadFQDNPatterns(bool systemWide)
+{
+	CRegKey reg;
+
+	LONG result = reg.Open(
+		systemWide ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
+		_T("SOFTWARE\\ClearCode\\BrowserSelector\\IntranetFQDNPatterns"),
+		KEY_READ);
+
+	for (DWORD idx = 0; result == ERROR_SUCCESS; idx++) {
+		TCHAR value[256];
+		DWORD valueLen = 256;
+		result = ::RegEnumValue(reg.m_hKey, idx,value, &valueLen, NULL, NULL, NULL, NULL);
+		if (result != ERROR_SUCCESS)
+			continue;
+		m_fqdnPatterns.push_back(value);
+	}
 
 	reg.Close();
 }
@@ -53,6 +74,8 @@ HRESULT CBrowserSelector::FinalConstruct()
 
 	bool systemWide = true;
 	m_urlPatterns.push_back(L"about:*");
+	LoadFQDNPatterns(systemWide);
+	LoadFQDNPatterns();
 	LoadURLPatterns(systemWide);
 	LoadURLPatterns();
 
@@ -171,15 +194,26 @@ void CBrowserSelector::OnBeforeNavigate2(
 
 bool CBrowserSelector::ShouldOpenByIE(const wstring &url)
 {
+	static CComAutoCriticalSection symMatchSection;
+
 	if (m_secondBrowserPath.empty())
 		return false;
 	if (url.empty())
 		return false;
 
-	static CComAutoCriticalSection symMatchSection;
-	vector<wstring>::iterator it = m_urlPatterns.begin();
+	vector<wstring>::iterator it;
+	CUrl cURL;
+	cURL.CrackUrl(url.c_str());
 
-	for (; it != m_urlPatterns.end(); it++) {
+	for (it = m_fqdnPatterns.begin(); it != m_fqdnPatterns.end(); it++) {
+		symMatchSection.Lock();
+		BOOL matched = SymMatchStringW(cURL.GetHostName(), it->c_str(), FALSE);
+		symMatchSection.Unlock();
+		if (matched)
+			return true;
+	}
+
+	for (it = m_urlPatterns.begin(); it != m_urlPatterns.end(); it++) {
 		symMatchSection.Lock();
 		BOOL matched = SymMatchStringW(url.c_str(), it->c_str(), FALSE);
 		symMatchSection.Unlock();

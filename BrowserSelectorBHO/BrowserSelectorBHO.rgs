@@ -6,16 +6,17 @@ HKLM
 		{
 			ForceRemove BrowserSelector
 			{
+				ForceRemove IntranetFQDNPatterns
+				{
+					val 'example.org' = s ''
+					val '*.example.org' = s ''
+				}
 				ForceRemove IntranetURLPatterns
 				{
-					val 'http://example.com' = s ''
-					val 'http://example.com/*' = s ''
-					val 'http://*.example.com' = s ''
-					val 'http://*.example.com/*' = s ''
-					val 'https://example.com' = s ''
-					val 'https://example.com/*' = s ''
-					val 'https://*.example.com' = s ''
-					val 'https://*.example.com/*' = s ''
+					val 'http*://example.com' = s ''
+					val 'http*://example.com/*' = s ''
+					val 'http*://*.example.com' = s ''
+					val 'http*://*.example.com/*' = s ''
 				}
 			}
 		}

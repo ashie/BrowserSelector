@@ -46,6 +46,7 @@ public:
 
 private:
 	void LoadFirefoxPath(void);
+	void LoadFQDNPatterns(bool systemWide = false);
 	void LoadURLPatterns(bool systemWide = false);
 	HRESULT Connect(void);
 	HRESULT Disconnect(void);
@@ -65,6 +66,7 @@ private:
 	CComQIPtr<IWebBrowser2, &IID_IWebBrowser2> m_webBrowser2;
 	DWORD m_cookie;
 	std::wstring m_secondBrowserPath;
+	std::vector<std::wstring> m_fqdnPatterns;
 	std::vector<std::wstring> m_urlPatterns;
 };
 
