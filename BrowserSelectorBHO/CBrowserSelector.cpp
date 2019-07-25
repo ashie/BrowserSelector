@@ -26,14 +26,17 @@ void CBrowserSelector::LoadFirefoxPath(void)
 	reg.Close();
 }
 
-void CBrowserSelector::LoadFQDNPatterns(bool systemWide)
+static void LoadMatchingPatterns(
+	vector<wstring> &patterns,
+	const LPCTSTR type,
+	bool systemWide = false)
 {
 	CRegKey reg;
+	HKEY keyParent = systemWide ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER;
+	CString regKeyName(_T("SOFTWARE\\ClearCode\\BrowserSelector\\"));
+	regKeyName += type;
 
-	LONG result = reg.Open(
-		systemWide ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
-		_T("SOFTWARE\\ClearCode\\BrowserSelector\\IntranetFQDNPatterns"),
-		KEY_READ);
+	LONG result = reg.Open(keyParent, regKeyName, KEY_READ);
 
 	for (DWORD idx = 0; result == ERROR_SUCCESS; idx++) {
 		TCHAR value[256];
@@ -41,31 +44,20 @@ void CBrowserSelector::LoadFQDNPatterns(bool systemWide)
 		result = ::RegEnumValue(reg.m_hKey, idx,value, &valueLen, NULL, NULL, NULL, NULL);
 		if (result != ERROR_SUCCESS)
 			continue;
-		m_fqdnPatterns.push_back(value);
+		patterns.push_back(value);
 	}
 
 	reg.Close();
 }
 
+void CBrowserSelector::LoadFQDNPatterns(bool systemWide)
+{
+	LoadMatchingPatterns(m_fqdnPatterns, _T("IntranetFQDNPatterns"), systemWide);
+}
+
 void CBrowserSelector::LoadURLPatterns(bool systemWide)
 {
-	CRegKey reg;
-
-	LONG result = reg.Open(
-		systemWide ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
-		_T("SOFTWARE\\ClearCode\\BrowserSelector\\IntranetURLPatterns"),
-		KEY_READ);
-
-	for (DWORD idx = 0; result == ERROR_SUCCESS; idx++) {
-		TCHAR value[256];
-		DWORD valueLen = 256;
-		result = ::RegEnumValue(reg.m_hKey, idx,value, &valueLen, NULL, NULL, NULL, NULL);
-		if (result != ERROR_SUCCESS)
-			continue;
-		m_urlPatterns.push_back(value);
-	}
-
-	reg.Close();
+	LoadMatchingPatterns(m_urlPatterns, _T("IntranetURLPatterns"), systemWide);
 }
 
 HRESULT CBrowserSelector::FinalConstruct()
