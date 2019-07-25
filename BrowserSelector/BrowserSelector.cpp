@@ -1,52 +1,10 @@
 #include "stdafx.h"
 #include "BrowserSelector.h"
-#include <string>
-#include <vector>
+#include "BrowserSelectorCommon.h"
 #include <ShellAPI.h>
-#include <DbgHelp.h>
 #include <Ddeml.h>
 
 using namespace std;
-
-static void LoadURLPatterns(vector<wstring> &urlPatterns, bool systemWide = false)
-{
-	CRegKey reg;
-
-	LONG result = reg.Open(
-		systemWide ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER,
-		_T("SOFTWARE\\ClearCode\\BrowserSelector\\IntranetURLPatterns"),
-		KEY_READ);
-
-	for (DWORD idx = 0; result == ERROR_SUCCESS; idx++) {
-		TCHAR value[256];
-		DWORD valueLen = 256;
-		result = ::RegEnumValue(reg.m_hKey, idx,value, &valueLen, NULL, NULL, NULL, NULL);
-		if (result != ERROR_SUCCESS)
-			continue;
-		urlPatterns.push_back(value);
-	}
-
-	reg.Close();
-}
-
-static bool IsIntranetURL(const wstring &url, const vector<wstring> &urlPatterns)
-{
-	if (url.empty())
-		return false;
-
-	static CComAutoCriticalSection symMatchSection;
-	vector<wstring>::const_iterator it = urlPatterns.begin();
-
-	for (; it != urlPatterns.end(); it++) {
-		symMatchSection.Lock();
-		BOOL matched = SymMatchStringW(url.c_str(), it->c_str(), FALSE);
-		symMatchSection.Unlock();
-		if (matched)
-			return true;
-	}
-
-	return false;
-}
 
 static HDDEDATA CALLBACK DDECallback(WORD wType, WORD wFmt, HCONV hConv, HSZ hsz1, HSZ hsz2, HDDEDATA hData, DWORD lData1, DWORD lData2)
 {
@@ -112,14 +70,13 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(nCmdShow);
 
-	vector<wstring> urlPatterns;
-	bool systemWide = true;
-	LoadURLPatterns(urlPatterns, systemWide);
+	vector<wstring> fqdnPatterns, urlPatterns;
+	LoadFQDNPatterns(fqdnPatterns);
 	LoadURLPatterns(urlPatterns);
 
 	wstring url = lpCmdLine;
 
-	if (IsIntranetURL(url, urlPatterns))
+	if (IsIntranetURL(url, fqdnPatterns, urlPatterns))
 		OpenByIE(url);
 	else
 		OpenByFirefox(url);
