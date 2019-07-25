@@ -50,26 +50,63 @@ static void LoadMatchingPatterns(
 	reg.Close();
 }
 
-void CBrowserSelector::LoadFQDNPatterns(bool systemWide)
+static void LoadFQDNPatterns(vector<wstring> &patterns)
 {
-	LoadMatchingPatterns(m_fqdnPatterns, _T("IntranetFQDNPatterns"), systemWide);
+	bool systemWide = true;
+	LoadMatchingPatterns(patterns, _T("IntranetFQDNPatterns"), systemWide);
+	LoadMatchingPatterns(patterns, _T("IntranetFQDNPatterns"));
 }
 
-void CBrowserSelector::LoadURLPatterns(bool systemWide)
+static void LoadURLPatterns(vector<wstring> &patterns)
 {
-	LoadMatchingPatterns(m_urlPatterns, _T("IntranetURLPatterns"), systemWide);
+	bool systemWide = true;
+	LoadMatchingPatterns(patterns, _T("IntranetURLPatterns"), systemWide);
+	LoadMatchingPatterns(patterns, _T("IntranetURLPatterns"));
+}
+
+static bool IsIntranetURL(
+	const wstring &url,
+	const vector<wstring> &fqdnPatterns,
+	const vector<wstring> &urlPatterns)
+{
+	static CComAutoCriticalSection symMatchSection;
+
+	if (url.empty())
+		return false;
+
+	vector<wstring>::const_iterator it;
+	CUrl cURL;
+	cURL.CrackUrl(url.c_str());
+	LPCTSTR hostName = cURL.GetHostName();
+
+	if (hostName && *hostName) {
+		for (it = fqdnPatterns.begin(); it != fqdnPatterns.end(); it++) {
+			symMatchSection.Lock();
+			BOOL matched = SymMatchStringW(cURL.GetHostName(), it->c_str(), FALSE);
+			symMatchSection.Unlock();
+			if (matched)
+				return true;
+		}
+	}
+
+	for (it = urlPatterns.begin(); it != urlPatterns.end(); it++) {
+		symMatchSection.Lock();
+		BOOL matched = SymMatchStringW(url.c_str(), it->c_str(), FALSE);
+		symMatchSection.Unlock();
+		if (matched)
+			return true;
+	}
+
+	return false;
 }
 
 HRESULT CBrowserSelector::FinalConstruct()
 {
 	LoadFirefoxPath();
 
-	bool systemWide = true;
 	m_urlPatterns.push_back(L"about:*");
-	LoadFQDNPatterns(systemWide);
-	LoadFQDNPatterns();
-	LoadURLPatterns(systemWide);
-	LoadURLPatterns();
+	LoadFQDNPatterns(m_fqdnPatterns);
+	LoadURLPatterns(m_urlPatterns);
 
 	return S_OK;
 }
@@ -190,30 +227,7 @@ bool CBrowserSelector::ShouldOpenByIE(const wstring &url)
 
 	if (m_secondBrowserPath.empty())
 		return false;
-	if (url.empty())
-		return false;
-
-	vector<wstring>::iterator it;
-	CUrl cURL;
-	cURL.CrackUrl(url.c_str());
-
-	for (it = m_fqdnPatterns.begin(); it != m_fqdnPatterns.end(); it++) {
-		symMatchSection.Lock();
-		BOOL matched = SymMatchStringW(cURL.GetHostName(), it->c_str(), FALSE);
-		symMatchSection.Unlock();
-		if (matched)
-			return true;
-	}
-
-	for (it = m_urlPatterns.begin(); it != m_urlPatterns.end(); it++) {
-		symMatchSection.Lock();
-		BOOL matched = SymMatchStringW(url.c_str(), it->c_str(), FALSE);
-		symMatchSection.Unlock();
-		if (matched)
-			return true;
-	}
-
-	return false;
+	return IsIntranetURL(url, m_fqdnPatterns, m_urlPatterns);
 }
 
 void CBrowserSelector::OpenBySecondBrowser(const wstring &url)

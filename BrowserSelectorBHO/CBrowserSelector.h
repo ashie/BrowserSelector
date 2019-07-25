@@ -46,8 +46,6 @@ public:
 
 private:
 	void LoadFirefoxPath(void);
-	void LoadFQDNPatterns(bool systemWide = false);
-	void LoadURLPatterns(bool systemWide = false);
 	HRESULT Connect(void);
 	HRESULT Disconnect(void);
 	void OnBeforeNavigate2(
