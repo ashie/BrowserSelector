@@ -216,34 +216,10 @@ bool CBrowserSelector::ShouldOpenByIE(const wstring &url)
 	return false;
 }
 
-static void BuildCommandLine(const wstring &browserPath, const wstring &url, wstring &commandLine)
-{
-	commandLine = L"\"";
-	commandLine += browserPath;
-	commandLine += L"\" \"";
-	commandLine += url;
-	commandLine += L"\"";
-}
-
 void CBrowserSelector::OpenBySecondBrowser(const wstring &url)
 {
 	if (m_secondBrowserPath.empty() || url.empty())
 		return;
 
-	wstring commandLine;
-	BuildCommandLine(m_secondBrowserPath, url, commandLine);
-
-	STARTUPINFO startupInfo = { 0 };
-	PROCESS_INFORMATION processInfo = { 0 };
-	::CreateProcessW(
-		m_secondBrowserPath.c_str(),
-		(LPWSTR)commandLine.c_str(),
-		NULL,
-		NULL,
-		FALSE,
-		CREATE_NEW_PROCESS_GROUP,
-		NULL,
-		NULL,
-		&startupInfo,
-		&processInfo);
+	::ShellExecute(NULL, _T("open"), _T("firefox.exe"), url.c_str(), NULL, SW_SHOW);
 }
