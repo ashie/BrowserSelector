@@ -6,7 +6,15 @@
 
 using namespace std;
 
-static HDDEDATA CALLBACK DDECallback(WORD wType, WORD wFmt, HCONV hConv, HSZ hsz1, HSZ hsz2, HDDEDATA hData, DWORD lData1, DWORD lData2)
+static HDDEDATA CALLBACK DDECallback(
+	WORD     wType,
+	WORD     wFmt,
+	HCONV    hConv,
+	HSZ      hsz1,
+	HSZ      hsz2,
+	HDDEDATA hData,
+	DWORD    lData1,
+	DWORD    lData2)
 {
 	return (HDDEDATA)0;
 }
@@ -16,9 +24,9 @@ bool OpenByExistingIE(const wstring &url)
 	DWORD dwDDEID = 0;
 
 	UINT err = DdeInitializeW(
-			&dwDDEID,
-			(PFNCALLBACK)MakeProcInstance((FARPROC)DDECallback, ghInstance),
-			CBF_SKIP_ALLNOTIFICATIONS | APPCMD_CLIENTONLY, 0L);
+		&dwDDEID,
+		(PFNCALLBACK)MakeProcInstance((FARPROC)DDECallback, ghInstance),
+		CBF_SKIP_ALLNOTIFICATIONS | APPCMD_CLIENTONLY, 0L);
 	if (err != DMLERR_NO_ERROR)
 		return false;
 
@@ -61,10 +69,11 @@ void OpenByFirefox(const wstring &url)
 	::ShellExecute(NULL, _T("open"), _T("firefox.exe"), url.c_str(), NULL, SW_SHOW);
 }
 
-int APIENTRY _tWinMain(HINSTANCE hInstance,
-                     HINSTANCE hPrevInstance,
-                     LPTSTR    lpCmdLine,
-                     int       nCmdShow)
+int APIENTRY _tWinMain(
+	HINSTANCE hInstance,
+	HINSTANCE hPrevInstance,
+	LPTSTR    lpCmdLine,
+	int       nCmdShow)
 {
 	UNREFERENCED_PARAMETER(hInstance);
 	UNREFERENCED_PARAMETER(hPrevInstance);
