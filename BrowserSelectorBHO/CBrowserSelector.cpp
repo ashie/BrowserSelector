@@ -7,22 +7,7 @@ using namespace std;
 
 void CBrowserSelector::LoadFirefoxPath(void)
 {
-	CRegKey reg;
-
-	LONG result = reg.Open(
-		HKEY_LOCAL_MACHINE,
-		_T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths\\firefox.exe"),
-		KEY_READ);
-	if (result != ERROR_SUCCESS)
-		return;
-
-	TCHAR path[MAX_PATH];
-	ULONG pathSize = MAX_PATH;
-	result = reg.QueryStringValue(NULL, path, &pathSize);
-	if (result == ERROR_SUCCESS)
-		m_secondBrowserPath = path;
-
-	reg.Close();
+	::LoadFirefoxPath(m_secondBrowserPath);
 }
 
 HRESULT CBrowserSelector::FinalConstruct()

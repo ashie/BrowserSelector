@@ -3,6 +3,30 @@
 #include <atlbase.h>
 #include <atlutil.h>
 
+static void LoadAppPath(std::wstring &wpath, const LPCTSTR exeName)
+{
+	CRegKey reg;
+	CString regKeyName(_T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths\\"));
+	regKeyName += exeName;
+
+	LONG result = reg.Open(HKEY_LOCAL_MACHINE, regKeyName, KEY_READ);
+	if (result != ERROR_SUCCESS)
+		return;
+
+	TCHAR path[MAX_PATH];
+	ULONG pathSize = MAX_PATH;
+	result = reg.QueryStringValue(NULL, path, &pathSize);
+	if (result == ERROR_SUCCESS)
+		wpath = path;
+
+	reg.Close();
+}
+
+static void LoadFirefoxPath(std::wstring &path)
+{
+	LoadAppPath(path, _T("firefox.exe"));
+}
+
 static void LoadMatchingPatterns(
 	std::vector<std::wstring> &patterns,
 	const LPCTSTR type,
