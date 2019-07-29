@@ -19,7 +19,7 @@ static HDDEDATA CALLBACK DDECallback(
 	return (HDDEDATA)0;
 }
 
-bool OpenByExistingIE(const wstring &url)
+static bool OpenByExistingIE(const wstring &url)
 {
 	DWORD dwDDEID = 0;
 
@@ -57,14 +57,14 @@ bool OpenByExistingIE(const wstring &url)
 	return true;
 }
 
-void OpenByIE(const wstring &url)
+static void OpenByIE(const wstring &url)
 {
 	bool succeeded = OpenByExistingIE(url);
 	if (!succeeded)
 		::ShellExecute(NULL, _T("open"), _T("iexplore.exe"), url.c_str(), NULL, SW_SHOW);
 }
 
-void OpenByFirefox(const wstring &url)
+static void OpenByFirefox(const wstring &url)
 {
 	::ShellExecute(NULL, _T("open"), _T("firefox.exe"), url.c_str(), NULL, SW_SHOW);
 }
