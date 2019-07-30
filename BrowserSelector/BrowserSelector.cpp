@@ -83,11 +83,20 @@ int APIENTRY _tWinMain(
 	LoadFQDNPatterns(fqdnPatterns);
 	LoadURLPatterns(urlPatterns);
 
-	wstring url = lpCmdLine;
+	int nArgs = 0;
+	LPWSTR *args = ::CommandLineToArgvW(lpCmdLine, &nArgs);
+
+	wstring url;
+
+	if (nArgs >= 1)
+		url = args[0];
 
 	if (IsIntranetURL(url, fqdnPatterns, urlPatterns))
 		OpenByIE(url);
 	else
 		OpenByFirefox(url);
+
+	LocalFree(args);
+
 	return 0;
 }
