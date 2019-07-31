@@ -87,14 +87,16 @@ int APIENTRY _tWinMain(
 	LPWSTR *args = ::CommandLineToArgvW(lpCmdLine, &nArgs);
 
 	wstring url;
-
 	if (nArgs >= 1)
 		url = args[0];
 
-	if (IsIntranetURL(url, fqdnPatterns, urlPatterns))
-		OpenByIE(url);
-	else
+	wstring firefoxPath;
+	LoadFirefoxPath(firefoxPath);
+
+	if (!firefoxPath.empty() && !IsIntranetURL(url, fqdnPatterns, urlPatterns))
 		OpenByFirefox(url);
+	else
+		OpenByIE(url);
 
 	LocalFree(args);
 
