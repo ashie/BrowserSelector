@@ -31,8 +31,8 @@ The patterns are stored in the registry of Windows.
 
 Please see the following examples for more detail:
 
-  * For 32bit OS: sample/BrowserSelectorExample.reg
-  * For 64bit OS: sample/BrowserSelectorWOW64Example.reg
+  * [For 32bit OS](sample/BrowserSelectorExample.reg)
+  * [For 64bit OS](sample/BrowserSelectorWOW64Example.reg)
 
 The following wildcard characters are supported for specifying FQDN or URL:
 
