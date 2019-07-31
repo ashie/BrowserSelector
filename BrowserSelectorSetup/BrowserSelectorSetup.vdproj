@@ -331,6 +331,50 @@
                                                         {
                                                         }
                                                     }
+                                                    "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_E0C7D7FC707340138A4C75DF290AA3F0"
+                                                    {
+                                                    "Name" = "8:App Paths"
+                                                    "Condition" = "8:"
+                                                    "AlwaysCreate" = "11:FALSE"
+                                                    "DeleteAtUninstall" = "11:FALSE"
+                                                    "Transitive" = "11:FALSE"
+                                                        "Keys"
+                                                        {
+                                                            "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_43DF11202DF44E668BE7246BEB695816"
+                                                            {
+                                                            "Name" = "8:BrowserSelector.exe"
+                                                            "Condition" = "8:"
+                                                            "AlwaysCreate" = "11:FALSE"
+                                                            "DeleteAtUninstall" = "11:FALSE"
+                                                            "Transitive" = "11:FALSE"
+                                                                "Keys"
+                                                                {
+                                                                }
+                                                                "Values"
+                                                                {
+                                                                    "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_BE79663F42AC46B1B23BC826EA25BA14"
+                                                                    {
+                                                                    "Name" = "8:"
+                                                                    "Condition" = "8:"
+                                                                    "Transitive" = "11:FALSE"
+                                                                    "ValueTypes" = "3:1"
+                                                                    "Value" = "8:[ProgramFilesFolder][Manufacturer]\\[ProductName]\\[ProductName].exe"
+                                                                    }
+                                                                    "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_F34327DA541C4AF5869184CE02C4B016"
+                                                                    {
+                                                                    "Name" = "8:Path"
+                                                                    "Condition" = "8:"
+                                                                    "Transitive" = "11:FALSE"
+                                                                    "ValueTypes" = "3:1"
+                                                                    "Value" = "8:[ProgramFilesFolder][Manufacturer]\\[ProductName]"
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                        "Values"
+                                                        {
+                                                        }
+                                                    }
                                                 }
                                                 "Values"
                                                 {
