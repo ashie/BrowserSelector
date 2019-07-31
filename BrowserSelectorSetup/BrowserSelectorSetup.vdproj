@@ -345,7 +345,7 @@
                                                             "Name" = "8:BrowserSelector.exe"
                                                             "Condition" = "8:"
                                                             "AlwaysCreate" = "11:FALSE"
-                                                            "DeleteAtUninstall" = "11:FALSE"
+                                                            "DeleteAtUninstall" = "11:TRUE"
                                                             "Transitive" = "11:FALSE"
                                                                 "Keys"
                                                                 {
