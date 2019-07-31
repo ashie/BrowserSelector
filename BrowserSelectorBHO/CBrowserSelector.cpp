@@ -95,6 +95,13 @@ STDMETHODIMP CBrowserSelector::Invoke(
 	return S_OK;
 }
 
+bool CBrowserSelector::IsEmptyURLPatterns(void)
+{
+	return
+		m_fqdnPatterns.empty() &&
+		m_urlPatterns.size() == 1;
+}
+
 bool CBrowserSelector::IsTopLevelFrame(IDispatch* pDisp)
 {
 	if(!m_webBrowser2)
@@ -136,7 +143,9 @@ bool CBrowserSelector::ShouldOpenByIE(const wstring &url)
 	static CComAutoCriticalSection symMatchSection;
 
 	if (m_secondBrowserPath.empty())
-		return false;
+		return true;
+	if (IsEmptyURLPatterns())
+		return true;
 	return IsIntranetURL(url, m_fqdnPatterns, m_urlPatterns);
 }
 

@@ -56,6 +56,7 @@ private:
 		VARIANT *postData,
 		VARIANT *headers,
 		VARIANT_BOOL *cancel);
+	bool IsEmptyURLPatterns(void);
 	bool IsTopLevelFrame(IDispatch* pDisp);
 	bool ShouldOpenByIE(const std::wstring &url);
 	void OpenBySecondBrowser(const std::wstring &url);
