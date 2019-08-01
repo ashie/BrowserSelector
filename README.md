@@ -2,8 +2,9 @@
 
 ## What's this?
 
-This is a web-browser launcher application for Microsoft Windows that aims to
-select an appropriate browser for an URL. Since many tranditional intranet web
+[BrowserSelctor](https://github.com/clear-code/BrowserSelector) is a
+web-browser launcher application for Microsoft Windows that aims to select an
+appropriate browser for an URL. Since many tranditional intranet web
 applications still depend on Internet Explorer, such enterprise users need to
 switch IE and modern web-browsers such as Mozilla Firefox or Google Chrome
 according to the situation. This application will do it automatically on
@@ -35,7 +36,7 @@ Run built BrowserSelectorBHO/Release/BrowserSelectorSetup.msi or setup.exe.
 
 ## How to Configure
 
-This software doesn't have any UI. System administrators should edit its
+This software doesn't have any UI. System administrators have to edit its
 registry entries directly and shouldn't allow users to edit them.
 
 ### FQDN or URL patterns
