@@ -32,7 +32,7 @@ launch IE from Firefox to open intranet sites.
 
 ## How to Install
 
-Run built BrowserSelectorBHO/Release/BrowserSelectorSetup.msi or setup.exe.
+Run built BrowserSelectorSetup/Release/BrowserSelectorSetup.msi or setup.exe.
 
 ## How to Configure
 
