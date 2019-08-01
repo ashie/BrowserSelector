@@ -8,9 +8,20 @@ applications still depend on Internet Explorer, such enterprise users need to
 switch IE and modern web-browsers such as Mozilla Firefox or Google Chrome
 according to the situation. This application will do it automatically on
 clicking or entering an URL. Currently only Firefox is supported as the second
-browser. In addition, we recommend to use it with the Firefox's add-on
+browser.
+
+This software consists of two modules:
+
+  * BrowserSelector.exe:
+    The web-browser launcher. Should be set as the default web-browser on
+    your desktop.
+  * BrowserSelectorBHO.dll:
+    A BHO (Browser Helper Object) for IE. It will launch Firefox to open
+    internet sites.
+
+In addition, we recommend to use them with the Firefox's add-on
 [IE View WE](https://addons.mozilla.org/en-US/firefox/addon/ie-view-we/) to
-switch from Firefox to IE.
+launch IE from Firefox to open intranet sites.
 
 ## How to Build
 
@@ -23,6 +34,9 @@ switch from Firefox to IE.
 Run built BrowserSelectorBHO/Release/BrowserSelectorSetup.msi or setup.exe.
 
 ## How to Configure
+
+This software doesn't have any UI. System administrators should edit its
+registry entries directly and shouldn't allow users to edit them.
 
 ### FQDN or URL patterns
 
