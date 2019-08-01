@@ -5,24 +5,24 @@
 
 STDAPI DllCanUnloadNow(void)
 {
-			return _AtlModule.DllCanUnloadNow();
+	return _AtlModule.DllCanUnloadNow();
 }
 
 STDAPI DllGetClassObject(REFCLSID rclsid, REFIID riid, LPVOID* ppv)
 {
-		return _AtlModule.DllGetClassObject(rclsid, riid, ppv);
+	return _AtlModule.DllGetClassObject(rclsid, riid, ppv);
 }
 
 STDAPI DllRegisterServer(void)
 {
 	HRESULT hr = _AtlModule.DllRegisterServer();
-		return hr;
+	return hr;
 }
 
 STDAPI DllUnregisterServer(void)
 {
 	HRESULT hr = _AtlModule.DllUnregisterServer();
-		return hr;
+	return hr;
 }
 
 STDAPI DllInstall(BOOL bInstall, LPCWSTR pszCmdLine)
