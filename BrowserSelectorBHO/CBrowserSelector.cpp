@@ -15,7 +15,7 @@ HRESULT CBrowserSelector::FinalConstruct()
 	LoadFirefoxPath();
 
 	m_urlPatterns.push_back(L"about:*");
-	LoadFQDNPatterns(m_fqdnPatterns);
+	LoadHostNamePatterns(m_hostNamePatterns);
 	LoadURLPatterns(m_urlPatterns);
 
 	return S_OK;
@@ -98,7 +98,7 @@ STDMETHODIMP CBrowserSelector::Invoke(
 bool CBrowserSelector::IsEmptyURLPatterns(void)
 {
 	return
-		m_fqdnPatterns.empty() &&
+		m_hostNamePatterns.empty() &&
 		m_urlPatterns.size() == 1;
 }
 
@@ -153,7 +153,7 @@ bool CBrowserSelector::ShouldOpenByIE(const wstring &url)
 		return true;
 	if (IsEmptyURLPatterns())
 		return true;
-	return IsIntranetURL(url, m_fqdnPatterns, m_urlPatterns);
+	return IsIntranetURL(url, m_hostNamePatterns, m_urlPatterns);
 }
 
 void CBrowserSelector::OpenBySecondBrowser(const wstring &url)

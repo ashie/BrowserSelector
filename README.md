@@ -39,9 +39,9 @@ Run built BrowserSelectorSetup/Release/BrowserSelectorSetup.msi or setup.exe.
 This software doesn't have any UI. System administrators have to edit its
 registry entries directly and shouldn't allow users to edit them.
 
-### FQDN or URL patterns
+### Host name or URL patterns
 
-You need to set FQDN or URL patterns of you intranet to open them by IE.
+You need to set host name or URL patterns of you intranet to open them by IE.
 The patterns are stored in the registry of Windows.
 
 Please see the following examples for more detail:
@@ -49,7 +49,7 @@ Please see the following examples for more detail:
   * [For 32bit OS](sample/BrowserSelectorExample.reg)
   * [For 64bit OS](sample/BrowserSelectorWOW64Example.reg)
 
-The following wildcard characters are supported for specifying FQDN or URL:
+The following wildcard characters are supported for specifying host name or URL:
 
   * `*`: matches any string
   * `?`: matches any single character

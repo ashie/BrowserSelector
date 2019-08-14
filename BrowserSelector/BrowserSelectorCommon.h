@@ -51,11 +51,11 @@ static void LoadMatchingPatterns(
 	reg.Close();
 }
 
-static void LoadFQDNPatterns(std::vector<std::wstring> &patterns)
+static void LoadHostNamePatterns(std::vector<std::wstring> &patterns)
 {
 	bool systemWide = true;
-	LoadMatchingPatterns(patterns, _T("IntranetFQDNPatterns"), systemWide);
-	LoadMatchingPatterns(patterns, _T("IntranetFQDNPatterns"));
+	LoadMatchingPatterns(patterns, _T("IntranetHostNamePatterns"), systemWide);
+	LoadMatchingPatterns(patterns, _T("IntranetHostNamePatterns"));
 }
 
 static void LoadURLPatterns(std::vector<std::wstring> &patterns)
@@ -67,7 +67,7 @@ static void LoadURLPatterns(std::vector<std::wstring> &patterns)
 
 static bool IsIntranetURL(
 	const std::wstring &url,
-	const std::vector<std::wstring> &fqdnPatterns,
+	const std::vector<std::wstring> &hostNamePatterns,
 	const std::vector<std::wstring> &urlPatterns)
 {
 	static CComAutoCriticalSection symMatchSection;
@@ -81,7 +81,7 @@ static bool IsIntranetURL(
 	LPCTSTR hostName = cURL.GetHostName();
 
 	if (hostName && *hostName) {
-		for (it = fqdnPatterns.begin(); it != fqdnPatterns.end(); it++) {
+		for (it = hostNamePatterns.begin(); it != hostNamePatterns.end(); it++) {
 			symMatchSection.Lock();
 			BOOL matched = SymMatchStringW(cURL.GetHostName(), it->c_str(), FALSE);
 			symMatchSection.Unlock();

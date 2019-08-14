@@ -79,8 +79,8 @@ int APIENTRY _tWinMain(
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(nCmdShow);
 
-	vector<wstring> fqdnPatterns, urlPatterns;
-	LoadFQDNPatterns(fqdnPatterns);
+	vector<wstring> hostNamePatterns, urlPatterns;
+	LoadHostNamePatterns(hostNamePatterns);
 	LoadURLPatterns(urlPatterns);
 
 	int nArgs = 0;
@@ -93,7 +93,7 @@ int APIENTRY _tWinMain(
 	wstring firefoxPath;
 	LoadFirefoxPath(firefoxPath);
 
-	if (!firefoxPath.empty() && !IsIntranetURL(url, fqdnPatterns, urlPatterns))
+	if (!firefoxPath.empty() && !IsIntranetURL(url, hostNamePatterns, urlPatterns))
 		OpenByFirefox(url);
 	else
 		OpenByIE(url);
