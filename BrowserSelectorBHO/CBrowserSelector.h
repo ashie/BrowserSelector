@@ -15,6 +15,7 @@ class ATL_NO_VTABLE CBrowserSelector :
 {
 public:
 	CBrowserSelector()
+		: m_isEmptyTab(true)
 	{
 	}
 
@@ -67,6 +68,7 @@ private:
 	std::wstring m_secondBrowserPath;
 	std::vector<std::wstring> m_fqdnPatterns;
 	std::vector<std::wstring> m_urlPatterns;
+	bool m_isEmptyTab;
 };
 
 OBJECT_ENTRY_AUTO(__uuidof(BrowserSelector), CBrowserSelector)

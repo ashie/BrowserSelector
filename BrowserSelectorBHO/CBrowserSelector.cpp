@@ -131,11 +131,18 @@ void CBrowserSelector::OnBeforeNavigate2(
 	if (!IsTopLevelFrame(pDisp))
 		return;
 
-	if (ShouldOpenByIE(URL))
+	if (ShouldOpenByIE(URL)) {
+		if (URL.size() > 0 && URL != L"about:blank" /* && URL != L"about:NewsFeed" */)
+			m_isEmptyTab = false;
 		return;
+	}
 
 	*cancel = VARIANT_TRUE;
 	OpenBySecondBrowser(URL);
+
+	if (m_isEmptyTab) {
+		m_webBrowser2->Quit();
+	}
 }
 
 bool CBrowserSelector::ShouldOpenByIE(const wstring &url)
