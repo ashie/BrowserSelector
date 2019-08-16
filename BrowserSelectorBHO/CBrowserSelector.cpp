@@ -5,6 +5,21 @@
 
 using namespace std;
 
+void CBrowserSelector::LoadBHOSettings(bool systemWide)
+{
+	CRegKey reg;
+	HKEY keyParent = systemWide ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER;
+	CString regKeyName(_T("SOFTWARE\\ClearCode\\BrowserSelector"));
+	LONG result = reg.Open(keyParent, regKeyName, KEY_READ);
+	if (result == ERROR_SUCCESS) {
+		DWORD value;
+		result = reg.QueryDWORDValue(L"CloseEmptyTab", value);
+		if (result == ERROR_SUCCESS)
+			m_shouldCloseEmptyTab = value;
+	}
+	reg.Close();
+}
+
 HRESULT CBrowserSelector::FinalConstruct()
 {
 	::LoadSecondBrowserNameAndPath(m_secondBrowserName, m_secondBrowserPath);
@@ -12,6 +27,10 @@ HRESULT CBrowserSelector::FinalConstruct()
 	m_urlPatterns.push_back(L"about:*");
 	LoadHostNamePatterns(m_hostNamePatterns);
 	LoadURLPatterns(m_urlPatterns);
+
+	bool systemWide = true;
+	LoadBHOSettings(systemWide);
+	LoadBHOSettings();
 
 	return S_OK;
 }
@@ -133,9 +152,9 @@ void CBrowserSelector::OnBeforeNavigate2(
 	}
 
 	*cancel = VARIANT_TRUE;
-	OpenBySecondBrowser(URL);
+	bool succeeded = OpenBySecondBrowser(URL);
 
-	if (m_isEmptyTab) {
+	if (succeeded && m_shouldCloseEmptyTab && m_isEmptyTab) {
 		m_webBrowser2->Quit();
 	}
 }
@@ -151,9 +170,9 @@ bool CBrowserSelector::ShouldOpenByIE(const wstring &url)
 	return IsIntranetURL(url, m_hostNamePatterns, m_urlPatterns);
 }
 
-void CBrowserSelector::OpenBySecondBrowser(const wstring &url)
+bool CBrowserSelector::OpenBySecondBrowser(const wstring &url)
 {
 	if (m_secondBrowserPath.empty() || url.empty())
-		return;
-	::OpenBySecondBrowser(m_secondBrowserName, url);
+		return false;
+	return ::OpenBySecondBrowser(m_secondBrowserName, url);
 }

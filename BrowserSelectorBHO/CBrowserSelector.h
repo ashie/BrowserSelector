@@ -16,6 +16,7 @@ class ATL_NO_VTABLE CBrowserSelector :
 public:
 	CBrowserSelector()
 		: m_secondBrowserName(L"firefox")
+		, m_shouldCloseEmptyTab(true)
 		, m_isEmptyTab(true)
 	{
 	}
@@ -47,6 +48,7 @@ public:
 		UINT *puArgErr);
 
 private:
+	void LoadBHOSettings(bool systemWide = false);
 	HRESULT Connect(void);
 	HRESULT Disconnect(void);
 	void OnBeforeNavigate2(
@@ -60,7 +62,7 @@ private:
 	bool IsEmptyURLPatterns(void);
 	bool IsTopLevelFrame(IDispatch* pDisp);
 	bool ShouldOpenByIE(const std::wstring &url);
-	void OpenBySecondBrowser(const std::wstring &url);
+	bool OpenBySecondBrowser(const std::wstring &url);
 
 private:
 	CComQIPtr<IWebBrowser2, &IID_IWebBrowser2> m_webBrowser2;
@@ -69,6 +71,7 @@ private:
 	std::wstring m_secondBrowserPath;
 	std::vector<std::wstring> m_hostNamePatterns;
 	std::vector<std::wstring> m_urlPatterns;
+	bool m_shouldCloseEmptyTab;
 	bool m_isEmptyTab;
 };
 

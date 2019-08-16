@@ -141,12 +141,13 @@ static bool IsIntranetURL(
 
 bool OpenBySecondBrowser(const std::wstring &browserName, const std::wstring &url)
 {
+	HINSTANCE hInstance = 0;
 	if (browserName == L"firefox") {
-		::ShellExecute(NULL, _T("open"), _T("firefox.exe"), url.c_str(), NULL, SW_SHOW);
-		return true;
+		hInstance = ::ShellExecute(NULL, _T("open"), _T("firefox.exe"), url.c_str(), NULL, SW_SHOW);
+		return (reinterpret_cast<int>(hInstance) > 32);
 	} else if (browserName == L"chrome") {
-		::ShellExecute(NULL, _T("open"), _T("chrome.exe"), url.c_str(), NULL, SW_SHOW);
-		return true;
+		hInstance = ::ShellExecute(NULL, _T("open"), _T("chrome.exe"), url.c_str(), NULL, SW_SHOW);
+		return (reinterpret_cast<int>(hInstance) > 32);
 	}
 	return false;
 }
