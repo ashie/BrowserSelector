@@ -15,7 +15,8 @@ class ATL_NO_VTABLE CBrowserSelector :
 {
 public:
 	CBrowserSelector()
-		: m_isEmptyTab(true)
+		: m_secondBrowserName(L"firefox")
+		, m_isEmptyTab(true)
 	{
 	}
 
@@ -46,7 +47,6 @@ public:
 		UINT *puArgErr);
 
 private:
-	void LoadFirefoxPath(void);
 	HRESULT Connect(void);
 	HRESULT Disconnect(void);
 	void OnBeforeNavigate2(
@@ -65,6 +65,7 @@ private:
 private:
 	CComQIPtr<IWebBrowser2, &IID_IWebBrowser2> m_webBrowser2;
 	DWORD m_cookie;
+	std::wstring m_secondBrowserName;
 	std::wstring m_secondBrowserPath;
 	std::vector<std::wstring> m_hostNamePatterns;
 	std::vector<std::wstring> m_urlPatterns;

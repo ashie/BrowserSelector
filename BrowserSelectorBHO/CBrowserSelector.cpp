@@ -5,14 +5,9 @@
 
 using namespace std;
 
-void CBrowserSelector::LoadFirefoxPath(void)
-{
-	::LoadFirefoxPath(m_secondBrowserPath);
-}
-
 HRESULT CBrowserSelector::FinalConstruct()
 {
-	LoadFirefoxPath();
+	::LoadSecondBrowserNameAndPath(m_secondBrowserName, m_secondBrowserPath);
 
 	m_urlPatterns.push_back(L"about:*");
 	LoadHostNamePatterns(m_hostNamePatterns);
@@ -160,6 +155,5 @@ void CBrowserSelector::OpenBySecondBrowser(const wstring &url)
 {
 	if (m_secondBrowserPath.empty() || url.empty())
 		return;
-
-	::ShellExecute(NULL, _T("open"), _T("firefox.exe"), url.c_str(), NULL, SW_SHOW);
+	::OpenBySecondBrowser(m_secondBrowserName, url);
 }

@@ -64,11 +64,6 @@ static void OpenByIE(const wstring &url)
 		::ShellExecute(NULL, _T("open"), _T("iexplore.exe"), url.c_str(), NULL, SW_SHOW);
 }
 
-static void OpenByFirefox(const wstring &url)
-{
-	::ShellExecute(NULL, _T("open"), _T("firefox.exe"), url.c_str(), NULL, SW_SHOW);
-}
-
 int APIENTRY _tWinMain(
 	HINSTANCE hInstance,
 	HINSTANCE hPrevInstance,
@@ -90,11 +85,11 @@ int APIENTRY _tWinMain(
 	if (nArgs >= 1)
 		url = args[0];
 
-	wstring firefoxPath;
-	LoadFirefoxPath(firefoxPath);
+	wstring browserName(L"firefox"), browserPath;
+	::LoadSecondBrowserNameAndPath(browserName, browserPath);
 
-	if (!firefoxPath.empty() && !IsIntranetURL(url, hostNamePatterns, urlPatterns))
-		OpenByFirefox(url);
+	if (!browserPath.empty() && !IsIntranetURL(url, hostNamePatterns, urlPatterns))
+		OpenBySecondBrowser(browserName, url);
 	else
 		OpenByIE(url);
 

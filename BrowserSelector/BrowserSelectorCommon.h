@@ -2,6 +2,23 @@
 #include <vector>
 #include <atlbase.h>
 #include <atlutil.h>
+#include <ShellAPI.h>
+
+static void LoadSecondBrowserName(std::wstring &browserName, bool systemWide = false)
+{
+	CRegKey reg;
+	HKEY keyParent = systemWide ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER;
+	CString regKeyName(_T("SOFTWARE\\ClearCode\\BrowserSelector"));
+	LONG result = reg.Open(keyParent, regKeyName, KEY_READ);
+	if (result == ERROR_SUCCESS) {
+		TCHAR value[256];
+		ULONG valueSize = sizeof(value);
+		result = reg.QueryStringValue(L"DefaultBrowser", value, &valueSize);
+		if (result == ERROR_SUCCESS)
+			browserName = value;
+	}
+	reg.Close();
+}
 
 static void LoadAppPath(std::wstring &wpath, const LPCTSTR exeName)
 {
@@ -25,6 +42,27 @@ static void LoadAppPath(std::wstring &wpath, const LPCTSTR exeName)
 static void LoadFirefoxPath(std::wstring &path)
 {
 	LoadAppPath(path, _T("firefox.exe"));
+}
+
+static void LoadGoogleChromePath(std::wstring &path)
+{
+	LoadAppPath(path, _T("chrome.exe"));
+}
+
+static void LoadSecondBrowserPath(const std::wstring &browserName, std::wstring &path)
+{
+	if (browserName == L"firefox")
+		LoadFirefoxPath(path);
+	else if (browserName == L"chrome")
+		LoadGoogleChromePath(path);
+}
+
+static void LoadSecondBrowserNameAndPath(std::wstring &name, std::wstring &path)
+{
+	bool systemWide = true;
+	::LoadSecondBrowserName(name, systemWide);
+	::LoadSecondBrowserName(name);
+	::LoadSecondBrowserPath(name, path);
 }
 
 static void LoadMatchingPatterns(
@@ -98,5 +136,17 @@ static bool IsIntranetURL(
 			return true;
 	}
 
+	return false;
+}
+
+bool OpenBySecondBrowser(const std::wstring &browserName, const std::wstring &url)
+{
+	if (browserName == L"firefox") {
+		::ShellExecute(NULL, _T("open"), _T("firefox.exe"), url.c_str(), NULL, SW_SHOW);
+		return true;
+	} else if (browserName == L"chrome") {
+		::ShellExecute(NULL, _T("open"), _T("chrome.exe"), url.c_str(), NULL, SW_SHOW);
+		return true;
+	}
 	return false;
 }
