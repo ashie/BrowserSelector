@@ -91,13 +91,11 @@ int APIENTRY _tWinMain(
 	wstring browserName =
 		::GetBrowserNameToOpenURL(url, defaultBrowserName, hostNamePatterns, urlPatterns);
 
-	if (!browserName.empty() && browserName != L"ie" && isInSystemPath(browserName)) {
-		bool succeeded = OpenByModernBrowser(browserName, url);
-		if (!succeeded)
-			OpenByIE(url);
-	} else {
+	bool openByIE = true;
+	if (browserName != L"ie")
+		openByIE = !OpenByModernBrowser(browserName, url);
+	if (openByIE)
 		OpenByIE(url);
-	}
 
 	LocalFree(args);
 

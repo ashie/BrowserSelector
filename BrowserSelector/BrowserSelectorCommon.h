@@ -7,7 +7,10 @@
 typedef std::pair<std::wstring, std::wstring> MatchingPattern;
 typedef std::vector<MatchingPattern> MatchingPatterns;
 
-static void LoadStringRegValue(std::wstring &value, const std::wstring &name, bool systemWide = false)
+static void LoadStringRegValue(
+	std::wstring &value,
+	const std::wstring &name,
+	bool systemWide = false)
 {
 	CRegKey reg;
 	HKEY keyParent = systemWide ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER;
@@ -66,6 +69,25 @@ static bool isInSystemPath(const std::wstring &browserName)
 	return !path.empty();
 }
 
+static bool isValidBrowserName(const std::wstring &browserName)
+{
+	if (browserName.empty())
+		return false;
+	return isInSystemPath(browserName);
+}
+
+static std::wstring ensureValidBrowserName(
+	const std::wstring &defaultName,
+	const std::wstring &name = std::wstring(L""))
+{
+	if (isValidBrowserName(name))
+		return name;
+	else if (isValidBrowserName(defaultName))
+		return defaultName;
+	else
+		return std::wstring(L"ie");
+}
+
 static void LoadMatchingPatterns(
 	MatchingPatterns &patterns,
 	const LPCTSTR type,
@@ -115,8 +137,9 @@ static std::wstring GetBrowserNameToOpenURL(
 {
 	static CComAutoCriticalSection symMatchSection;
 
-	if (url.empty())
-		return false;
+	if (url.empty()) {
+		return ensureValidBrowserName(defaultBrowserName);
+	}
 
 	MatchingPatterns::const_iterator it;
 	CUrl cURL;
@@ -130,7 +153,7 @@ static std::wstring GetBrowserNameToOpenURL(
 			BOOL matched = SymMatchStringW(cURL.GetHostName(), hostNamePattern.c_str(), FALSE);
 			symMatchSection.Unlock();
 			if (matched)
-				return it->second;
+				return ensureValidBrowserName(defaultBrowserName, it->second);
 		}
 	}
 
@@ -140,10 +163,10 @@ static std::wstring GetBrowserNameToOpenURL(
 		BOOL matched = SymMatchStringW(url.c_str(), urlPattern.c_str(), FALSE);
 		symMatchSection.Unlock();
 		if (matched)
-			return it->second;
+			return ensureValidBrowserName(defaultBrowserName, it->second);
 	}
 
-	return defaultBrowserName;
+	return ensureValidBrowserName(defaultBrowserName);
 }
 
 bool OpenByModernBrowser(const std::wstring &browserName, const std::wstring &url)

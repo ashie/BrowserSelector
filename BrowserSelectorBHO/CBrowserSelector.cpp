@@ -170,10 +170,6 @@ wstring CBrowserSelector::GetBrowserNameToOpenURL(const wstring &url)
 
 	if (IsEmptyURLPatterns())
 		return wstring(L"ie");
-	wstring browserName =
-		::GetBrowserNameToOpenURL(url, m_defaultBrowserName, m_hostNamePatterns, m_urlPatterns);
-
-	if (!browserName.empty() && browserName != L"ie" && isInSystemPath(browserName))
-		return browserName;
-	return wstring(L"ie");
+	return ::GetBrowserNameToOpenURL(
+		url, m_defaultBrowserName, m_hostNamePatterns, m_urlPatterns);
 }
