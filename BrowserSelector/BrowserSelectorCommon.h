@@ -96,15 +96,15 @@ static void LoadMatchingPatterns(
 static void LoadHostNamePatterns(MatchingPatterns &patterns)
 {
 	bool systemWide = true;
-	LoadMatchingPatterns(patterns, _T("HostNamePatterns"), systemWide);
 	LoadMatchingPatterns(patterns, _T("HostNamePatterns"));
+	LoadMatchingPatterns(patterns, _T("HostNamePatterns"), systemWide);
 }
 
 static void LoadURLPatterns(MatchingPatterns &patterns)
 {
 	bool systemWide = true;
-	LoadMatchingPatterns(patterns, _T("URLPatterns"), systemWide);
 	LoadMatchingPatterns(patterns, _T("URLPatterns"));
+	LoadMatchingPatterns(patterns, _T("URLPatterns"), systemWide);
 }
 
 static std::wstring GetBrowserNameToOpenURL(
