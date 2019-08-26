@@ -137,9 +137,8 @@ static std::wstring GetBrowserNameToOpenURL(
 {
 	static CComAutoCriticalSection symMatchSection;
 
-	if (url.empty()) {
+	if (url.empty())
 		return ensureValidBrowserName(defaultBrowserName);
-	}
 
 	MatchingPatterns::const_iterator it;
 	CUrl cURL;
