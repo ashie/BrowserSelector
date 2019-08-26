@@ -67,7 +67,6 @@ private:
 	CComQIPtr<IWebBrowser2, &IID_IWebBrowser2> m_webBrowser2;
 	DWORD m_cookie;
 	std::wstring m_defaultBrowserName;
-	std::wstring m_defaultBrowserPath;
 	MatchingPatterns m_hostNamePatterns;
 	MatchingPatterns m_urlPatterns;
 	bool m_shouldCloseEmptyTab;

@@ -7,18 +7,18 @@
 typedef std::pair<std::wstring, std::wstring> MatchingPattern;
 typedef std::vector<MatchingPattern> MatchingPatterns;
 
-static void LoadDefaultBrowserName(std::wstring &browserName, bool systemWide = false)
+static void LoadStringRegValue(std::wstring &value, const std::wstring &name, bool systemWide = false)
 {
 	CRegKey reg;
 	HKEY keyParent = systemWide ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER;
 	CString regKeyName(_T("SOFTWARE\\ClearCode\\BrowserSelector"));
 	LONG result = reg.Open(keyParent, regKeyName, KEY_READ);
 	if (result == ERROR_SUCCESS) {
-		TCHAR value[256];
-		ULONG valueSize = sizeof(value);
-		result = reg.QueryStringValue(L"DefaultBrowser", value, &valueSize);
+		TCHAR regValue[256];
+		ULONG regValueSize = sizeof(value);
+		result = reg.QueryStringValue(name.c_str(), regValue, &regValueSize);
 		if (result == ERROR_SUCCESS)
-			browserName = value;
+			value = regValue;
 	}
 	reg.Close();
 }
@@ -42,37 +42,28 @@ static void LoadAppPath(std::wstring &wpath, const LPCTSTR exeName)
 	reg.Close();
 }
 
-static void LoadIEPath(std::wstring &path)
-{
-	LoadAppPath(path, _T("iexplore.exe"));
-}
-
-static void LoadFirefoxPath(std::wstring &path)
-{
-	LoadAppPath(path, _T("firefox.exe"));
-}
-
-static void LoadGoogleChromePath(std::wstring &path)
-{
-	LoadAppPath(path, _T("chrome.exe"));
-}
-
 static void LoadBrowserPath(std::wstring &path, const std::wstring &browserName)
 {
 	if (browserName == L"ie")
-		LoadIEPath(path);
+		LoadAppPath(path, _T("iexplore.exe"));
 	if (browserName == L"firefox")
-		LoadFirefoxPath(path);
+		LoadAppPath(path, _T("firefox.exe"));
 	else if (browserName == L"chrome")
-		LoadGoogleChromePath(path);
+		LoadAppPath(path, _T("chrome.exe"));
 }
 
-static void LoadDefaultBrowserNameAndPath(std::wstring &name, std::wstring &path)
+static void LoadDefaultBrowserName(std::wstring &name)
 {
 	bool systemWide = true;
-	::LoadDefaultBrowserName(name, systemWide);
-	::LoadDefaultBrowserName(name);
-	::LoadBrowserPath(path, name);
+	::LoadStringRegValue(name, L"DefaultBrowser", systemWide);
+	::LoadStringRegValue(name, L"DefaultBrowser");
+}
+
+static bool isInSystemPath(const std::wstring &browserName)
+{
+	std::wstring path;
+	LoadBrowserPath(path, browserName);
+	return !path.empty();
 }
 
 static void LoadMatchingPatterns(

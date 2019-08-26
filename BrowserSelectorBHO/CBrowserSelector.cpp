@@ -21,7 +21,7 @@ void CBrowserSelector::LoadBHOSettings(bool systemWide)
 
 HRESULT CBrowserSelector::FinalConstruct()
 {
-	::LoadDefaultBrowserNameAndPath(m_defaultBrowserName, m_defaultBrowserPath);
+	::LoadDefaultBrowserName(m_defaultBrowserName);
 
 	m_urlPatterns.push_back(MatchingPattern(L"about:*", L"ie"));
 	LoadHostNamePatterns(m_hostNamePatterns);
@@ -172,10 +172,8 @@ wstring CBrowserSelector::GetBrowserNameToOpenURL(const wstring &url)
 		return wstring(L"ie");
 	wstring browserName =
 		::GetBrowserNameToOpenURL(url, m_defaultBrowserName, m_hostNamePatterns, m_urlPatterns);
-	wstring browserPath;
-	LoadBrowserPath(browserPath, browserName.c_str());
 
-	if (!browserName.empty() && !browserPath.empty() && browserName != L"ie")
+	if (!browserName.empty() && browserName != L"ie" && isInSystemPath(browserName))
 		return browserName;
 	return wstring(L"ie");
 }

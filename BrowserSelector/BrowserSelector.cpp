@@ -85,15 +85,13 @@ int APIENTRY _tWinMain(
 	if (nArgs >= 1)
 		url = args[0];
 
-	wstring defaultBrowserName(L"ie"), defaultBrowserPath;
-	::LoadDefaultBrowserNameAndPath(defaultBrowserName, defaultBrowserPath);
+	wstring defaultBrowserName(L"ie");
+	::LoadDefaultBrowserName(defaultBrowserName);
 
 	wstring browserName =
 		::GetBrowserNameToOpenURL(url, defaultBrowserName, hostNamePatterns, urlPatterns);
-	wstring browserPath;
-	LoadBrowserPath(browserPath, browserName);
 
-	if (!browserName.empty() && !browserPath.empty() && browserName != L"ie") {
+	if (!browserName.empty() && browserName != L"ie" && isInSystemPath(browserName)) {
 		bool succeeded = OpenByModernBrowser(browserName, url);
 		if (!succeeded)
 			OpenByIE(url);
