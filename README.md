@@ -56,15 +56,18 @@ key is:
   * for 64bit OS: `SOFTWARE\WOW6432Node\ClearCode\BrowserSelector`
   * for 32bit OS: `SOFTWARE\ClearCode\BrowserSelector`
 
+If a same named value exists in both `HKLM` adn `HKCU`, they will be merged
+(overriten by `HKCU`'s one).
+
 Please see the following *.reg files by way of example:
 
   * [For 64bit OS](sample/BrowserSelectorWOW64Example.reg)
   * [For 32bit OS](sample/BrowserSelectorExample.reg)
 
-### `HostNamePatterns` or `URL patterns`
+### `HostNamePatterns` or `URLPatterns`
 
 You need to set host name or URL patterns to open them by specific browsers.
-They are stored under the registry key "HostNamePatterns" and "URLPatterns".
+They are stored under the registry key `HostNamePatterns` and `URLPatterns`.
 The value name is an URL pattern and the value is a browser name.
 Here is the example:
 
@@ -78,7 +81,7 @@ The following wildcard characters are supported for specifying host name or URL:
   * `*`: matches any string
   * `?`: matches any single character
 
-Following values are supported as browser names:
+The following values are supported as browser names:
 
   * `ie`
   * `firefox`
