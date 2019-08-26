@@ -74,7 +74,7 @@ int APIENTRY _tWinMain(
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(nCmdShow);
 
-	vector<wstring> hostNamePatterns, urlPatterns;
+	MatchingPatterns hostNamePatterns, urlPatterns;
 	LoadHostNamePatterns(hostNamePatterns);
 	LoadURLPatterns(urlPatterns);
 
@@ -85,13 +85,21 @@ int APIENTRY _tWinMain(
 	if (nArgs >= 1)
 		url = args[0];
 
-	wstring browserName(L"firefox"), browserPath;
-	::LoadSecondBrowserNameAndPath(browserName, browserPath);
+	wstring defaultBrowserName(L"ie"), defaultBrowserPath;
+	::LoadDefaultBrowserNameAndPath(defaultBrowserName, defaultBrowserPath);
 
-	if (!browserPath.empty() && !IsIntranetURL(url, hostNamePatterns, urlPatterns))
-		OpenBySecondBrowser(browserName, url);
-	else
+	wstring browserName =
+		::GetBrowserNameToOpenURL(url, defaultBrowserName, hostNamePatterns, urlPatterns);
+	wstring browserPath;
+	LoadBrowserPath(browserPath, browserName);
+
+	if (!browserName.empty() && !browserPath.empty() && browserName != L"ie") {
+		bool succeeded = OpenByModernBrowser(browserName, url);
+		if (!succeeded)
+			OpenByIE(url);
+	} else {
 		OpenByIE(url);
+	}
 
 	LocalFree(args);
 

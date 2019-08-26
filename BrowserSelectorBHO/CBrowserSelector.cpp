@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "CBrowserSelector.h"
-#include "../BrowserSelector/BrowserSelectorCommon.h"
 #include <exdispid.h>
 
 using namespace std;
@@ -15,16 +14,16 @@ void CBrowserSelector::LoadBHOSettings(bool systemWide)
 		DWORD value;
 		result = reg.QueryDWORDValue(L"CloseEmptyTab", value);
 		if (result == ERROR_SUCCESS)
-			m_shouldCloseEmptyTab = value;
+			m_shouldCloseEmptyTab = value ? true : false;
 	}
 	reg.Close();
 }
 
 HRESULT CBrowserSelector::FinalConstruct()
 {
-	::LoadSecondBrowserNameAndPath(m_secondBrowserName, m_secondBrowserPath);
+	::LoadDefaultBrowserNameAndPath(m_defaultBrowserName, m_defaultBrowserPath);
 
-	m_urlPatterns.push_back(L"about:*");
+	m_urlPatterns.push_back(MatchingPattern(L"about:*", L"ie"));
 	LoadHostNamePatterns(m_hostNamePatterns);
 	LoadURLPatterns(m_urlPatterns);
 
@@ -145,34 +144,38 @@ void CBrowserSelector::OnBeforeNavigate2(
 	if (!IsTopLevelFrame(pDisp))
 		return;
 
-	if (ShouldOpenByIE(URL)) {
+	wstring browserName = GetBrowserNameToOpenURL(URL);
+
+	if (browserName == L"ie") {
 		if (URL.size() > 0 && URL != L"about:blank" /* && URL != L"about:NewsFeed" */)
 			m_isEmptyTab = false;
 		return;
 	}
 
 	*cancel = VARIANT_TRUE;
-	bool succeeded = OpenBySecondBrowser(URL);
+	bool succeeded = OpenByModernBrowser(browserName, URL);
 
-	if (succeeded && m_shouldCloseEmptyTab && m_isEmptyTab) {
-		m_webBrowser2->Quit();
+	if (succeeded) {
+		if (m_shouldCloseEmptyTab && m_isEmptyTab)
+			m_webBrowser2->Quit();
+	} else {
+		// Fall back to IE
+		*cancel = VARIANT_FALSE;
 	}
 }
 
-bool CBrowserSelector::ShouldOpenByIE(const wstring &url)
+wstring CBrowserSelector::GetBrowserNameToOpenURL(const wstring &url)
 {
 	static CComAutoCriticalSection symMatchSection;
 
-	if (m_secondBrowserPath.empty())
-		return true;
 	if (IsEmptyURLPatterns())
-		return true;
-	return IsIntranetURL(url, m_hostNamePatterns, m_urlPatterns);
-}
+		return wstring(L"ie");
+	wstring browserName =
+		::GetBrowserNameToOpenURL(url, m_defaultBrowserName, m_hostNamePatterns, m_urlPatterns);
+	wstring browserPath;
+	LoadBrowserPath(browserPath, browserName.c_str());
 
-bool CBrowserSelector::OpenBySecondBrowser(const wstring &url)
-{
-	if (m_secondBrowserPath.empty() || url.empty())
-		return false;
-	return ::OpenBySecondBrowser(m_secondBrowserName, url);
+	if (!browserName.empty() && !browserPath.empty() && browserName != L"ie")
+		return browserName;
+	return wstring(L"ie");
 }

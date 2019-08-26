@@ -4,7 +4,10 @@
 #include <atlutil.h>
 #include <ShellAPI.h>
 
-static void LoadSecondBrowserName(std::wstring &browserName, bool systemWide = false)
+typedef std::pair<std::wstring, std::wstring> MatchingPattern;
+typedef std::vector<MatchingPattern> MatchingPatterns;
+
+static void LoadDefaultBrowserName(std::wstring &browserName, bool systemWide = false)
 {
 	CRegKey reg;
 	HKEY keyParent = systemWide ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER;
@@ -39,6 +42,11 @@ static void LoadAppPath(std::wstring &wpath, const LPCTSTR exeName)
 	reg.Close();
 }
 
+static void LoadIEPath(std::wstring &path)
+{
+	LoadAppPath(path, _T("iexplore.exe"));
+}
+
 static void LoadFirefoxPath(std::wstring &path)
 {
 	LoadAppPath(path, _T("firefox.exe"));
@@ -49,24 +57,26 @@ static void LoadGoogleChromePath(std::wstring &path)
 	LoadAppPath(path, _T("chrome.exe"));
 }
 
-static void LoadSecondBrowserPath(const std::wstring &browserName, std::wstring &path)
+static void LoadBrowserPath(std::wstring &path, const std::wstring &browserName)
 {
+	if (browserName == L"ie")
+		LoadIEPath(path);
 	if (browserName == L"firefox")
 		LoadFirefoxPath(path);
 	else if (browserName == L"chrome")
 		LoadGoogleChromePath(path);
 }
 
-static void LoadSecondBrowserNameAndPath(std::wstring &name, std::wstring &path)
+static void LoadDefaultBrowserNameAndPath(std::wstring &name, std::wstring &path)
 {
 	bool systemWide = true;
-	::LoadSecondBrowserName(name, systemWide);
-	::LoadSecondBrowserName(name);
-	::LoadSecondBrowserPath(name, path);
+	::LoadDefaultBrowserName(name, systemWide);
+	::LoadDefaultBrowserName(name);
+	::LoadBrowserPath(path, name);
 }
 
 static void LoadMatchingPatterns(
-	std::vector<std::wstring> &patterns,
+	MatchingPatterns &patterns,
 	const LPCTSTR type,
 	bool systemWide = false)
 {
@@ -78,42 +88,46 @@ static void LoadMatchingPatterns(
 	LONG result = reg.Open(keyParent, regKeyName, KEY_READ);
 
 	for (DWORD idx = 0; result == ERROR_SUCCESS; idx++) {
-		TCHAR value[256];
-		DWORD valueLen = 256;
-		result = ::RegEnumValue(reg.m_hKey, idx,value, &valueLen, NULL, NULL, NULL, NULL);
+		TCHAR valueName[256];
+		DWORD valueNameLen = 256;
+		result = ::RegEnumValue(reg.m_hKey, idx, valueName, &valueNameLen, NULL, NULL, NULL, NULL);
 		if (result != ERROR_SUCCESS)
 			continue;
-		patterns.push_back(value);
+		TCHAR value[256];
+		DWORD valueLen = 256;
+		result = reg.QueryStringValue(valueName, value, &valueLen);
+		patterns.push_back(MatchingPattern(valueName, value));
 	}
 
 	reg.Close();
 }
 
-static void LoadHostNamePatterns(std::vector<std::wstring> &patterns)
+static void LoadHostNamePatterns(MatchingPatterns &patterns)
 {
 	bool systemWide = true;
-	LoadMatchingPatterns(patterns, _T("IntranetHostNamePatterns"), systemWide);
-	LoadMatchingPatterns(patterns, _T("IntranetHostNamePatterns"));
+	LoadMatchingPatterns(patterns, _T("HostNamePatterns"), systemWide);
+	LoadMatchingPatterns(patterns, _T("HostNamePatterns"));
 }
 
-static void LoadURLPatterns(std::vector<std::wstring> &patterns)
+static void LoadURLPatterns(MatchingPatterns &patterns)
 {
 	bool systemWide = true;
-	LoadMatchingPatterns(patterns, _T("IntranetURLPatterns"), systemWide);
-	LoadMatchingPatterns(patterns, _T("IntranetURLPatterns"));
+	LoadMatchingPatterns(patterns, _T("URLPatterns"), systemWide);
+	LoadMatchingPatterns(patterns, _T("URLPatterns"));
 }
 
-static bool IsIntranetURL(
+static std::wstring GetBrowserNameToOpenURL(
 	const std::wstring &url,
-	const std::vector<std::wstring> &hostNamePatterns,
-	const std::vector<std::wstring> &urlPatterns)
+	const std::wstring &defaultBrowserName,
+	const MatchingPatterns &hostNamePatterns,
+	const MatchingPatterns &urlPatterns)
 {
 	static CComAutoCriticalSection symMatchSection;
 
 	if (url.empty())
 		return false;
 
-	std::vector<std::wstring>::const_iterator it;
+	MatchingPatterns::const_iterator it;
 	CUrl cURL;
 	cURL.CrackUrl(url.c_str());
 	LPCTSTR hostName = cURL.GetHostName();
@@ -121,25 +135,27 @@ static bool IsIntranetURL(
 	if (hostName && *hostName) {
 		for (it = hostNamePatterns.begin(); it != hostNamePatterns.end(); it++) {
 			symMatchSection.Lock();
-			BOOL matched = SymMatchStringW(cURL.GetHostName(), it->c_str(), FALSE);
+			const std::wstring &hostNamePattern = it->first;
+			BOOL matched = SymMatchStringW(cURL.GetHostName(), hostNamePattern.c_str(), FALSE);
 			symMatchSection.Unlock();
 			if (matched)
-				return true;
+				return it->second;
 		}
 	}
 
 	for (it = urlPatterns.begin(); it != urlPatterns.end(); it++) {
 		symMatchSection.Lock();
-		BOOL matched = SymMatchStringW(url.c_str(), it->c_str(), FALSE);
+		const std::wstring &urlPattern = it->first;
+		BOOL matched = SymMatchStringW(url.c_str(), urlPattern.c_str(), FALSE);
 		symMatchSection.Unlock();
 		if (matched)
-			return true;
+			return it->second;
 	}
 
-	return false;
+	return defaultBrowserName;
 }
 
-bool OpenBySecondBrowser(const std::wstring &browserName, const std::wstring &url)
+bool OpenByModernBrowser(const std::wstring &browserName, const std::wstring &url)
 {
 	HINSTANCE hInstance = 0;
 	if (browserName == L"firefox") {

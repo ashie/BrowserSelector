@@ -2,10 +2,10 @@
 #include "resource.h"
 
 #include "BrowserSelectorBHO_i.h"
-#include <string>
-#include <vector>
 
 using namespace ATL;
+
+#include "../BrowserSelector/BrowserSelectorCommon.h"
 
 class ATL_NO_VTABLE CBrowserSelector :
 	public CComObjectRootEx<CComSingleThreadModel>,
@@ -15,7 +15,7 @@ class ATL_NO_VTABLE CBrowserSelector :
 {
 public:
 	CBrowserSelector()
-		: m_secondBrowserName(L"firefox")
+		: m_defaultBrowserName(L"ie")
 		, m_shouldCloseEmptyTab(true)
 		, m_isEmptyTab(true)
 	{
@@ -61,16 +61,15 @@ private:
 		VARIANT_BOOL *cancel);
 	bool IsEmptyURLPatterns(void);
 	bool IsTopLevelFrame(IDispatch* pDisp);
-	bool ShouldOpenByIE(const std::wstring &url);
-	bool OpenBySecondBrowser(const std::wstring &url);
+	std::wstring GetBrowserNameToOpenURL(const std::wstring &url);
 
 private:
 	CComQIPtr<IWebBrowser2, &IID_IWebBrowser2> m_webBrowser2;
 	DWORD m_cookie;
-	std::wstring m_secondBrowserName;
-	std::wstring m_secondBrowserPath;
-	std::vector<std::wstring> m_hostNamePatterns;
-	std::vector<std::wstring> m_urlPatterns;
+	std::wstring m_defaultBrowserName;
+	std::wstring m_defaultBrowserPath;
+	MatchingPatterns m_hostNamePatterns;
+	MatchingPatterns m_urlPatterns;
 	bool m_shouldCloseEmptyTab;
 	bool m_isEmptyTab;
 };
