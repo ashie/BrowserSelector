@@ -18,7 +18,7 @@ static void LoadStringRegValue(
 	LONG result = reg.Open(keyParent, regKeyName, KEY_READ);
 	if (result == ERROR_SUCCESS) {
 		TCHAR regValue[256];
-		ULONG regValueSize = sizeof(value);
+		ULONG regValueSize = sizeof(regValue) / sizeof(TCHAR);
 		result = reg.QueryStringValue(name.c_str(), regValue, &regValueSize);
 		if (result == ERROR_SUCCESS)
 			value = regValue;
@@ -101,13 +101,13 @@ static void LoadMatchingPatterns(
 	LONG result = reg.Open(keyParent, regKeyName, KEY_READ);
 
 	for (DWORD idx = 0; result == ERROR_SUCCESS; idx++) {
-		TCHAR valueName[256];
-		DWORD valueNameLen = 256;
+		TCHAR valueName[1024];
+		DWORD valueNameLen = sizeof(valueName) / sizeof(TCHAR);
 		result = ::RegEnumValue(reg.m_hKey, idx, valueName, &valueNameLen, NULL, NULL, NULL, NULL);
 		if (result != ERROR_SUCCESS)
 			continue;
-		TCHAR value[256];
-		DWORD valueLen = 256;
+		TCHAR value[1024];
+		DWORD valueLen = sizeof(value) / sizeof(TCHAR);
 		result = reg.QueryStringValue(valueName, value, &valueLen);
 		patterns.push_back(MatchingPattern(valueName, value));
 	}
