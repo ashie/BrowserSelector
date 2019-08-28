@@ -21,15 +21,8 @@ void CBrowserSelector::LoadBHOSettings(bool systemWide)
 
 HRESULT CBrowserSelector::FinalConstruct()
 {
-	::LoadDefaultBrowserName(m_defaultBrowserName);
-
-	m_urlPatterns.push_back(MatchingPattern(L"about:*", L"ie"));
-	LoadHostNamePatterns(m_hostNamePatterns);
-	LoadURLPatterns(m_urlPatterns);
-
-	bool systemWide = true;
-	LoadBHOSettings(systemWide);
-	LoadBHOSettings();
+	m_config.m_urlPatterns.push_back(MatchingPattern(L"about:*", L"ie"));
+	m_config.LoadAll();
 
 	return S_OK;
 }
@@ -111,8 +104,8 @@ STDMETHODIMP CBrowserSelector::Invoke(
 bool CBrowserSelector::IsEmptyURLPatterns(void)
 {
 	return
-		m_hostNamePatterns.empty() &&
-		m_urlPatterns.size() == 1;
+		m_config.m_hostNamePatterns.empty() &&
+		m_config.m_urlPatterns.size() == 1;
 }
 
 bool CBrowserSelector::IsTopLevelFrame(IDispatch* pDisp)
@@ -170,6 +163,5 @@ wstring CBrowserSelector::GetBrowserNameToOpenURL(const wstring &url)
 
 	if (IsEmptyURLPatterns())
 		return wstring(L"ie");
-	return ::GetBrowserNameToOpenURL(
-		url, m_defaultBrowserName, m_hostNamePatterns, m_urlPatterns);
+	return ::GetBrowserNameToOpenURL(url, m_config);
 }

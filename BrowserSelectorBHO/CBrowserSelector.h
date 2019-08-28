@@ -15,9 +15,7 @@ class ATL_NO_VTABLE CBrowserSelector :
 {
 public:
 	CBrowserSelector()
-		: m_defaultBrowserName(L"ie")
-		, m_shouldCloseEmptyTab(true)
-		, m_isEmptyTab(true)
+		: m_isEmptyTab(true)
 	{
 	}
 
@@ -66,9 +64,7 @@ private:
 private:
 	CComQIPtr<IWebBrowser2, &IID_IWebBrowser2> m_webBrowser2;
 	DWORD m_cookie;
-	std::wstring m_defaultBrowserName;
-	MatchingPatterns m_hostNamePatterns;
-	MatchingPatterns m_urlPatterns;
+	Config m_config;
 	bool m_shouldCloseEmptyTab;
 	bool m_isEmptyTab;
 };

@@ -74,9 +74,8 @@ int APIENTRY _tWinMain(
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(nCmdShow);
 
-	MatchingPatterns hostNamePatterns, urlPatterns;
-	LoadHostNamePatterns(hostNamePatterns);
-	LoadURLPatterns(urlPatterns);
+	Config config;
+	config.LoadAll();
 
 	int nArgs = 0;
 	LPWSTR *args = ::CommandLineToArgvW(lpCmdLine, &nArgs);
@@ -85,11 +84,7 @@ int APIENTRY _tWinMain(
 	if (nArgs >= 1)
 		url = args[0];
 
-	wstring defaultBrowserName(L"ie");
-	::LoadDefaultBrowserName(defaultBrowserName);
-
-	wstring browserName =
-		::GetBrowserNameToOpenURL(url, defaultBrowserName, hostNamePatterns, urlPatterns);
+	wstring browserName = ::GetBrowserNameToOpenURL(url, config);
 
 	bool openByIE = true;
 	if (browserName != L"ie")
