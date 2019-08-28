@@ -35,7 +35,7 @@ static void LoadDefaultBrowserName(std::wstring &name)
 
 static void LoadMatchingPatterns(
 	MatchingPatterns &patterns,
-	const LPCTSTR type,
+	LPCTSTR type,
 	bool systemWide = false)
 {
 	CRegKey reg;
@@ -74,7 +74,7 @@ static void LoadURLPatterns(MatchingPatterns &patterns)
 	LoadMatchingPatterns(patterns, _T("URLPatterns"), systemWide);
 }
 
-static void LoadAppPath(std::wstring &wpath, const LPCTSTR exeName)
+static void LoadAppPath(std::wstring &wpath, LPCTSTR exeName)
 {
 	CRegKey reg;
 	CString regKeyName(_T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths\\"));
