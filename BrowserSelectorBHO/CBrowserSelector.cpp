@@ -21,8 +21,9 @@ void CBrowserSelector::LoadBHOSettings(bool systemWide)
 
 HRESULT CBrowserSelector::FinalConstruct()
 {
-	m_config.m_urlPatterns.push_back(MatchingPattern(L"about:*", L"ie"));
 	m_config.LoadAll();
+	MatchingPatterns &patterns(m_config.m_urlPatterns);
+	patterns.insert(patterns.begin(), MatchingPattern(L"about:*", L"ie"));
 
 	return S_OK;
 }
