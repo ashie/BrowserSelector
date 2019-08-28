@@ -147,13 +147,22 @@ public:
 class INIFileConfig : public Config
 {
 public:
-	INIFileConfig(const std::wstring &path)
+	INIFileConfig(const std::wstring &path, INIFileConfig *parent = nullptr)
 		: m_path(path)
+		, m_parent(parent)
 	{
 		GetStringValue(m_defaultBrowser, L"Common", L"DefaultBrowser");
+		GetStringValue(m_includePath, L"Common", L"Include");
 		GetIntValue(m_closeEmptyTab, L"Common", L"CloseEmptyTab");
 		LoadURLPatterns(m_urlPatterns);
 		LoadHostNamePatterns(m_hostNamePatterns);
+
+		if (!m_includePath.empty() && !parent) {
+			INIFileConfig child(m_includePath, this);
+			std::vector<Config*> configs;
+			configs.push_back(&child);
+			merge(configs);
+		}
 	}
 	virtual ~INIFileConfig()
 	{
@@ -257,6 +266,8 @@ public:
 
 public:
 	std::wstring m_path;
+	std::wstring m_includePath;
+	INIFileConfig *m_parent;
 };
 
 void Config::LoadAll()
