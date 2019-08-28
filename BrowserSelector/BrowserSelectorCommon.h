@@ -26,66 +26,11 @@ static void LoadStringRegValue(
 	reg.Close();
 }
 
-static void LoadAppPath(std::wstring &wpath, const LPCTSTR exeName)
-{
-	CRegKey reg;
-	CString regKeyName(_T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths\\"));
-	regKeyName += exeName;
-
-	LONG result = reg.Open(HKEY_LOCAL_MACHINE, regKeyName, KEY_READ);
-	if (result != ERROR_SUCCESS)
-		return;
-
-	TCHAR path[MAX_PATH];
-	ULONG pathSize = MAX_PATH;
-	result = reg.QueryStringValue(NULL, path, &pathSize);
-	if (result == ERROR_SUCCESS)
-		wpath = path;
-
-	reg.Close();
-}
-
-static void LoadBrowserPath(std::wstring &path, const std::wstring &browserName)
-{
-	if (browserName == L"ie")
-		LoadAppPath(path, _T("iexplore.exe"));
-	if (browserName == L"firefox")
-		LoadAppPath(path, _T("firefox.exe"));
-	else if (browserName == L"chrome")
-		LoadAppPath(path, _T("chrome.exe"));
-}
-
 static void LoadDefaultBrowserName(std::wstring &name)
 {
 	bool systemWide = true;
 	::LoadStringRegValue(name, L"DefaultBrowser", systemWide);
 	::LoadStringRegValue(name, L"DefaultBrowser");
-}
-
-static bool isInSystemPath(const std::wstring &browserName)
-{
-	std::wstring path;
-	LoadBrowserPath(path, browserName);
-	return !path.empty();
-}
-
-static bool isValidBrowserName(const std::wstring &browserName)
-{
-	if (browserName.empty())
-		return false;
-	return isInSystemPath(browserName);
-}
-
-static std::wstring ensureValidBrowserName(
-	const std::wstring &defaultName,
-	const std::wstring &name = std::wstring(L""))
-{
-	if (isValidBrowserName(name))
-		return name;
-	else if (isValidBrowserName(defaultName))
-		return defaultName;
-	else
-		return std::wstring(L"ie");
 }
 
 static void LoadMatchingPatterns(
@@ -127,6 +72,61 @@ static void LoadURLPatterns(MatchingPatterns &patterns)
 	bool systemWide = true;
 	LoadMatchingPatterns(patterns, _T("URLPatterns"));
 	LoadMatchingPatterns(patterns, _T("URLPatterns"), systemWide);
+}
+
+static void LoadAppPath(std::wstring &wpath, const LPCTSTR exeName)
+{
+	CRegKey reg;
+	CString regKeyName(_T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths\\"));
+	regKeyName += exeName;
+
+	LONG result = reg.Open(HKEY_LOCAL_MACHINE, regKeyName, KEY_READ);
+	if (result != ERROR_SUCCESS)
+		return;
+
+	TCHAR path[MAX_PATH];
+	ULONG pathSize = MAX_PATH;
+	result = reg.QueryStringValue(NULL, path, &pathSize);
+	if (result == ERROR_SUCCESS)
+		wpath = path;
+
+	reg.Close();
+}
+
+static void LoadBrowserPath(std::wstring &path, const std::wstring &browserName)
+{
+	if (browserName == L"ie")
+		LoadAppPath(path, _T("iexplore.exe"));
+	if (browserName == L"firefox")
+		LoadAppPath(path, _T("firefox.exe"));
+	else if (browserName == L"chrome")
+		LoadAppPath(path, _T("chrome.exe"));
+}
+
+static bool isInSystemPath(const std::wstring &browserName)
+{
+	std::wstring path;
+	LoadBrowserPath(path, browserName);
+	return !path.empty();
+}
+
+static bool isValidBrowserName(const std::wstring &browserName)
+{
+	if (browserName.empty())
+		return false;
+	return isInSystemPath(browserName);
+}
+
+static std::wstring ensureValidBrowserName(
+	const std::wstring &defaultName,
+	const std::wstring &name = std::wstring(L""))
+{
+	if (isValidBrowserName(name))
+		return name;
+	else if (isValidBrowserName(defaultName))
+		return defaultName;
+	else
+		return std::wstring(L"ie");
 }
 
 static std::wstring GetBrowserNameToOpenURL(
