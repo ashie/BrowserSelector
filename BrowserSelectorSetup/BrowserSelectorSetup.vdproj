@@ -39,13 +39,19 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_991DB451AC174FC3BDABEF1B5410BE7F"
+        "OwnerKey" = "8:_C03D314614CD4F4EA4A20243C8EF8F15"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_A41BF1FC9A2F4F4B9FF848DAE2CDB401"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_BD7ED73E68904028BB28C29174432F37"
+        "MsmKey" = "8:_B843A64DEE884E10B5940EC0D1DE592C"
         "OwnerKey" = "8:_3BF7B80D023F407197BA479BED617B91"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -53,12 +59,6 @@
         {
         "MsmKey" = "8:_C03D314614CD4F4EA4A20243C8EF8F15"
         "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_F55CAF2CCE7944D6B5F89D45887F5A7E"
-        "OwnerKey" = "8:_C03D314614CD4F4EA4A20243C8EF8F15"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -326,7 +326,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:BrowserSelector"
         "ProductCode" = "8:{F68C4082-4D0D-48C3-8E32-D7C739561EE4}"
-        "PackageCode" = "8:{7381B378-31D7-4513-92CE-2A97748EDA8B}"
+        "PackageCode" = "8:{208FF051-EA17-4A6D-9DF7-7D2D26964FDD}"
         "UpgradeCode" = "8:{864B7071-7281-4A14-B718-57CB190FE7B7}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -1398,11 +1398,11 @@
         }
         "MergeModule"
         {
-            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_BD7ED73E68904028BB28C29174432F37"
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_991DB451AC174FC3BDABEF1B5410BE7F"
             {
             "UseDynamicProperties" = "11:TRUE"
             "IsDependency" = "11:TRUE"
-            "SourcePath" = "8:Microsoft_VC100_CRT_x86.msm"
+            "SourcePath" = "8:Microsoft_VC100_ATL_x86.msm"
                 "Properties"
                 {
                 }
@@ -1412,11 +1412,11 @@
             "Feature" = "8:"
             "IsolateTo" = "8:"
             }
-            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_F55CAF2CCE7944D6B5F89D45887F5A7E"
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_B843A64DEE884E10B5940EC0D1DE592C"
             {
             "UseDynamicProperties" = "11:TRUE"
             "IsDependency" = "11:TRUE"
-            "SourcePath" = "8:Microsoft_VC100_ATL_x86.msm"
+            "SourcePath" = "8:Microsoft_VC100_CRT_x86.msm"
                 "Properties"
                 {
                 }
@@ -1431,7 +1431,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_3BF7B80D023F407197BA479BED617B91"
             {
-            "SourcePath" = "8:..\\Release\\BrowserSelector.exe"
+            "SourcePath" = "8:..\\Debug\\BrowserSelector.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_EFD80C7B4A164AA691FA4C75A672BE63"
@@ -1459,7 +1459,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_C03D314614CD4F4EA4A20243C8EF8F15"
             {
-            "SourcePath" = "8:..\\Release\\BrowserSelectorBHO.dll"
+            "SourcePath" = "8:..\\Debug\\BrowserSelectorBHO.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_EFD80C7B4A164AA691FA4C75A672BE63"

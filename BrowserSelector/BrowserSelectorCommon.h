@@ -7,6 +7,97 @@
 typedef std::pair<std::wstring, std::wstring> MatchingPattern;
 typedef std::vector<MatchingPattern> MatchingPatterns;
 
+class INIFile {
+public:
+	INIFile(const std::wstring &path)
+		: m_path(path)
+		, m_closeEmptyTab(-1)
+	{
+		GetStringValue(m_defaultBrowser, L"Common", L"DefaultBrowser");
+		GetIntValue(m_closeEmptyTab, L"Common", L"CloseEmptyTab");
+		LoadURLPatterns(m_urlPatterns);
+		LoadHostNamePatterns(m_hostNamePatterns);
+	}
+	~INIFile()
+	{
+	};
+
+	void GetIntValue(int &value, const std::wstring &section, const std::wstring &key)
+	{
+		value = GetPrivateProfileInt(
+			section.c_str(), key.c_str(), value, m_path.c_str());
+	}
+
+	void GetStringValue(std::wstring &value, const std::wstring &section, const std::wstring &key)
+	{
+		TCHAR buf[256];
+		DWORD size = sizeof(buf) / sizeof(TCHAR);
+		DWORD nWrittenChars = GetPrivateProfileString(
+			section.c_str(), key.c_str(), value.c_str(), buf, size, m_path.c_str());
+		if (nWrittenChars > 0)
+			value = buf;
+	}
+
+	void GetKeys(std::vector<std::wstring> &keys, const std::wstring &sectionName)
+	{
+		TCHAR buf[4096];
+		DWORD size = sizeof(buf) / sizeof(TCHAR);
+		DWORD nWrittenChars = GetPrivateProfileString(
+			sectionName.c_str(), NULL, NULL, buf, size, m_path.c_str());
+		TCHAR *key = buf;
+		for (DWORD i = 0; i < nWrittenChars; i++) {
+			if (!buf[i]) {
+				if (*key)
+					keys.push_back(key);
+				key = buf + i + 1;
+			}
+		}
+	}
+
+	void LoadHostNamePatterns(MatchingPatterns &hostNamePatterns)
+	{
+		LoadMatchingPatterns(hostNamePatterns, L"HostNamePatterns");
+	}
+
+	void LoadURLPatterns(MatchingPatterns &urlPatterns)
+	{
+		LoadMatchingPatterns(urlPatterns, L"URLPatterns");
+	}
+
+	void LoadMatchingPatterns(MatchingPatterns &patterns, LPCTSTR type)
+	{
+		std::vector<std::wstring> keys;
+		GetKeys(keys, type);
+		std::vector<std::wstring>:: iterator it;
+		for (it = keys.begin(); it != keys.end(); it++) {
+			TCHAR buf[1024];
+			DWORD size = sizeof(buf) / sizeof(TCHAR);
+			DWORD nWrittenChars = GetPrivateProfileString(
+				type, it->c_str(), NULL, buf, size, m_path.c_str());
+			if (nWrittenChars < 1)
+				continue;
+
+			TCHAR *browserName = L"";
+			for (DWORD i = 0; i < nWrittenChars; i++) {
+				if (buf[i] == '|') {
+					buf[i] = '\0';
+					browserName = buf + i + 1;
+					break;
+				}
+			}
+
+			patterns.push_back(MatchingPattern(buf, browserName));
+		}
+	}
+
+public:
+	std::wstring m_path;
+	std::wstring m_defaultBrowser;
+	int m_closeEmptyTab;
+	MatchingPatterns m_hostNamePatterns;
+	MatchingPatterns m_urlPatterns;
+};
+
 static void LoadStringRegValue(
 	std::wstring &value,
 	const std::wstring &name,
