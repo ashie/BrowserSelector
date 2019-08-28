@@ -3,6 +3,7 @@
 #include <atlbase.h>
 #include <atlutil.h>
 #include <ShellAPI.h>
+#include <Shlobj.h>
 
 typedef std::pair<std::wstring, std::wstring> MatchingPattern;
 typedef std::vector<MatchingPattern> MatchingPatterns;
@@ -227,6 +228,34 @@ public:
 	}
 
 public:
+	static std::wstring GetSystemConfigPath(void)
+	{
+		TCHAR buf[MAX_PATH];
+		DWORD bufSize = sizeof(buf) / sizeof(TCHAR);
+		DWORD ret = ::GetModuleFileName(NULL, buf, bufSize);
+		if (ret < 1)
+			return std::wstring();
+		TCHAR *lastSep = _tcsrchr(buf, '\\');
+		if (lastSep)
+			*(++lastSep) = '\0';
+		std::wstring path(buf);
+		path += std::wstring(L"BrowserSelector.ini");
+		return path;
+	}
+
+	static std::wstring GetUserConfigPath(void)
+	{
+		TCHAR buf[MAX_PATH];
+		DWORD bufSize = sizeof(buf) / sizeof(TCHAR);
+		BOOL succeeded = ::SHGetSpecialFolderPath(NULL, buf, CSIDL_APPDATA, FALSE);
+		if (!succeeded)
+			return std::wstring();
+		std::wstring path(buf);
+		path += std::wstring(L"\\ClearCode\\BrowserSelector\\BrowserSelector.ini");
+		return path;
+	}
+
+public:
 	std::wstring m_path;
 };
 
@@ -236,11 +265,15 @@ void Config::LoadAll()
 	DefaultConfig defaultConfig;
 	RegistryConfig systemConfig(systemWide);
 	RegistryConfig userConfig;
+	INIFileConfig systemINIFileConfig(INIFileConfig::GetSystemConfigPath());
+	INIFileConfig userINIFileConfig(INIFileConfig::GetUserConfigPath());
 
 	std::vector<Config*> configs;
 	configs.push_back(&defaultConfig);
 	configs.push_back(&systemConfig);
+	configs.push_back(&systemINIFileConfig);
 	configs.push_back(&userConfig);
+	configs.push_back(&userINIFileConfig);
 
 	merge(configs);
 }
