@@ -46,17 +46,13 @@ public:
 				m_defaultBrowser = config->m_defaultBrowser;
 			if (config->m_closeEmptyTab >= 0)
 				m_closeEmptyTab = config->m_closeEmptyTab;
-		}
 
-		std::vector<Config*>::reverse_iterator rit;
-		for (rit = configs.rbegin(); rit != configs.rend(); rit++) {
-			Config *config = *rit;
 			m_hostNamePatterns.insert(
-				m_hostNamePatterns.end(),
+				m_hostNamePatterns.begin(),
 				config->m_hostNamePatterns.begin(),
 				config->m_hostNamePatterns.end());
 			m_urlPatterns.insert(
-				m_urlPatterns.end(),
+				m_urlPatterns.begin(),
 				config->m_urlPatterns.begin(),
 				config->m_urlPatterns.end());
 		}

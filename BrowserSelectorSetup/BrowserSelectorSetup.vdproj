@@ -326,7 +326,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:BrowserSelector"
         "ProductCode" = "8:{F68C4082-4D0D-48C3-8E32-D7C739561EE4}"
-        "PackageCode" = "8:{8D274574-490F-4CAD-910F-CDF7B2A99136}"
+        "PackageCode" = "8:{5533D710-2C64-41D4-AC4E-6578D3BB7B11}"
         "UpgradeCode" = "8:{864B7071-7281-4A14-B718-57CB190FE7B7}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
