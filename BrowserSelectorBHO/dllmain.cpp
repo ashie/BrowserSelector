@@ -7,7 +7,7 @@ CBrowserSelectorBHOModule _AtlModule;
 
 extern "C" BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
 {
-	hInstance;
+	UNREFERENCED_PARAMETER(hInstance);
 	if (dwReason == DLL_PROCESS_ATTACH) {
 		TCHAR loader[MAX_PATH];
 		GetModuleFileName(NULL, loader, MAX_PATH);

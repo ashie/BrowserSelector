@@ -58,7 +58,7 @@ public:
 		}
 	}
 
-	void LoadAll(void);
+	void LoadAll(HINSTANCE hInstance = nullptr);
 
 public:
 	std::wstring m_defaultBrowser;
@@ -233,11 +233,11 @@ public:
 	}
 
 public:
-	static std::wstring GetSystemConfigPath(void)
+	static std::wstring GetSystemConfigPath(HINSTANCE hInstance = nullptr)
 	{
 		TCHAR buf[MAX_PATH];
 		DWORD bufSize = sizeof(buf) / sizeof(TCHAR);
-		DWORD ret = ::GetModuleFileName(NULL, buf, bufSize);
+		DWORD ret = ::GetModuleFileName(hInstance, buf, bufSize);
 		if (ret < 1)
 			return std::wstring();
 		TCHAR *lastSep = _tcsrchr(buf, '\\');
@@ -266,13 +266,13 @@ public:
 	INIFileConfig *m_parent;
 };
 
-void Config::LoadAll()
+void Config::LoadAll(HINSTANCE hInstance)
 {
 	bool systemWide = true;
 	DefaultConfig defaultConfig;
 	RegistryConfig systemConfig(systemWide);
 	RegistryConfig userConfig;
-	INIFileConfig systemINIFileConfig(INIFileConfig::GetSystemConfigPath());
+	INIFileConfig systemINIFileConfig(INIFileConfig::GetSystemConfigPath(hInstance));
 	INIFileConfig userINIFileConfig(INIFileConfig::GetUserConfigPath());
 
 	std::vector<Config*> configs;

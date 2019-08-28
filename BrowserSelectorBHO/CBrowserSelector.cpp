@@ -21,7 +21,7 @@ void CBrowserSelector::LoadBHOSettings(bool systemWide)
 
 HRESULT CBrowserSelector::FinalConstruct()
 {
-	m_config.LoadAll();
+	m_config.LoadAll(_AtlBaseModule.GetResourceInstance());
 	MatchingPatterns &patterns(m_config.m_urlPatterns);
 	patterns.insert(patterns.begin(), MatchingPattern(L"about:*", L"ie"));
 
