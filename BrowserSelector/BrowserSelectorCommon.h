@@ -140,32 +140,55 @@ public:
 	bool m_systemWide;
 };
 
+// INI file feature is deprecated.
+// Won't be documented.
 class INIFileConfig : public Config
 {
 public:
 	INIFileConfig(const std::wstring &path, INIFileConfig *parent = nullptr)
 		: m_path(path)
 		, m_parent(parent)
+		, m_enableIncludeCache(false)
+		, m_notFound(false)
 	{
-		if (!PathFileExists(m_path.c_str()))
+		if (m_path.empty() || !::PathFileExists(m_path.c_str())) {
+			m_notFound = true;
 			return;
+		}
 
 		GetStringValue(m_defaultBrowser, L"Common", L"DefaultBrowser");
 		GetStringValue(m_includePath, L"Common", L"Include");
+		GetIntValue(m_enableIncludeCache, L"Common", L"EnableIncludeCache");
 		GetIntValue(m_closeEmptyTab, L"Common", L"CloseEmptyTab");
 		LoadURLPatterns(m_urlPatterns);
 		LoadHostNamePatterns(m_hostNamePatterns);
 
-		if (!m_includePath.empty() && !parent) {
-			INIFileConfig child(m_includePath, this);
-			std::vector<Config*> configs;
-			configs.push_back(&child);
-			merge(configs);
-		}
+		if (!m_includePath.empty() && !parent)
+			includeINIFile(m_includePath);
 	}
 	virtual ~INIFileConfig()
 	{
 	};
+
+	void includeINIFile(std::wstring &path)
+	{
+		INIFileConfig child(path, this);
+		if (m_enableIncludeCache) {
+			if (child.isSucceededToLoad())
+				child.WriteCache();
+			else
+				child.ReadCache();
+		}
+
+		std::vector<Config*> configs;
+		configs.push_back(&child);
+		merge(configs);
+	}
+
+	bool isSucceededToLoad()
+	{
+		return !m_notFound;
+	}
 
 	void GetIntValue(int &value, const std::wstring &section, const std::wstring &key)
 	{
@@ -235,6 +258,43 @@ public:
 		}
 	}
 
+	void ReadCache()
+	{
+		std::wstring path = GetCachePath(m_path);
+		if (path.empty())
+			return;
+		INIFileConfig cache(path, this);
+		std::vector<Config*> configs;
+		configs.push_back(&cache);
+		merge(configs);
+	}
+
+	void WriteCache()
+	{
+		std::wstring folderPath = GetCacheFolderPath();
+		std::wstring cachePath = GetCachePath(m_path);
+
+		if (cachePath.empty())
+			return;
+
+		unsigned int pos = GetDataFolderPath().size();
+		do
+		{
+			pos = folderPath.find_first_of(L"\\", pos + 1);
+			std::wstring path;
+			if (pos == std::string::npos)
+				path = folderPath;
+			else
+				path = cachePath.substr(0, pos).c_str();
+			::CreateDirectory(path.c_str(), NULL);
+		} while (pos != std::string::npos);
+
+		if (!::PathFileExists(folderPath.c_str()))
+			return;
+
+		::CopyFile(m_path.c_str(), cachePath.c_str(), FALSE);
+	}
+
 public:
 	static std::wstring GetSystemConfigPath(HINSTANCE hInstance = nullptr)
 	{
@@ -251,7 +311,7 @@ public:
 		return path;
 	}
 
-	static std::wstring GetUserConfigPath(void)
+	static std::wstring GetDataFolderPath(void)
 	{
 		TCHAR buf[MAX_PATH];
 		DWORD bufSize = sizeof(buf) / sizeof(TCHAR);
@@ -259,13 +319,59 @@ public:
 		if (!succeeded)
 			return std::wstring();
 		std::wstring path(buf);
-		path += std::wstring(L"\\ClearCode\\BrowserSelector\\BrowserSelector.ini");
+		return path;
+	}
+
+	static std::wstring GetAppDataFolderPath(void)
+	{
+		std::wstring path(GetDataFolderPath());
+		if (path.empty())
+			return path;
+		path += std::wstring(L"\\ClearCode\\BrowserSelector");
+		return path;
+	}
+
+	static std::wstring GetUserConfigPath(void)
+	{
+		std::wstring path(GetAppDataFolderPath());
+		if (path.empty())
+			return path;
+		path += std::wstring(L"\\BrowserSelector.ini");
+		return path;
+	}
+
+	static std::wstring GetCacheFolderPath(void)
+	{
+		std::wstring path(GetAppDataFolderPath());
+		if (path.empty())
+			return path;
+		path += std::wstring(L"\\Cache\\Cache");
+		return path;
+	}
+
+	static std::wstring GetCachePath(const std::wstring &srcPath)
+	{
+		std::wstring path(GetCacheFolderPath());
+		if (path.empty())
+			return path;
+
+		path += std::wstring(L"\\");
+
+		std::wstring filename(srcPath);
+		for (int i = 0; i < filename.size(); i++) {
+			int ch = filename[i];
+			if (ch == '\\' || ch == ':')
+				filename[i] = '_';
+		}
+		path += filename;
 		return path;
 	}
 
 public:
 	std::wstring m_path;
 	std::wstring m_includePath;
+	int m_enableIncludeCache;
+	bool m_notFound;
 	INIFileConfig *m_parent;
 };
 
