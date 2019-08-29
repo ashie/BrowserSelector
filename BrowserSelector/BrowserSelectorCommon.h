@@ -147,6 +147,9 @@ public:
 		: m_path(path)
 		, m_parent(parent)
 	{
+		if (!PathFileExists(m_path.c_str()))
+			return;
+
 		GetStringValue(m_defaultBrowser, L"Common", L"DefaultBrowser");
 		GetStringValue(m_includePath, L"Common", L"Include");
 		GetIntValue(m_closeEmptyTab, L"Common", L"CloseEmptyTab");
