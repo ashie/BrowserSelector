@@ -342,12 +342,25 @@ public:
 		return path;
 	}
 
+	static std::wstring GetTempPath(void)
+	{
+		LPWSTR folderPath;
+		HRESULT result = SHGetKnownFolderPath(
+			FOLDERID_LocalAppDataLow, 0, NULL, &folderPath);
+		if (FAILED(result))
+			return std::wstring();
+		std::wstring path(folderPath);
+		CoTaskMemFree(folderPath);
+		return path;
+	}
+
+
 	static std::wstring GetCacheFolderPath(void)
 	{
-		std::wstring path(GetAppDataFolderPath());
+		std::wstring path(GetTempPath());
 		if (path.empty())
 			return path;
-		path += std::wstring(L"\\Cache");
+		path += std::wstring(L"\\ClearCode\\BrowserSelector");
 		return path;
 	}
 
