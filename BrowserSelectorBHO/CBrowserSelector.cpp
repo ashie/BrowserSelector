@@ -4,21 +4,6 @@
 
 using namespace std;
 
-void CBrowserSelector::LoadBHOSettings(bool systemWide)
-{
-	CRegKey reg;
-	HKEY keyParent = systemWide ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER;
-	CString regKeyName(_T("SOFTWARE\\ClearCode\\BrowserSelector"));
-	LONG result = reg.Open(keyParent, regKeyName, KEY_READ);
-	if (result == ERROR_SUCCESS) {
-		DWORD value;
-		result = reg.QueryDWORDValue(L"CloseEmptyTab", value);
-		if (result == ERROR_SUCCESS)
-			m_shouldCloseEmptyTab = value ? true : false;
-	}
-	reg.Close();
-}
-
 HRESULT CBrowserSelector::FinalConstruct()
 {
 	m_config.LoadAll(_AtlBaseModule.GetResourceInstance());
@@ -150,7 +135,7 @@ void CBrowserSelector::OnBeforeNavigate2(
 	bool succeeded = OpenByModernBrowser(browserName, URL);
 
 	if (succeeded) {
-		if (m_shouldCloseEmptyTab && m_isEmptyTab)
+		if (m_config.m_closeEmptyTab && m_isEmptyTab)
 			m_webBrowser2->Quit();
 	} else {
 		// Fall back to IE

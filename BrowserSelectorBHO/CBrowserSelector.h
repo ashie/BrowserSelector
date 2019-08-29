@@ -46,7 +46,6 @@ public:
 		UINT *puArgErr);
 
 private:
-	void LoadBHOSettings(bool systemWide = false);
 	HRESULT Connect(void);
 	HRESULT Disconnect(void);
 	void OnBeforeNavigate2(

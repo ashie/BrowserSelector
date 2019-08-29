@@ -326,7 +326,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:BrowserSelector"
         "ProductCode" = "8:{F68C4082-4D0D-48C3-8E32-D7C739561EE4}"
-        "PackageCode" = "8:{4BD2AF04-343C-4FBF-8B13-F7D983022CC1}"
+        "PackageCode" = "8:{0247A90B-F6F5-4E60-B91C-95B611FEC817}"
         "UpgradeCode" = "8:{864B7071-7281-4A14-B718-57CB190FE7B7}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -1431,7 +1431,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_3BF7B80D023F407197BA479BED617B91"
             {
-            "SourcePath" = "8:..\\Debug\\BrowserSelector.exe"
+            "SourcePath" = "8:..\\Release\\BrowserSelector.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_EFD80C7B4A164AA691FA4C75A672BE63"
@@ -1459,7 +1459,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_C03D314614CD4F4EA4A20243C8EF8F15"
             {
-            "SourcePath" = "8:..\\Debug\\BrowserSelectorBHO.dll"
+            "SourcePath" = "8:..\\Release\\BrowserSelectorBHO.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_EFD80C7B4A164AA691FA4C75A672BE63"
