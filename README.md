@@ -71,10 +71,10 @@ They are stored under the registry key `HostNamePatterns` and `URLPatterns`.
 The value name is an URL pattern and the value is a browser name.
 Here is the example:
 
-  * HostNamePatterns
-    * "*.example.org" = "firefox"
+  * `HostNamePatterns`
+    * `*.example.org` = `firefox`
   * URLPatterns
-    * "http://*.example.com" = "firefox"
+    * `http://*.example.com` = `firefox`
 
 The following wildcard characters are supported for specifying host name or URL:
 
@@ -107,11 +107,10 @@ for such URL patterns, you can do it by the registry value
 
 e.g.)
 
-  * URLPagtterns
-    * "http://*.example.com" = ""
-    * "http://*.example.org" = ""
+  * `URLPagtterns`
+    * `http://*.example.com` = ``
+    * `http://*.example.org` = ``
     * ...
-  * DefaultSecondBrowser
-    * `DefaultSecondBrowser` = `chrome`
+  * `DefaultSecondBrowser` = `chrome`
 
 The default value is empty (use `DefaultBrowser`).
