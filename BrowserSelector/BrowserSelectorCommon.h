@@ -345,7 +345,7 @@ public:
 		std::wstring path(GetAppDataFolderPath());
 		if (path.empty())
 			return path;
-		path += std::wstring(L"\\Cache\\Cache");
+		path += std::wstring(L"\\Cache");
 		return path;
 	}
 
