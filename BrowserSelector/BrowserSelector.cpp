@@ -77,12 +77,14 @@ int APIENTRY _tWinMain(
 	Config config;
 	config.LoadAll();
 
-	int nArgs = 0;
-	LPWSTR *args = ::CommandLineToArgvW(lpCmdLine, &nArgs);
-
 	wstring url;
-	if (nArgs >= 1)
-		url = args[0];
+	if (lpCmdLine && *lpCmdLine) {
+		int nArgs = 0;
+		LPWSTR *args = ::CommandLineToArgvW(lpCmdLine, &nArgs);
+		if (nArgs >= 1)
+			url = args[0];
+		LocalFree(args);
+	}
 
 	wstring browserName = ::GetBrowserNameToOpenURL(url, config);
 
@@ -91,8 +93,6 @@ int APIENTRY _tWinMain(
 		openByIE = !OpenByModernBrowser(browserName, url);
 	if (openByIE)
 		OpenByIE(url);
-
-	LocalFree(args);
 
 	return 0;
 }
