@@ -6,5 +6,6 @@ Release/
 ipch/
 *.aps
 *.vcxproj.user
+*_h.h
 *_i.[ch]
 *_p.[ch]
