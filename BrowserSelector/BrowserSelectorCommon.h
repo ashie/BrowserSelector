@@ -44,6 +44,8 @@ public:
 			Config *config = *it;
 			if (!config->m_defaultBrowser.empty())
 				m_defaultBrowser = config->m_defaultBrowser;
+			if (!config->m_defaultSecondBrowser.empty())
+				m_defaultSecondBrowser = config->m_defaultSecondBrowser;
 			if (config->m_closeEmptyTab >= 0)
 				m_closeEmptyTab = config->m_closeEmptyTab;
 
@@ -62,6 +64,7 @@ public:
 
 public:
 	std::wstring m_defaultBrowser;
+	std::wstring m_defaultSecondBrowser;
 	int m_closeEmptyTab;
 	MatchingPatterns m_hostNamePatterns;
 	MatchingPatterns m_urlPatterns;
@@ -86,17 +89,15 @@ public:
 	RegistryConfig(bool systemWide = false)
 		: m_systemWide(systemWide)
 	{
-		LoadDefaultBrowserName(m_defaultBrowser);
+		::LoadStringRegValue(m_defaultBrowser,
+			L"DefaultBrowser", m_systemWide);
+		::LoadStringRegValue(m_defaultSecondBrowser,
+			L"DefaultSecondBrowser", m_systemWide);
 		LoadHostNamePatterns(m_hostNamePatterns);
 		LoadURLPatterns(m_urlPatterns);
 	}
 	virtual ~RegistryConfig()
 	{
-	}
-
-	void LoadDefaultBrowserName(std::wstring &name)
-	{
-		::LoadStringRegValue(name, L"DefaultBrowser", m_systemWide);
 	}
 
 	static void LoadMatchingPatterns(
@@ -157,6 +158,7 @@ public:
 		}
 
 		GetStringValue(m_defaultBrowser, L"Common", L"DefaultBrowser");
+		GetStringValue(m_defaultSecondBrowser, L"Common", L"DefaultSecondBrowser");
 		GetStringValue(m_includePath, L"Common", L"Include");
 		GetIntValue(m_enableIncludeCache, L"Common", L"EnableIncludeCache");
 		GetIntValue(m_closeEmptyTab, L"Common", L"CloseEmptyTab");
@@ -438,13 +440,15 @@ static bool isValidBrowserName(const std::wstring &browserName)
 }
 
 static std::wstring ensureValidBrowserName(
-	const std::wstring &defaultName,
-	const std::wstring &name = std::wstring(L""))
+	const Config &config,
+	const std::wstring *name = nullptr)
 {
-	if (isValidBrowserName(name))
-		return name;
-	else if (isValidBrowserName(defaultName))
-		return defaultName;
+	if (name && isValidBrowserName(*name))
+		return *name;
+	else if (name && name->empty() && isValidBrowserName(config.m_defaultSecondBrowser))
+		 return config.m_defaultSecondBrowser;
+	else if (isValidBrowserName(config.m_defaultBrowser))
+		return config.m_defaultBrowser;
 	else
 		return std::wstring(L"ie");
 }
@@ -456,7 +460,7 @@ static std::wstring GetBrowserNameToOpenURL(
 	static CComAutoCriticalSection symMatchSection;
 
 	if (url.empty())
-		return ensureValidBrowserName(config.m_defaultBrowser);
+		return ensureValidBrowserName(config);
 
 	MatchingPatterns::const_iterator it;
 	CUrl cURL;
@@ -470,7 +474,7 @@ static std::wstring GetBrowserNameToOpenURL(
 			BOOL matched = SymMatchStringW(cURL.GetHostName(), hostNamePattern.c_str(), FALSE);
 			symMatchSection.Unlock();
 			if (matched)
-				return ensureValidBrowserName(config.m_defaultBrowser, it->second);
+				return ensureValidBrowserName(config, &it->second);
 		}
 	}
 
@@ -480,10 +484,10 @@ static std::wstring GetBrowserNameToOpenURL(
 		BOOL matched = SymMatchStringW(url.c_str(), urlPattern.c_str(), FALSE);
 		symMatchSection.Unlock();
 		if (matched)
-			return ensureValidBrowserName(config.m_defaultBrowser, it->second);
+			return ensureValidBrowserName(config, &it->second);
 	}
 
-	return ensureValidBrowserName(config.m_defaultBrowser);
+	return ensureValidBrowserName(config);
 }
 
 bool OpenByModernBrowser(const std::wstring &browserName, const std::wstring &url)

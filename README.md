@@ -90,8 +90,28 @@ The following values are supported as browser names:
 ### `DefaultBrowser`
 
 You can change the browser for opening unmatched URLs by setting the registry
-value "DefaultBrowser". Here is the example:
+value "DefaultBrowser".
+
+e.g)
 
   * `DefaultBrowser` = `firefox`
 
 The default value is `ie`.
+
+### `DefaultSecondBrowser`
+
+If you leave the browser name empty for each URL patterns, the browser
+specified by `DefaultBrowser` will be used for them. If you change the browser
+for such URL patterns, you can do it by the registry value
+`DefaultSecondBrowser`.
+
+e.g.)
+
+  * URLPagtterns
+    * "http://*.example.com" = ""
+    * "http://*.example.org" = ""
+    * ...
+  * DefaultSecondBrowser
+    * `DefaultSecondBrowser` = `chrome`
+
+The default value is empty (use `DefaultBrowser`).
