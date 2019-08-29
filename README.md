@@ -102,8 +102,7 @@ The default value is `ie`.
 
 If you leave the browser name empty for each URL patterns, the browser
 specified by `DefaultBrowser` will be used for them. If you change the browser
-for such URL patterns, you can do it by the registry value
-`SecondBrowser`.
+for such URL patterns, you can do it by the registry value `SecondBrowser`.
 
 e.g.)
 
