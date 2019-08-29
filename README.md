@@ -98,12 +98,12 @@ e.g)
 
 The default value is `ie`.
 
-### `DefaultSecondBrowser`
+### `SecondBrowser`
 
 If you leave the browser name empty for each URL patterns, the browser
 specified by `DefaultBrowser` will be used for them. If you change the browser
 for such URL patterns, you can do it by the registry value
-`DefaultSecondBrowser`.
+`SecondBrowser`.
 
 e.g.)
 
@@ -111,6 +111,6 @@ e.g.)
     * `http://*.example.com` = ``
     * `http://*.example.org` = ``
     * ...
-  * `DefaultSecondBrowser` = `chrome`
+  * `SecondBrowser` = `chrome`
 
 The default value is empty (use `DefaultBrowser`).

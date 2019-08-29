@@ -44,8 +44,8 @@ public:
 			Config *config = *it;
 			if (!config->m_defaultBrowser.empty())
 				m_defaultBrowser = config->m_defaultBrowser;
-			if (!config->m_defaultSecondBrowser.empty())
-				m_defaultSecondBrowser = config->m_defaultSecondBrowser;
+			if (!config->m_secondBrowser.empty())
+				m_secondBrowser = config->m_secondBrowser;
 			if (config->m_closeEmptyTab >= 0)
 				m_closeEmptyTab = config->m_closeEmptyTab;
 
@@ -64,7 +64,7 @@ public:
 
 public:
 	std::wstring m_defaultBrowser;
-	std::wstring m_defaultSecondBrowser;
+	std::wstring m_secondBrowser;
 	int m_closeEmptyTab;
 	MatchingPatterns m_hostNamePatterns;
 	MatchingPatterns m_urlPatterns;
@@ -91,8 +91,8 @@ public:
 	{
 		::LoadStringRegValue(m_defaultBrowser,
 			L"DefaultBrowser", m_systemWide);
-		::LoadStringRegValue(m_defaultSecondBrowser,
-			L"DefaultSecondBrowser", m_systemWide);
+		::LoadStringRegValue(m_secondBrowser,
+			L"SecondBrowser", m_systemWide);
 		LoadHostNamePatterns(m_hostNamePatterns);
 		LoadURLPatterns(m_urlPatterns);
 	}
@@ -158,7 +158,7 @@ public:
 		}
 
 		GetStringValue(m_defaultBrowser, L"Common", L"DefaultBrowser");
-		GetStringValue(m_defaultSecondBrowser, L"Common", L"DefaultSecondBrowser");
+		GetStringValue(m_secondBrowser, L"Common", L"SecondBrowser");
 		GetStringValue(m_includePath, L"Common", L"Include");
 		GetIntValue(m_enableIncludeCache, L"Common", L"EnableIncludeCache");
 		GetIntValue(m_closeEmptyTab, L"Common", L"CloseEmptyTab");
@@ -445,8 +445,8 @@ static std::wstring ensureValidBrowserName(
 {
 	if (name && isValidBrowserName(*name))
 		return *name;
-	else if (name && name->empty() && isValidBrowserName(config.m_defaultSecondBrowser))
-		 return config.m_defaultSecondBrowser;
+	else if (name && name->empty() && isValidBrowserName(config.m_secondBrowser))
+		 return config.m_secondBrowser;
 	else if (isValidBrowserName(config.m_defaultBrowser))
 		return config.m_defaultBrowser;
 	else
