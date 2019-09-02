@@ -39,6 +39,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_72246FDC53804DA8927AF7B62BEB38BF"
+        "OwnerKey" = "8:_C03D314614CD4F4EA4A20243C8EF8F15"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_A41BF1FC9A2F4F4B9FF848DAE2CDB401"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -51,14 +57,8 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_C80EAD863F074F95B9334A079DA6D644"
+        "MsmKey" = "8:_F547C13F8EBC4C1D8DB87F0ADA028FED"
         "OwnerKey" = "8:_3BF7B80D023F407197BA479BED617B91"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_C8667E3A4FB54250849FBE198F75A9F5"
-        "OwnerKey" = "8:_C03D314614CD4F4EA4A20243C8EF8F15"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -326,7 +326,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:BrowserSelector"
         "ProductCode" = "8:{F68C4082-4D0D-48C3-8E32-D7C739561EE4}"
-        "PackageCode" = "8:{7B49AE0D-A08B-4BCE-9E21-1584D8CDDC76}"
+        "PackageCode" = "8:{AE5EBFEF-399A-41A5-A6A9-F976F241BC10}"
         "UpgradeCode" = "8:{864B7071-7281-4A14-B718-57CB190FE7B7}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -343,8 +343,8 @@
         "Keywords" = "8:"
         "ARPCOMMENTS" = "8:"
         "ARPURLINFOABOUT" = "8:https://www.clear-code.com"
-        "ARPPRODUCTICON" = "8:"
-        "ARPIconIndex" = "3:0"
+        "ARPPRODUCTICON" = "8:_3BF7B80D023F407197BA479BED617B91"
+        "ARPIconIndex" = "3:107"
         "SearchPath" = "8:"
         "UseSystemSearchPath" = "11:TRUE"
         "TargetPlatform" = "3:0"
@@ -1398,11 +1398,11 @@
         }
         "MergeModule"
         {
-            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_C80EAD863F074F95B9334A079DA6D644"
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_72246FDC53804DA8927AF7B62BEB38BF"
             {
             "UseDynamicProperties" = "11:TRUE"
             "IsDependency" = "11:TRUE"
-            "SourcePath" = "8:Microsoft_VC100_CRT_x86.msm"
+            "SourcePath" = "8:Microsoft_VC100_ATL_x86.msm"
                 "Properties"
                 {
                 }
@@ -1412,11 +1412,11 @@
             "Feature" = "8:"
             "IsolateTo" = "8:"
             }
-            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_C8667E3A4FB54250849FBE198F75A9F5"
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_F547C13F8EBC4C1D8DB87F0ADA028FED"
             {
             "UseDynamicProperties" = "11:TRUE"
             "IsDependency" = "11:TRUE"
-            "SourcePath" = "8:Microsoft_VC100_ATL_x86.msm"
+            "SourcePath" = "8:Microsoft_VC100_CRT_x86.msm"
                 "Properties"
                 {
                 }
