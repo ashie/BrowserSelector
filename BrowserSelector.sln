@@ -10,6 +10,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		sample\BrowserSelectorExample.reg = sample\BrowserSelectorExample.reg
 		sample\BrowserSelectorWOW64Example.reg = sample\BrowserSelectorWOW64Example.reg
 		COPYING.MIT = COPYING.MIT
+		sample\IE-ElevationPolicy.reg = sample\IE-ElevationPolicy.reg
 		README.md = README.md
 	EndProjectSection
 EndProject
