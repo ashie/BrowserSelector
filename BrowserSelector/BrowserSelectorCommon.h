@@ -121,7 +121,17 @@ public:
 			TCHAR value[1024];
 			DWORD valueLen = sizeof(value) / sizeof(TCHAR);
 			result = reg.QueryStringValue(valueName, value, &valueLen);
-			patterns.push_back(MatchingPattern(valueName, value));
+
+			TCHAR *browserName = L"";
+			for (DWORD i = 0; i < valueLen; i++) {
+				if (value[i] == '|') {
+					value[i] = '\0';
+					browserName = value + i + 1;
+					break;
+				}
+			}
+
+			patterns.push_back(MatchingPattern(value, browserName));
 		}
 
 		reg.Close();

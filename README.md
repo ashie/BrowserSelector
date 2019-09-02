@@ -67,14 +67,18 @@ Please see the following *.reg files by way of example:
 ### `HostNamePatterns` or `URLPatterns`
 
 You need to set host name or URL patterns to open them by specific browsers.
-They are stored under the registry key `HostNamePatterns` and `URLPatterns`.
-The value name is an URL pattern and the value is a browser name.
-Here is the example:
+They are stored under the registry key `HostNamePatterns` and `URLPatterns` as
+string values. Although you can use any characters as the value names, we
+recommend to use numbers such as `0001` to clarify the priority. The value is
+URL pattern. Optionally you can add a browser name to open the URL pattern by
+spliting the value by `|`.
+
+e.g.)
 
   * `HostNamePatterns`
-    * `*.example.org` = `firefox`
+    * `0001` = `*.example.org|firefox`
   * URLPatterns
-    * `http://*.example.com` = `firefox`
+    * `0001` = `http://*.example.com|firefox`
 
 The following wildcard characters are supported for specifying host name or URL:
 
