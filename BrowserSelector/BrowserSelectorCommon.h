@@ -486,6 +486,16 @@ static std::wstring GetBrowserNameToOpenURL(
 		return ensureValidBrowserName(config);
 
 	MatchingPatterns::const_iterator it;
+
+	for (it = config.m_urlPatterns.begin(); it != config.m_urlPatterns.end(); it++) {
+		symMatchSection.Lock();
+		const std::wstring &urlPattern = it->first;
+		BOOL matched = SymMatchStringW(url.c_str(), urlPattern.c_str(), FALSE);
+		symMatchSection.Unlock();
+		if (matched)
+			return ensureValidBrowserName(config, &it->second);
+	}
+
 	CUrl cURL;
 	cURL.CrackUrl(url.c_str());
 	LPCTSTR hostName = cURL.GetHostName();
@@ -499,15 +509,6 @@ static std::wstring GetBrowserNameToOpenURL(
 			if (matched)
 				return ensureValidBrowserName(config, &it->second);
 		}
-	}
-
-	for (it = config.m_urlPatterns.begin(); it != config.m_urlPatterns.end(); it++) {
-		symMatchSection.Lock();
-		const std::wstring &urlPattern = it->first;
-		BOOL matched = SymMatchStringW(url.c_str(), urlPattern.c_str(), FALSE);
-		symMatchSection.Unlock();
-		if (matched)
-			return ensureValidBrowserName(config, &it->second);
 	}
 
 	return ensureValidBrowserName(config);
