@@ -34,25 +34,11 @@ static HRESULT GetConnectionPoint(
 
 HRESULT CBrowserSelector::Connect(void)
 {
-	CComPtr<IConnectionPoint> connectionPoint;
-	HRESULT hr = GetConnectionPoint(m_webBrowser2, connectionPoint);
-	if (!SUCCEEDED(hr))
-		return hr;
-	hr= connectionPoint->Advise((IDispatch*)this, &m_cookie);
-	if (!SUCCEEDED(hr))
-		return hr;
 	return DispEventAdvise(m_webBrowser2);
 }
 
 HRESULT CBrowserSelector::Disconnect(void)
 {
-	CComPtr<IConnectionPoint> connectionPoint;
-	HRESULT hr = GetConnectionPoint(m_webBrowser2, connectionPoint);
-	if (!SUCCEEDED(hr))
-		return hr;
-	hr = connectionPoint->Unadvise(m_cookie);
-	if (!SUCCEEDED(hr))
-		return hr;
 	return DispEventUnadvise(m_webBrowser2);
 }
 
