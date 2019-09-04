@@ -383,7 +383,7 @@ public:
 		path += std::wstring(L"\\");
 
 		std::wstring filename(srcPath);
-		for (int i = 0; i < filename.size(); i++) {
+		for (unsigned int i = 0; i < filename.size(); i++) {
 			int ch = filename[i];
 			if (ch == '\\' || ch == ':')
 				filename[i] = '_';
