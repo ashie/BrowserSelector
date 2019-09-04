@@ -38,7 +38,10 @@ HRESULT CBrowserSelector::Connect(void)
 	HRESULT hr = GetConnectionPoint(m_webBrowser2, connectionPoint);
 	if (!SUCCEEDED(hr))
 		return hr;
-	return connectionPoint->Advise((IDispatch*)this, &m_cookie);
+	hr= connectionPoint->Advise((IDispatch*)this, &m_cookie);
+	if (!SUCCEEDED(hr))
+		return hr;
+	return DispEventAdvise(m_webBrowser2);
 }
 
 HRESULT CBrowserSelector::Disconnect(void)
@@ -47,7 +50,10 @@ HRESULT CBrowserSelector::Disconnect(void)
 	HRESULT hr = GetConnectionPoint(m_webBrowser2, connectionPoint);
 	if (!SUCCEEDED(hr))
 		return hr;
-	return connectionPoint->Unadvise(m_cookie);
+	hr = connectionPoint->Unadvise(m_cookie);
+	if (!SUCCEEDED(hr))
+		return hr;
+	return DispEventUnadvise(m_webBrowser2);
 }
 
 STDMETHODIMP CBrowserSelector::SetSite(IUnknown *pUnkSite)
@@ -56,35 +62,6 @@ STDMETHODIMP CBrowserSelector::SetSite(IUnknown *pUnkSite)
 	if (m_webBrowser2 == NULL)
 		return E_INVALIDARG;
 	return Connect();
-}
-
-STDMETHODIMP CBrowserSelector::Invoke(
-	DISPID dispidMember,
-	REFIID riid,
-	LCID lcid,
-	WORD wFlags,
-	DISPPARAMS *pdispparams,
-	VARIANT *pvarResult,
-	EXCEPINFO *pexcepinfo,
-	UINT *puArgErr)
-{
-	switch(dispidMember) {
-	case DISPID_BEFORENAVIGATE2:
-		OnBeforeNavigate2(
-			pdispparams->rgvarg[6].pdispVal,
-			pdispparams->rgvarg[5].pvarVal,
-			pdispparams->rgvarg[4].pvarVal,
-			pdispparams->rgvarg[3].pvarVal,
-			pdispparams->rgvarg[2].pvarVal,
-			pdispparams->rgvarg[1].pvarVal,
-			pdispparams->rgvarg[0].pboolVal);
-		break;
-	case DISPID_QUIT:
-		return Disconnect();
-	default:
-		break;
-	}
-	return S_OK;
 }
 
 bool CBrowserSelector::IsEmptyURLPatterns(void)
@@ -107,8 +84,8 @@ bool CBrowserSelector::IsTopLevelFrame(IDispatch* pDisp)
 	return (pDisp == spDispatch);
 }
 
-void CBrowserSelector::OnBeforeNavigate2(
-		IDispatch *pDisp,
+void STDMETHODCALLTYPE CBrowserSelector::OnBeforeNavigate2(
+		LPDISPATCH pDisp,
 		VARIANT *url,
 		VARIANT *flags,
 		VARIANT *targetFrameName,
@@ -141,6 +118,22 @@ void CBrowserSelector::OnBeforeNavigate2(
 		// Fall back to IE
 		*cancel = VARIANT_FALSE;
 	}
+}
+
+void STDMETHODCALLTYPE CBrowserSelector::OnNavigateComplete2(
+		LPDISPATCH pDisp,
+		VARIANT *URL)
+{
+	if (!IsTopLevelFrame(pDisp))
+		return;
+	CComPtr<IDispatch> pDispDocument;
+	m_webBrowser2->get_Document(&pDispDocument);
+	CComQIPtr<IHTMLDocument3, &IID_IHTMLDocument3> document(pDispDocument);
+}
+
+void STDMETHODCALLTYPE CBrowserSelector::OnQuit(LPDISPATCH pDisp)
+{
+	Disconnect();
 }
 
 wstring CBrowserSelector::GetBrowserNameToOpenURL(const wstring &url)

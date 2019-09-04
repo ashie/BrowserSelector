@@ -21,18 +21,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_0CE34B76375048C68CB24332684ECFC4"
-        "OwnerKey" = "8:_3BF7B80D023F407197BA479BED617B91"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_12BCF1BC7F404989B5991A83D0D9AC45"
-        "OwnerKey" = "8:_C03D314614CD4F4EA4A20243C8EF8F15"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_2DA6F27C8C9F48D29B180B027C2340F2"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -59,6 +47,18 @@
         {
         "MsmKey" = "8:_C03D314614CD4F4EA4A20243C8EF8F15"
         "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_DB3F9D9B184B40359B8CBB61D7E99DBC"
+        "OwnerKey" = "8:_3BF7B80D023F407197BA479BED617B91"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_DB7EAC69101C4CC78D18454C9FC9698D"
+        "OwnerKey" = "8:_C03D314614CD4F4EA4A20243C8EF8F15"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -326,7 +326,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:BrowserSelector"
         "ProductCode" = "8:{F68C4082-4D0D-48C3-8E32-D7C739561EE4}"
-        "PackageCode" = "8:{D9143DC2-EFFD-4C66-9D48-9EF27DDF0075}"
+        "PackageCode" = "8:{F9B84FBF-D56A-4E15-9F55-9F5FC62BED96}"
         "UpgradeCode" = "8:{864B7071-7281-4A14-B718-57CB190FE7B7}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -1398,7 +1398,7 @@
         }
         "MergeModule"
         {
-            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_0CE34B76375048C68CB24332684ECFC4"
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_DB3F9D9B184B40359B8CBB61D7E99DBC"
             {
             "UseDynamicProperties" = "11:TRUE"
             "IsDependency" = "11:TRUE"
@@ -1412,7 +1412,7 @@
             "Feature" = "8:"
             "IsolateTo" = "8:"
             }
-            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_12BCF1BC7F404989B5991A83D0D9AC45"
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_DB7EAC69101C4CC78D18454C9FC9698D"
             {
             "UseDynamicProperties" = "11:TRUE"
             "IsDependency" = "11:TRUE"
