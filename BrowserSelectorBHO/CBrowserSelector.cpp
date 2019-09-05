@@ -32,14 +32,40 @@ static HRESULT GetConnectionPoint(
 	return S_OK;
 }
 
-HRESULT CBrowserSelector::Connect(void)
+HRESULT CBrowserSelector::ConnectBrowserEvents(void)
 {
-	return DispEventAdvise(m_webBrowser2);
+	return IDispEventImpl<1, CBrowserSelector, &DIID_DWebBrowserEvents2, &LIBID_SHDocVw, 1, 1>::DispEventAdvise(m_webBrowser2);
 }
 
-HRESULT CBrowserSelector::Disconnect(void)
+HRESULT CBrowserSelector::DisconnectBrowserEvents(void)
 {
-	return DispEventUnadvise(m_webBrowser2);
+	return IDispEventImpl<1, CBrowserSelector, &DIID_DWebBrowserEvents2, &LIBID_SHDocVw, 1, 1>::DispEventUnadvise(m_webBrowser2);
+}
+
+HRESULT CBrowserSelector::ConnectDocumentEvents(void)
+{
+	if (!m_config.m_onlyOnAnchorClick)
+		return S_OK;
+
+	CComPtr<IDispatch> pDispDocument;
+	m_webBrowser2->get_Document(&pDispDocument);
+	CComQIPtr<IHTMLDocument3, &IID_IHTMLDocument3> document(pDispDocument);
+	if (!document)
+		return S_OK;
+	return IDispEventImpl<2, CBrowserSelector, &DIID_HTMLDocumentEvents2, &LIBID_MSHTML, 4, 0>::DispEventAdvise(document);
+}
+
+HRESULT CBrowserSelector::DisconnectDocumentEvents(void)
+{
+	if (!m_config.m_onlyOnAnchorClick)
+		return S_OK;
+
+	CComPtr<IDispatch> pDispDocument;
+	m_webBrowser2->get_Document(&pDispDocument);
+	CComQIPtr<IHTMLDocument3, &IID_IHTMLDocument3> document(pDispDocument);
+	if (!document)
+		return S_OK;
+	return IDispEventImpl<2, CBrowserSelector, &DIID_HTMLDocumentEvents2, &LIBID_MSHTML, 4, 0>::DispEventUnadvise(document);
 }
 
 STDMETHODIMP CBrowserSelector::SetSite(IUnknown *pUnkSite)
@@ -47,7 +73,7 @@ STDMETHODIMP CBrowserSelector::SetSite(IUnknown *pUnkSite)
 	m_webBrowser2 = pUnkSite;
 	if (m_webBrowser2 == NULL)
 		return E_INVALIDARG;
-	return Connect();
+	return ConnectBrowserEvents();
 }
 
 bool CBrowserSelector::IsEmptyURLPatterns(void)
@@ -79,12 +105,14 @@ void STDMETHODCALLTYPE CBrowserSelector::OnBeforeNavigate2(
 		VARIANT *headers,
 		VARIANT_BOOL *cancel)
 {
+	if (!IsTopLevelFrame(pDisp))
+		return;
+
+	DisconnectDocumentEvents();
+
 	CComVariant varURL(*url);
 	varURL.ChangeType(VT_BSTR);
 	wstring URL(varURL.bstrVal);
-
-	if (!IsTopLevelFrame(pDisp))
-		return;
 
 	wstring browserName = GetBrowserNameToOpenURL(URL);
 
@@ -94,12 +122,21 @@ void STDMETHODCALLTYPE CBrowserSelector::OnBeforeNavigate2(
 		return;
 	}
 
+	if (m_config.m_onlyOnAnchorClick) {
+		bool isClicked = m_isClicked;
+		m_isClicked = false;
+		if (!isClicked)
+			return;
+	}
+
 	*cancel = VARIANT_TRUE;
 	bool succeeded = OpenByModernBrowser(browserName, URL);
 
 	if (succeeded) {
 		if (m_config.m_closeEmptyTab && m_isEmptyTab)
 			m_webBrowser2->Quit();
+		else
+			ConnectDocumentEvents();
 	} else {
 		// Fall back to IE
 		*cancel = VARIANT_FALSE;
@@ -112,14 +149,42 @@ void STDMETHODCALLTYPE CBrowserSelector::OnNavigateComplete2(
 {
 	if (!IsTopLevelFrame(pDisp))
 		return;
-	CComPtr<IDispatch> pDispDocument;
-	m_webBrowser2->get_Document(&pDispDocument);
-	CComQIPtr<IHTMLDocument3, &IID_IHTMLDocument3> document(pDispDocument);
+	ConnectDocumentEvents();
 }
 
 void STDMETHODCALLTYPE CBrowserSelector::OnQuit(LPDISPATCH pDisp)
 {
-	Disconnect();
+	DisconnectDocumentEvents();
+	DisconnectBrowserEvents();
+}
+
+void STDMETHODCALLTYPE CBrowserSelector::OnClick(IHTMLEventObj *pEventObj)
+{
+	HRESULT hr;
+
+	IHTMLElement *element = nullptr;
+	pEventObj->get_srcElement(&element);
+
+	while (element) {
+		CComBSTR tagName;
+		element->get_tagName(&tagName);
+
+		if(tagName == "a" || tagName == "A") {
+			CComVariant v;
+			hr = element->getAttribute(L"href", 0, &v);
+			if (SUCCEEDED(hr)) {
+				// TODO: Should be compared at BeforeNavigate2
+				m_isClicked = true;
+			}
+			element->Release();
+			break;
+		}
+
+		IHTMLElement *parentElement = nullptr;
+		element->get_parentElement(&parentElement);
+		element->Release();
+		element = parentElement;
+	}
 }
 
 wstring CBrowserSelector::GetBrowserNameToOpenURL(const wstring &url)

@@ -1,6 +1,8 @@
 #pragma once
 #include "resource.h"
 #include <exdispid.h>
+#include <mshtmdid.h>
+#include <mshtml.h>
 
 #include "BrowserSelectorBHO_i.h"
 
@@ -13,11 +15,13 @@ class ATL_NO_VTABLE CBrowserSelector :
 	public CComCoClass<CBrowserSelector, &CLSID_BrowserSelector>,
 	public IObjectWithSiteImpl<CBrowserSelector>,
 	public IDispatchImpl<IBrowserSelector, &IID_IBrowserSelector, &LIBID_BrowserSelectorBHOLib, /*wMajor =*/ 1, /*wMinor =*/ 0>,
-	public IDispEventImpl<1, CBrowserSelector, &DIID_DWebBrowserEvents2, &LIBID_SHDocVw, 1, 1>
+	public IDispEventImpl<1, CBrowserSelector, &DIID_DWebBrowserEvents2, &LIBID_SHDocVw, 1, 1>,
+	public IDispEventImpl<2, CBrowserSelector, &DIID_HTMLDocumentEvents2, &LIBID_MSHTML, 4, 0>
 {
 public:
 	CBrowserSelector()
 		: m_isEmptyTab(true)
+		, m_isClicked(false)
 	{
 	}
 
@@ -34,6 +38,7 @@ BEGIN_SINK_MAP(CBrowserSelector)
 	SINK_ENTRY_EX(1, DIID_DWebBrowserEvents2, DISPID_BEFORENAVIGATE2, OnBeforeNavigate2)
 	SINK_ENTRY_EX(1, DIID_DWebBrowserEvents2, DISPID_NAVIGATECOMPLETE2, OnNavigateComplete2)
 	SINK_ENTRY_EX(1, DIID_DWebBrowserEvents2, DISPID_ONQUIT, OnQuit)
+	SINK_ENTRY_EX(2, DIID_HTMLDocumentEvents2, DISPID_HTMLDOCUMENTEVENTS2_ONCLICK, OnClick)
 END_SINK_MAP()
 
 	DECLARE_PROTECT_FINAL_CONSTRUCT()
@@ -45,8 +50,10 @@ public:
 	STDMETHOD(SetSite)(IUnknown *pUnkSite);
 
 private:
-	HRESULT Connect(void);
-	HRESULT Disconnect(void);
+	HRESULT ConnectBrowserEvents(void);
+	HRESULT DisconnectBrowserEvents(void);
+	HRESULT ConnectDocumentEvents(void);
+	HRESULT DisconnectDocumentEvents(void);
 	bool IsEmptyURLPatterns(void);
 	bool IsTopLevelFrame(IDispatch* pDisp);
 	std::wstring GetBrowserNameToOpenURL(const std::wstring &url);
@@ -64,6 +71,7 @@ private:
 		VARIANT* URL);
 	void STDMETHODCALLTYPE OnQuit(
 		LPDISPATCH pDisp);
+	void STDMETHODCALLTYPE OnClick(IHTMLEventObj *pEventObj);
 
 private:
 	CComQIPtr<IWebBrowser2, &IID_IWebBrowser2> m_webBrowser2;
@@ -71,6 +79,7 @@ private:
 	Config m_config;
 	bool m_shouldCloseEmptyTab;
 	bool m_isEmptyTab;
+	bool m_isClicked;
 };
 
 OBJECT_ENTRY_AUTO(__uuidof(BrowserSelector), CBrowserSelector)

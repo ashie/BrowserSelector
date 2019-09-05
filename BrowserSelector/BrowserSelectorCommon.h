@@ -50,6 +50,7 @@ class Config {
 public:
 	Config()
 		: m_closeEmptyTab(-1)
+		, m_onlyOnAnchorClick(-1)
 	{
 	}
 	virtual ~Config()
@@ -67,6 +68,8 @@ public:
 				m_secondBrowser = config->m_secondBrowser;
 			if (config->m_closeEmptyTab >= 0)
 				m_closeEmptyTab = config->m_closeEmptyTab;
+			if (config->m_onlyOnAnchorClick >= 0)
+				m_onlyOnAnchorClick = config->m_onlyOnAnchorClick;
 
 			m_hostNamePatterns.insert(
 				m_hostNamePatterns.begin(),
@@ -85,6 +88,7 @@ public:
 	std::wstring m_defaultBrowser;
 	std::wstring m_secondBrowser;
 	int m_closeEmptyTab;
+	int m_onlyOnAnchorClick;
 	MatchingPatterns m_hostNamePatterns;
 	MatchingPatterns m_urlPatterns;
 };
@@ -96,6 +100,7 @@ public:
 	{
 		m_defaultBrowser = L"ie";
 		m_closeEmptyTab = true;
+		m_onlyOnAnchorClick = false;
 	}
 	virtual ~DefaultConfig()
 	{
@@ -113,6 +118,7 @@ public:
 		::LoadStringRegValue(m_secondBrowser,
 			L"SecondBrowser", m_systemWide);
 		::LoadIntRegValue(m_closeEmptyTab, L"CloseEmptyTab", m_systemWide);
+		::LoadIntRegValue(m_onlyOnAnchorClick, L"OnlyOnAnchorClick", m_systemWide);
 		LoadHostNamePatterns(m_hostNamePatterns);
 		LoadURLPatterns(m_urlPatterns);
 	}
@@ -192,6 +198,7 @@ public:
 		GetStringValue(m_includePath, L"Common", L"Include");
 		GetIntValue(m_enableIncludeCache, L"Common", L"EnableIncludeCache");
 		GetIntValue(m_closeEmptyTab, L"Common", L"CloseEmptyTab");
+		GetIntValue(m_closeEmptyTab, L"Common", L"OnlyOnAnchorClick");
 		LoadURLPatterns(m_urlPatterns);
 		LoadHostNamePatterns(m_hostNamePatterns);
 
