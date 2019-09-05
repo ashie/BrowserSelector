@@ -71,7 +71,7 @@ private:
 		VARIANT* URL);
 	void STDMETHODCALLTYPE OnQuit(
 		LPDISPATCH pDisp);
-	void STDMETHODCALLTYPE OnClick(IHTMLEventObj *pEventObj);
+	bool STDMETHODCALLTYPE OnClick(IHTMLEventObj *pEventObj);
 
 private:
 	CComQIPtr<IWebBrowser2, &IID_IWebBrowser2> m_webBrowser2;

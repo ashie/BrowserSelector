@@ -154,14 +154,12 @@ void STDMETHODCALLTYPE CBrowserSelector::OnQuit(LPDISPATCH pDisp)
 	DisconnectBrowserEvents();
 }
 
-void STDMETHODCALLTYPE CBrowserSelector::OnClick(IHTMLEventObj *pEventObj)
+bool STDMETHODCALLTYPE CBrowserSelector::OnClick(IHTMLEventObj *pEventObj)
 {
 	HRESULT hr;
 
 	IHTMLElement *element = nullptr;
 	pEventObj->get_srcElement(&element);
-
-	wstring debugString(L"CBrowserSelector::OnClick: ");
 
 	while (element) {
 		CComBSTR tagName;
@@ -172,7 +170,6 @@ void STDMETHODCALLTYPE CBrowserSelector::OnClick(IHTMLEventObj *pEventObj)
 			hr = element->getAttribute(L"href", 0, &v);
 			if (SUCCEEDED(hr)) {
 				// TODO: Should be compared at BeforeNavigate2
-				debugString += v.bstrVal;
 				m_isClicked = true;
 			}
 			element->Release();
@@ -185,7 +182,7 @@ void STDMETHODCALLTYPE CBrowserSelector::OnClick(IHTMLEventObj *pEventObj)
 		element = parentElement;
 	}
 
-	OutputDebugString(debugString.c_str());
+	return true;
 }
 
 wstring CBrowserSelector::GetBrowserNameToOpenURL(const wstring &url)
