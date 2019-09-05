@@ -27,6 +27,25 @@ static void LoadStringRegValue(
 	reg.Close();
 }
 
+void LoadIntRegValue(
+	int &value,
+	const std::wstring &name,
+	bool systemWide = false)
+{
+	CRegKey reg;
+	HKEY keyParent = systemWide ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER;
+	CString regKeyName(_T("SOFTWARE\\ClearCode\\BrowserSelector"));
+	LONG result = reg.Open(keyParent, regKeyName, KEY_READ);
+	if (result == ERROR_SUCCESS) {
+		DWORD v;
+		result = reg.QueryDWORDValue(name.c_str(), v);
+		if (result == ERROR_SUCCESS)
+			value = v;
+	}
+	reg.Close();
+}
+
+
 class Config {
 public:
 	Config()
@@ -93,6 +112,7 @@ public:
 			L"DefaultBrowser", m_systemWide);
 		::LoadStringRegValue(m_secondBrowser,
 			L"SecondBrowser", m_systemWide);
+		::LoadIntRegValue(m_closeEmptyTab, L"CloseEmptyTab", m_systemWide);
 		LoadHostNamePatterns(m_hostNamePatterns);
 		LoadURLPatterns(m_urlPatterns);
 	}
