@@ -113,10 +113,7 @@ void STDMETHODCALLTYPE CBrowserSelector::OnBeforeNavigate2(
 	bool isClicked = m_isClicked;
 	m_isClicked = false;
 
-	CComVariant varURL(*url);
-	varURL.ChangeType(VT_BSTR);
-	wstring URL(varURL.bstrVal);
-
+	wstring URL(url->bstrVal);
 	wstring browserName = GetBrowserNameToOpenURL(URL);
 
 	if (browserName == L"ie") {
