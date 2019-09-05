@@ -54,7 +54,6 @@ private:
 	HRESULT DisconnectBrowserEvents(void);
 	HRESULT ConnectDocumentEvents(void);
 	HRESULT DisconnectDocumentEvents(void);
-	bool IsEmptyURLPatterns(void);
 	bool IsTopLevelFrame(IDispatch* pDisp);
 	std::wstring GetBrowserNameToOpenURL(const std::wstring &url);
 

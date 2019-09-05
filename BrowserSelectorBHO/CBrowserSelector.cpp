@@ -76,13 +76,6 @@ STDMETHODIMP CBrowserSelector::SetSite(IUnknown *pUnkSite)
 	return ConnectBrowserEvents();
 }
 
-bool CBrowserSelector::IsEmptyURLPatterns(void)
-{
-	return
-		m_config.m_hostNamePatterns.empty() &&
-		m_config.m_urlPatterns.size() == 1;
-}
-
 bool CBrowserSelector::IsTopLevelFrame(IDispatch* pDisp)
 {
 	if(!m_webBrowser2)
@@ -185,7 +178,5 @@ bool STDMETHODCALLTYPE CBrowserSelector::OnClick(IHTMLEventObj *pEventObj)
 
 wstring CBrowserSelector::GetBrowserNameToOpenURL(const wstring &url)
 {
-	if (IsEmptyURLPatterns())
-		return wstring(L"ie");
 	return ::GetBrowserNameToOpenURL(url, m_config);
 }
