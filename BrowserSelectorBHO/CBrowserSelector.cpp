@@ -112,17 +112,13 @@ void STDMETHODCALLTYPE CBrowserSelector::OnBeforeNavigate2(
 
 	bool isClicked = m_isClicked;
 	m_isClicked = false;
+	if (m_config.m_onlyOnAnchorClick && !isClicked)
+		return;
 
 	wstring URL(url->bstrVal);
 	wstring browserName = GetBrowserNameToOpenURL(URL);
 
-	if (browserName == L"ie") {
-		if (URL.size() > 0 && URL != L"about:blank" /* && URL != L"about:NewsFeed" */)
-			m_isEmptyTab = false;
-		return;
-	}
-
-	if (m_config.m_onlyOnAnchorClick && !isClicked)
+	if (browserName == L"ie")
 		return;
 
 	*cancel = VARIANT_TRUE;
@@ -141,11 +137,15 @@ void STDMETHODCALLTYPE CBrowserSelector::OnBeforeNavigate2(
 
 void STDMETHODCALLTYPE CBrowserSelector::OnNavigateComplete2(
 		LPDISPATCH pDisp,
-		VARIANT *URL)
+		VARIANT *url)
 {
 	if (!IsTopLevelFrame(pDisp))
 		return;
 	ConnectDocumentEvents();
+
+	wstring URL(url->bstrVal);
+	if (URL.size() > 0 && URL != L"about:blank" && URL != L"about:NewsFeed")
+		m_isEmptyTab = false;
 }
 
 void STDMETHODCALLTYPE CBrowserSelector::OnQuit(LPDISPATCH pDisp)
