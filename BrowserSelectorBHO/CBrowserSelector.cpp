@@ -185,8 +185,6 @@ bool STDMETHODCALLTYPE CBrowserSelector::OnClick(IHTMLEventObj *pEventObj)
 
 wstring CBrowserSelector::GetBrowserNameToOpenURL(const wstring &url)
 {
-	static CComAutoCriticalSection symMatchSection;
-
 	if (IsEmptyURLPatterns())
 		return wstring(L"ie");
 	return ::GetBrowserNameToOpenURL(url, m_config);
