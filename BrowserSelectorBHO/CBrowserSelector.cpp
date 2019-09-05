@@ -158,7 +158,7 @@ bool STDMETHODCALLTYPE CBrowserSelector::OnClick(IHTMLEventObj *pEventObj)
 {
 	HRESULT hr;
 
-	IHTMLElement *element = nullptr;
+	CComPtr<IHTMLElement> element;
 	pEventObj->get_srcElement(&element);
 
 	while (element) {
@@ -172,14 +172,12 @@ bool STDMETHODCALLTYPE CBrowserSelector::OnClick(IHTMLEventObj *pEventObj)
 				// TODO: Should be compared at BeforeNavigate2
 				m_isClicked = true;
 			}
-			element->Release();
 			break;
 		}
 
-		IHTMLElement *parentElement = nullptr;
-		element->get_parentElement(&parentElement);
-		element->Release();
-		element = parentElement;
+		hr = element->get_parentElement(&element);
+		if (FAILED(hr))
+			break;
 	}
 
 	return true;
