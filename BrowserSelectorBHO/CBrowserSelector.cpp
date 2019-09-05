@@ -110,6 +110,9 @@ void STDMETHODCALLTYPE CBrowserSelector::OnBeforeNavigate2(
 
 	DisconnectDocumentEvents();
 
+	bool isClicked = m_isClicked;
+	m_isClicked = false;
+
 	CComVariant varURL(*url);
 	varURL.ChangeType(VT_BSTR);
 	wstring URL(varURL.bstrVal);
@@ -122,12 +125,8 @@ void STDMETHODCALLTYPE CBrowserSelector::OnBeforeNavigate2(
 		return;
 	}
 
-	if (m_config.m_onlyOnAnchorClick) {
-		bool isClicked = m_isClicked;
-		m_isClicked = false;
-		if (!isClicked)
-			return;
-	}
+	if (m_config.m_onlyOnAnchorClick && !isClicked)
+		return;
 
 	*cancel = VARIANT_TRUE;
 	bool succeeded = OpenByModernBrowser(browserName, URL);
