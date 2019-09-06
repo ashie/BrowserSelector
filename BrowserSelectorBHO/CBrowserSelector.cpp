@@ -103,14 +103,18 @@ void STDMETHODCALLTYPE CBrowserSelector::OnBeforeNavigate2(
 
 	DisconnectDocumentEvents();
 
-	bool isClicked = m_isClicked;
-	m_isClicked = false;
-	if (m_config.m_onlyOnAnchorClick && !isClicked)
-		return;
+	wstring URL(url->bstrVal ? url->bstrVal : L"");
 
-	wstring URL(url->bstrVal);
+	if (m_config.m_onlyOnAnchorClick) {
+		// TODO: Need to resolve relative path
+		// bool isClicked = (URL == m_lastClickedURL);
+		bool isClicked = !m_lastClickedURL.empty();
+		m_lastClickedURL.clear();
+		if (!isClicked)
+			return;
+	}
+
 	wstring browserName = GetBrowserNameToOpenURL(URL);
-
 	if (browserName == L"ie")
 		return;
 
@@ -136,7 +140,7 @@ void STDMETHODCALLTYPE CBrowserSelector::OnNavigateComplete2(
 		return;
 	ConnectDocumentEvents();
 
-	wstring URL(url->bstrVal);
+	wstring URL(url->bstrVal ? url->bstrVal : L"");
 	if (URL.size() > 0 && URL != L"about:blank" && URL != L"about:NewsFeed")
 		m_isEmptyTab = false;
 }
@@ -147,9 +151,14 @@ void STDMETHODCALLTYPE CBrowserSelector::OnQuit(LPDISPATCH pDisp)
 	DisconnectBrowserEvents();
 }
 
-bool STDMETHODCALLTYPE CBrowserSelector::OnClick(IHTMLEventObj *pEventObj)
+bool STDMETHODCALLTYPE CBrowserSelector::OnMouseUp(IHTMLEventObj *pEventObj)
 {
 	HRESULT hr;
+
+	long button = 0;
+	hr = pEventObj->get_button(&button);
+	if (FAILED(hr) || button != 1)
+		return true;
 
 	CComPtr<IHTMLElement> element;
 	pEventObj->get_srcElement(&element);
@@ -161,9 +170,9 @@ bool STDMETHODCALLTYPE CBrowserSelector::OnClick(IHTMLEventObj *pEventObj)
 		if(tagName == "a" || tagName == "A") {
 			CComVariant v;
 			hr = element->getAttribute(L"href", 0, &v);
-			if (SUCCEEDED(hr)) {
-				// TODO: Should be compared at BeforeNavigate2
-				m_isClicked = true;
+			if (SUCCEEDED(hr) && v.bstrVal) {
+				// Entity references are already decoded
+				m_lastClickedURL = v.bstrVal;
 			}
 			break;
 		}
