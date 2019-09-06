@@ -143,11 +143,20 @@ void STDMETHODCALLTYPE CBrowserSelector::OnNavigateComplete2(
 {
 	if (!IsTopLevelFrame(pDisp))
 		return;
-	ConnectDocumentEvents();
 
 	wstring URL(url->bstrVal ? url->bstrVal : L"");
 	if (URL.size() > 0 && URL != L"about:blank" && URL != L"about:NewsFeed")
 		m_isEmptyTab = false;
+}
+
+void STDMETHODCALLTYPE CBrowserSelector::OnDocumentComplete(
+		LPDISPATCH pDisp,
+		VARIANT *url)
+{
+	if (!IsTopLevelFrame(pDisp))
+		return;
+
+	ConnectDocumentEvents();
 }
 
 void STDMETHODCALLTYPE CBrowserSelector::OnQuit(LPDISPATCH pDisp)
