@@ -110,6 +110,11 @@ void STDMETHODCALLTYPE CBrowserSelector::OnBeforeNavigate2(
 		// bool isClicked = (URL == m_lastClickedURL);
 		bool isClicked = !m_lastClickedURL.empty();
 		m_lastClickedURL.clear();
+
+		int timeDiff = ::GetTickCount() - m_lastClickedTime;
+		if (abs(timeDiff) > 100)
+			return;
+
 		if (!isClicked)
 			return;
 	}
@@ -173,6 +178,7 @@ bool STDMETHODCALLTYPE CBrowserSelector::OnMouseUp(IHTMLEventObj *pEventObj)
 			if (SUCCEEDED(hr) && v.bstrVal) {
 				// Entity references are already decoded
 				m_lastClickedURL = v.bstrVal;
+				m_lastClickedTime = ::GetTickCount();
 			}
 			break;
 		}

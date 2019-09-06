@@ -21,6 +21,7 @@ class ATL_NO_VTABLE CBrowserSelector :
 public:
 	CBrowserSelector()
 		: m_isEmptyTab(true)
+		, m_lastClickedTime(0)
 	{
 	}
 
@@ -76,6 +77,7 @@ private:
 	Config m_config;
 	bool m_shouldCloseEmptyTab;
 	bool m_isEmptyTab;
+	DWORD m_lastClickedTime;
 	std::wstring m_lastClickedURL;
 };
 
