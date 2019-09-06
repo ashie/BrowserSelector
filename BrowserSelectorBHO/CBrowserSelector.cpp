@@ -156,7 +156,8 @@ void STDMETHODCALLTYPE CBrowserSelector::OnDocumentComplete(
 	if (!IsTopLevelFrame(pDisp))
 		return;
 
-	ConnectDocumentEvents();
+	if (!m_isEmptyTab)
+		ConnectDocumentEvents();
 }
 
 void STDMETHODCALLTYPE CBrowserSelector::OnQuit(LPDISPATCH pDisp)
