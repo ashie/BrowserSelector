@@ -21,7 +21,6 @@ class ATL_NO_VTABLE CBrowserSelector :
 public:
 	CBrowserSelector()
 		: m_isEmptyTab(true)
-		, m_lastClickedTime(0)
 	{
 	}
 
@@ -39,6 +38,7 @@ BEGIN_SINK_MAP(CBrowserSelector)
 	SINK_ENTRY_EX(1, DIID_DWebBrowserEvents2, DISPID_NAVIGATECOMPLETE2, OnNavigateComplete2)
 	SINK_ENTRY_EX(1, DIID_DWebBrowserEvents2, DISPID_DOCUMENTCOMPLETE, OnDocumentComplete)
 	SINK_ENTRY_EX(1, DIID_DWebBrowserEvents2, DISPID_ONQUIT, OnQuit)
+	SINK_ENTRY_EX(2, DIID_HTMLDocumentEvents2, DISPID_HTMLDOCUMENTEVENTS2_ONMOUSEDOWN, OnMouseDown)
 	SINK_ENTRY_EX(2, DIID_HTMLDocumentEvents2, DISPID_HTMLDOCUMENTEVENTS2_ONMOUSEUP, OnMouseUp)
 END_SINK_MAP()
 
@@ -74,6 +74,7 @@ private:
 		VARIANT* URL);
 	void STDMETHODCALLTYPE OnQuit(
 		LPDISPATCH pDisp);
+	bool STDMETHODCALLTYPE OnMouseDown(IHTMLEventObj *pEventObj);
 	bool STDMETHODCALLTYPE OnMouseUp(IHTMLEventObj *pEventObj);
 
 private:
@@ -81,7 +82,6 @@ private:
 	Config m_config;
 	bool m_shouldCloseEmptyTab;
 	bool m_isEmptyTab;
-	DWORD m_lastClickedTime;
 	std::wstring m_lastClickedURL;
 };
 

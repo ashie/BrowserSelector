@@ -103,22 +103,10 @@ void STDMETHODCALLTYPE CBrowserSelector::OnBeforeNavigate2(
 
 	DisconnectDocumentEvents();
 
+	if (m_config.m_onlyOnAnchorClick)
+		return;
+
 	wstring URL(url->bstrVal ? url->bstrVal : L"");
-
-	if (m_config.m_onlyOnAnchorClick) {
-		// TODO: Need to resolve relative path
-		// bool isClicked = (URL == m_lastClickedURL);
-		bool isClicked = !m_lastClickedURL.empty();
-		m_lastClickedURL.clear();
-
-		int timeDiff = ::GetTickCount() - m_lastClickedTime;
-		if (abs(timeDiff) > 100)
-			return;
-
-		if (!isClicked)
-			return;
-	}
-
 	wstring browserName = GetBrowserNameToOpenURL(URL);
 	if (browserName == L"ie")
 		return;
@@ -166,14 +154,15 @@ void STDMETHODCALLTYPE CBrowserSelector::OnQuit(LPDISPATCH pDisp)
 	DisconnectBrowserEvents();
 }
 
-bool STDMETHODCALLTYPE CBrowserSelector::OnMouseUp(IHTMLEventObj *pEventObj)
+static void GetLink(std::wstring &url, IHTMLEventObj *pEventObj)
 {
-	HRESULT hr;
+	if (!pEventObj)
+		return;
 
 	long button = 0;
-	hr = pEventObj->get_button(&button);
+	HRESULT hr = pEventObj->get_button(&button);
 	if (FAILED(hr) || button != 1)
-		return true;
+		return;
 
 	CComPtr<IHTMLElement> element;
 	pEventObj->get_srcElement(&element);
@@ -185,11 +174,8 @@ bool STDMETHODCALLTYPE CBrowserSelector::OnMouseUp(IHTMLEventObj *pEventObj)
 		if(tagName == "a" || tagName == "A") {
 			CComVariant v;
 			hr = element->getAttribute(L"href", 0, &v);
-			if (SUCCEEDED(hr) && v.bstrVal) {
-				// Entity references are already decoded
-				m_lastClickedURL = v.bstrVal;
-				m_lastClickedTime = ::GetTickCount();
-			}
+			if (SUCCEEDED(hr) && v.bstrVal)
+				url = v.bstrVal;
 			break;
 		}
 
@@ -197,7 +183,34 @@ bool STDMETHODCALLTYPE CBrowserSelector::OnMouseUp(IHTMLEventObj *pEventObj)
 		if (FAILED(hr))
 			break;
 	}
+}
 
+bool STDMETHODCALLTYPE CBrowserSelector::OnMouseDown(IHTMLEventObj *pEventObj)
+{
+	GetLink(m_lastClickedURL, pEventObj);
+	return true;
+}
+
+bool STDMETHODCALLTYPE CBrowserSelector::OnMouseUp(IHTMLEventObj *pEventObj)
+{
+	std::wstring lastClickedURL(m_lastClickedURL), url;
+	if (m_lastClickedURL.empty())
+		return true;
+
+	m_lastClickedURL.clear();
+
+	GetLink(url, pEventObj);
+
+	if (url.empty())
+		return true;
+	if (lastClickedURL != url)
+		return true;
+	wstring browserName = GetBrowserNameToOpenURL(url);
+	if (browserName == L"ie")
+		return true;
+	bool succeeded = OpenByModernBrowser(browserName, url);
+	if (succeeded)
+		return false;
 	return true;
 }
 
