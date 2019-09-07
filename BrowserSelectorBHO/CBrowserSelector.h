@@ -21,6 +21,7 @@ class ATL_NO_VTABLE CBrowserSelector :
 public:
 	CBrowserSelector()
 		: m_isEmptyTab(true)
+		, m_lastClickedTime(0)
 	{
 	}
 
@@ -37,6 +38,7 @@ BEGIN_SINK_MAP(CBrowserSelector)
 	SINK_ENTRY_EX(1, DIID_DWebBrowserEvents2, DISPID_BEFORENAVIGATE2, OnBeforeNavigate2)
 	SINK_ENTRY_EX(1, DIID_DWebBrowserEvents2, DISPID_NAVIGATECOMPLETE2, OnNavigateComplete2)
 	SINK_ENTRY_EX(1, DIID_DWebBrowserEvents2, DISPID_DOCUMENTCOMPLETE, OnDocumentComplete)
+	SINK_ENTRY_EX(1, DIID_DWebBrowserEvents2, DISPID_NEWWINDOW3, OnNewWindow3)
 	SINK_ENTRY_EX(1, DIID_DWebBrowserEvents2, DISPID_ONQUIT, OnQuit)
 	SINK_ENTRY_EX(2, DIID_HTMLDocumentEvents2, DISPID_HTMLDOCUMENTEVENTS2_ONMOUSEDOWN, OnMouseDown)
 	SINK_ENTRY_EX(2, DIID_HTMLDocumentEvents2, DISPID_HTMLDOCUMENTEVENTS2_ONMOUSEUP, OnMouseUp)
@@ -57,6 +59,7 @@ private:
 	HRESULT DisconnectDocumentEvents(void);
 	bool IsTopLevelFrame(IDispatch* pDisp);
 	std::wstring GetBrowserNameToOpenURL(const std::wstring &url);
+	void DoNavigate(BSTR url, VARIANT_BOOL *cancel);
 
 	void STDMETHODCALLTYPE OnBeforeNavigate2(
 		LPDISPATCH pDisp,
@@ -65,13 +68,19 @@ private:
 		VARIANT* TargetFrameName,
 		VARIANT* PostData,
 		VARIANT* Headers,
-		VARIANT_BOOL* Cancel);
+		VARIANT_BOOL* cancel);
 	void STDMETHODCALLTYPE OnNavigateComplete2(
 		LPDISPATCH pDisp,
 		VARIANT* URL);
 	void STDMETHODCALLTYPE OnDocumentComplete(
 		LPDISPATCH pDisp,
 		VARIANT* URL);
+	void STDMETHODCALLTYPE OnNewWindow3(
+		LPDISPATCH *pDisp,
+		VARIANT_BOOL *cancel,
+		DWORD flags,
+		BSTR urlContext,
+		BSTR bstrURL);
 	void STDMETHODCALLTYPE OnQuit(
 		LPDISPATCH pDisp);
 	bool STDMETHODCALLTYPE OnMouseDown(IHTMLEventObj *pEventObj);
@@ -82,6 +91,8 @@ private:
 	Config m_config;
 	bool m_shouldCloseEmptyTab;
 	bool m_isEmptyTab;
+	DWORD m_lastClickedTime;
+	std::wstring m_lastPressedURL;
 	std::wstring m_lastClickedURL;
 };
 

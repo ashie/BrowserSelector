@@ -89,24 +89,20 @@ bool CBrowserSelector::IsTopLevelFrame(IDispatch* pDisp)
 	return (pDisp == spDispatch);
 }
 
-void STDMETHODCALLTYPE CBrowserSelector::OnBeforeNavigate2(
-		LPDISPATCH pDisp,
-		VARIANT *url,
-		VARIANT *flags,
-		VARIANT *targetFrameName,
-		VARIANT *postData,
-		VARIANT *headers,
-		VARIANT_BOOL *cancel)
+void CBrowserSelector::DoNavigate(BSTR url, VARIANT_BOOL *cancel)
 {
-	if (!IsTopLevelFrame(pDisp))
-		return;
+	wstring URL(url);
 
-	DisconnectDocumentEvents();
+	if (m_config.m_onlyOnAnchorClick) {
+		std::wstring lastClickedURL = m_lastClickedURL;
+		m_lastClickedURL.clear();
+		int timeDiff = ::GetTickCount() - m_lastClickedTime;
+		if (abs(timeDiff) > 100)
+			return;
+		if (!lastClickedURL.empty())
+			return;
+	}
 
-	if (m_config.m_onlyOnAnchorClick)
-		return;
-
-	wstring URL(url->bstrVal ? url->bstrVal : L"");
 	wstring browserName = GetBrowserNameToOpenURL(URL);
 	if (browserName == L"ie")
 		return;
@@ -123,6 +119,21 @@ void STDMETHODCALLTYPE CBrowserSelector::OnBeforeNavigate2(
 		// Fall back to IE
 		*cancel = VARIANT_FALSE;
 	}
+}
+
+void STDMETHODCALLTYPE CBrowserSelector::OnBeforeNavigate2(
+		LPDISPATCH pDisp,
+		VARIANT *url,
+		VARIANT *flags,
+		VARIANT *targetFrameName,
+		VARIANT *postData,
+		VARIANT *headers,
+		VARIANT_BOOL *cancel)
+{
+	if (!IsTopLevelFrame(pDisp))
+		return;
+	DisconnectDocumentEvents();
+	DoNavigate(url->bstrVal, cancel);
 }
 
 void STDMETHODCALLTYPE CBrowserSelector::OnNavigateComplete2(
@@ -146,6 +157,18 @@ void STDMETHODCALLTYPE CBrowserSelector::OnDocumentComplete(
 
 	if (!m_isEmptyTab)
 		ConnectDocumentEvents();
+}
+
+void STDMETHODCALLTYPE CBrowserSelector::OnNewWindow3(
+		LPDISPATCH *pDisp,
+		VARIANT_BOOL *cancel,
+		DWORD flags,
+		BSTR urlContext,
+		BSTR url)
+{
+	if (!m_config.m_onlyOnAnchorClick)
+		return;
+	DoNavigate(url, cancel);
 }
 
 void STDMETHODCALLTYPE CBrowserSelector::OnQuit(LPDISPATCH pDisp)
@@ -187,30 +210,25 @@ static void GetLink(std::wstring &url, IHTMLEventObj *pEventObj)
 
 bool STDMETHODCALLTYPE CBrowserSelector::OnMouseDown(IHTMLEventObj *pEventObj)
 {
-	GetLink(m_lastClickedURL, pEventObj);
+	GetLink(m_lastPressedURL, pEventObj);
 	return true;
 }
 
 bool STDMETHODCALLTYPE CBrowserSelector::OnMouseUp(IHTMLEventObj *pEventObj)
 {
-	std::wstring lastClickedURL(m_lastClickedURL), url;
-	if (m_lastClickedURL.empty())
+	std::wstring lastPressedURL(m_lastPressedURL), url;
+	if (m_lastPressedURL.empty())
 		return true;
 
-	m_lastClickedURL.clear();
+	m_lastPressedURL.clear();
 
-	GetLink(url, pEventObj);
+	GetLink(m_lastClickedURL, pEventObj);
 
-	if (url.empty())
-		return true;
-	if (lastClickedURL != url)
-		return true;
-	wstring browserName = GetBrowserNameToOpenURL(url);
-	if (browserName == L"ie")
-		return true;
-	bool succeeded = OpenByModernBrowser(browserName, url);
-	if (succeeded)
-		return false;
+	if (!m_lastClickedURL.empty() && m_lastPressedURL != m_lastClickedURL) {
+		m_lastPressedURL.clear();
+		m_lastClickedURL.clear();
+	}
+	m_lastClickedTime = ::GetTickCount();
 	return true;
 }
 
