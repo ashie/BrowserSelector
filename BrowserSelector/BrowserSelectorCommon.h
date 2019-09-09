@@ -198,7 +198,7 @@ public:
 		GetStringValue(m_includePath, L"Common", L"Include");
 		GetIntValue(m_enableIncludeCache, L"Common", L"EnableIncludeCache");
 		GetIntValue(m_closeEmptyTab, L"Common", L"CloseEmptyTab");
-		GetIntValue(m_closeEmptyTab, L"Common", L"OnlyOnAnchorClick");
+		GetIntValue(m_onlyOnAnchorClick, L"Common", L"OnlyOnAnchorClick");
 		LoadURLPatterns(m_urlPatterns);
 		LoadHostNamePatterns(m_hostNamePatterns);
 
