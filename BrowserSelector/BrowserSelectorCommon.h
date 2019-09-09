@@ -9,44 +9,6 @@
 typedef std::pair<std::wstring, std::wstring> MatchingPattern;
 typedef std::vector<MatchingPattern> MatchingPatterns;
 
-static void LoadStringRegValue(
-	std::wstring &value,
-	const std::wstring &name,
-	bool systemWide = false)
-{
-	CRegKey reg;
-	HKEY keyParent = systemWide ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER;
-	CString regKeyName(_T("SOFTWARE\\ClearCode\\BrowserSelector"));
-	LONG result = reg.Open(keyParent, regKeyName, KEY_READ);
-	if (result == ERROR_SUCCESS) {
-		TCHAR regValue[256];
-		ULONG regValueSize = sizeof(regValue) / sizeof(TCHAR);
-		result = reg.QueryStringValue(name.c_str(), regValue, &regValueSize);
-		if (result == ERROR_SUCCESS)
-			value = regValue;
-	}
-	reg.Close();
-}
-
-void LoadIntRegValue(
-	int &value,
-	const std::wstring &name,
-	bool systemWide = false)
-{
-	CRegKey reg;
-	HKEY keyParent = systemWide ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER;
-	CString regKeyName(_T("SOFTWARE\\ClearCode\\BrowserSelector"));
-	LONG result = reg.Open(keyParent, regKeyName, KEY_READ);
-	if (result == ERROR_SUCCESS) {
-		DWORD v;
-		result = reg.QueryDWORDValue(name.c_str(), v);
-		if (result == ERROR_SUCCESS)
-			value = v;
-	}
-	reg.Close();
-}
-
-
 class Config {
 public:
 	Config()
@@ -119,18 +81,55 @@ public:
 	RegistryConfig(bool systemWide = false)
 		: m_systemWide(systemWide)
 	{
-		::LoadStringRegValue(m_defaultBrowser,
+		LoadStringValue(m_defaultBrowser,
 			L"DefaultBrowser", m_systemWide);
-		::LoadStringRegValue(m_secondBrowser,
+		LoadStringValue(m_secondBrowser,
 			L"SecondBrowser", m_systemWide);
-		::LoadIntRegValue(m_closeEmptyTab, L"CloseEmptyTab", m_systemWide);
-		::LoadIntRegValue(m_onlyOnAnchorClick, L"OnlyOnAnchorClick", m_systemWide);
-		::LoadIntRegValue(m_useRegex, L"UseRegex", m_systemWide);
+		LoadIntValue(m_closeEmptyTab, L"CloseEmptyTab", m_systemWide);
+		LoadIntValue(m_onlyOnAnchorClick, L"OnlyOnAnchorClick", m_systemWide);
+		LoadIntValue(m_useRegex, L"UseRegex", m_systemWide);
 		LoadHostNamePatterns(m_hostNamePatterns);
 		LoadURLPatterns(m_urlPatterns);
 	}
 	virtual ~RegistryConfig()
 	{
+	}
+
+	static void LoadStringValue(
+		std::wstring &value,
+		const std::wstring &name,
+		bool systemWide = false)
+	{
+		CRegKey reg;
+		HKEY keyParent = systemWide ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER;
+		CString regKeyName(_T("SOFTWARE\\ClearCode\\BrowserSelector"));
+		LONG result = reg.Open(keyParent, regKeyName, KEY_READ);
+		if (result == ERROR_SUCCESS) {
+			TCHAR regValue[256];
+			ULONG regValueSize = sizeof(regValue) / sizeof(TCHAR);
+			result = reg.QueryStringValue(name.c_str(), regValue, &regValueSize);
+			if (result == ERROR_SUCCESS)
+				value = regValue;
+		}
+		reg.Close();
+	}
+
+	static void LoadIntValue(
+		int &value,
+		const std::wstring &name,
+		bool systemWide = false)
+	{
+		CRegKey reg;
+		HKEY keyParent = systemWide ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER;
+		CString regKeyName(_T("SOFTWARE\\ClearCode\\BrowserSelector"));
+		LONG result = reg.Open(keyParent, regKeyName, KEY_READ);
+		if (result == ERROR_SUCCESS) {
+			DWORD v;
+			result = reg.QueryDWORDValue(name.c_str(), v);
+			if (result == ERROR_SUCCESS)
+				value = v;
+		}
+		reg.Close();
 	}
 
 	void LoadMatchingPatterns(
