@@ -93,6 +93,8 @@ void CBrowserSelector::DoNavigate(BSTR url, VARIANT_BOOL *cancel)
 {
 	wstring URL(url);
 
+	*cancel = VARIANT_FALSE;
+
 	if (m_config.m_onlyOnAnchorClick) {
 		std::wstring lastClickedURL = m_lastClickedURL;
 		m_lastClickedURL.clear();
@@ -107,18 +109,8 @@ void CBrowserSelector::DoNavigate(BSTR url, VARIANT_BOOL *cancel)
 	if (browserName == L"ie")
 		return;
 
-	*cancel = VARIANT_TRUE;
 	bool succeeded = OpenByModernBrowser(browserName, URL);
-
-	if (succeeded) {
-		if (m_config.m_closeEmptyTab && m_isEmptyFrame)
-			m_webBrowser2->Quit();
-		else
-			ConnectDocumentEvents();
-	} else {
-		// Fall back to IE
-		*cancel = VARIANT_FALSE;
-	}
+	*cancel= succeeded ? VARIANT_TRUE : VARIANT_FALSE;
 }
 
 void STDMETHODCALLTYPE CBrowserSelector::OnBeforeNavigate2(
@@ -132,8 +124,17 @@ void STDMETHODCALLTYPE CBrowserSelector::OnBeforeNavigate2(
 {
 	if (!IsTopLevelFrame(pDisp))
 		return;
+
 	DisconnectDocumentEvents();
+
 	DoNavigate(url->bstrVal, cancel);
+
+	if (*cancel) {
+		if (m_config.m_closeEmptyTab && m_isEmptyFrame)
+			m_webBrowser2->Quit();
+		else
+			ConnectDocumentEvents();
+	}
 }
 
 void STDMETHODCALLTYPE CBrowserSelector::OnNavigateComplete2(
@@ -165,7 +166,13 @@ void STDMETHODCALLTYPE CBrowserSelector::OnNewWindow3(
 {
 	if (!m_config.m_onlyOnAnchorClick)
 		return;
+
 	DoNavigate(url, cancel);
+
+	if (*cancel) {
+		if (m_config.m_closeEmptyTab && m_isEmptyFrame)
+			m_webBrowser2->Quit();
+	}
 }
 
 void STDMETHODCALLTYPE CBrowserSelector::OnQuit(LPDISPATCH pDisp)
