@@ -99,7 +99,7 @@ void CBrowserSelector::DoNavigate(BSTR url, VARIANT_BOOL *cancel)
 		int timeDiff = ::GetTickCount() - m_lastClickedTime;
 		if (abs(timeDiff) > 100)
 			return;
-		if (!lastClickedURL.empty())
+		if (lastClickedURL.empty())
 			return;
 	}
 
@@ -224,10 +224,8 @@ bool STDMETHODCALLTYPE CBrowserSelector::OnMouseUp(IHTMLEventObj *pEventObj)
 
 	GetLink(m_lastClickedURL, pEventObj);
 
-	if (!m_lastClickedURL.empty() && m_lastPressedURL != m_lastClickedURL) {
-		m_lastPressedURL.clear();
+	if (!m_lastClickedURL.empty() && lastPressedURL != m_lastClickedURL)
 		m_lastClickedURL.clear();
-	}
 	m_lastClickedTime = ::GetTickCount();
 	return true;
 }
