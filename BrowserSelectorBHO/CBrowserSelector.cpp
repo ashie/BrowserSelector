@@ -47,6 +47,9 @@ HRESULT CBrowserSelector::ConnectDocumentEvents(void)
 	if (!m_config.m_onlyOnAnchorClick)
 		return S_OK;
 
+	if (m_isEmptyFrame)
+		return S_OK;
+
 	CComPtr<IDispatch> pDispDocument;
 	m_webBrowser2->get_Document(&pDispDocument);
 	CComQIPtr<IHTMLDocument3, &IID_IHTMLDocument3> document(pDispDocument);
@@ -153,8 +156,7 @@ void STDMETHODCALLTYPE CBrowserSelector::OnDocumentComplete(
 	if (!IsTopLevelFrame(pDisp))
 		return;
 
-	if (!m_isEmptyFrame)
-		ConnectDocumentEvents();
+	ConnectDocumentEvents();
 }
 
 void STDMETHODCALLTYPE CBrowserSelector::OnNewWindow3(
