@@ -27,12 +27,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_36911A9E50074A378B2EF78DD780A30D"
-        "OwnerKey" = "8:_3BF7B80D023F407197BA479BED617B91"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_3BF7B80D023F407197BA479BED617B91"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -45,14 +39,20 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_98C013428ED3461D9B22A3FF092C5628"
-        "OwnerKey" = "8:_C03D314614CD4F4EA4A20243C8EF8F15"
+        "MsmKey" = "8:_A41BF1FC9A2F4F4B9FF848DAE2CDB401"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_A41BF1FC9A2F4F4B9FF848DAE2CDB401"
-        "OwnerKey" = "8:_UNDEFINED"
+        "MsmKey" = "8:_B59370E3589B4DF6A3E7FD4EAE4D7A4A"
+        "OwnerKey" = "8:_3BF7B80D023F407197BA479BED617B91"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_BFAE697260954B388562D940A8F7B528"
+        "OwnerKey" = "8:_C03D314614CD4F4EA4A20243C8EF8F15"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -326,7 +326,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:BrowserSelector"
         "ProductCode" = "8:{1D6F9743-EFE4-4E8A-B0EC-B1D175B29767}"
-        "PackageCode" = "8:{CBBA8935-0292-4C29-9521-FC830C7B6F6F}"
+        "PackageCode" = "8:{CE9978CD-0363-4E86-8569-452DEAD13EA4}"
         "UpgradeCode" = "8:{864B7071-7281-4A14-B718-57CB190FE7B7}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -1241,8 +1241,8 @@
                             "Type" = "3:3"
                             "ContextData" = "8:"
                             "Attributes" = "3:0"
-                            "Setting" = "3:1"
-                            "Value" = "8:#1202"
+                            "Setting" = "3:2"
+                            "Value" = "8:このソフトウェアは、MITライセンスのもとで公開されています。"
                             "DefaultValue" = "8:#1202"
                             "UsePlugInResources" = "11:TRUE"
                             }
@@ -1398,7 +1398,7 @@
         }
         "MergeModule"
         {
-            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_36911A9E50074A378B2EF78DD780A30D"
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_B59370E3589B4DF6A3E7FD4EAE4D7A4A"
             {
             "UseDynamicProperties" = "11:TRUE"
             "IsDependency" = "11:TRUE"
@@ -1412,7 +1412,7 @@
             "Feature" = "8:"
             "IsolateTo" = "8:"
             }
-            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_98C013428ED3461D9B22A3FF092C5628"
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_BFAE697260954B388562D940A8F7B528"
             {
             "UseDynamicProperties" = "11:TRUE"
             "IsDependency" = "11:TRUE"
