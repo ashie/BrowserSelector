@@ -8,7 +8,10 @@ HRESULT CBrowserSelector::FinalConstruct()
 {
 	m_config.LoadAll(_AtlBaseModule.GetResourceInstance());
 	MatchingPatterns &patterns(m_config.m_urlPatterns);
-	patterns.insert(patterns.begin(), MatchingPattern(L"about:*", L"ie"));
+	if (m_config.m_useRegex)
+		patterns.insert(patterns.begin(), MatchingPattern(L"^about:.*", L"ie"));
+	else
+		patterns.insert(patterns.begin(), MatchingPattern(L"about:*", L"ie"));
 
 	return S_OK;
 }

@@ -1,5 +1,6 @@
 #include <string>
 #include <vector>
+#include <regex>
 #include <atlbase.h>
 #include <atlutil.h>
 #include <ShellAPI.h>
@@ -51,6 +52,7 @@ public:
 	Config()
 		: m_closeEmptyTab(-1)
 		, m_onlyOnAnchorClick(-1)
+		, m_useRegex(-1)
 	{
 	}
 	virtual ~Config()
@@ -70,6 +72,8 @@ public:
 				m_closeEmptyTab = config->m_closeEmptyTab;
 			if (config->m_onlyOnAnchorClick >= 0)
 				m_onlyOnAnchorClick = config->m_onlyOnAnchorClick;
+			if (config->m_useRegex >= 0)
+				m_useRegex = config->m_useRegex;
 
 			m_hostNamePatterns.insert(
 				m_hostNamePatterns.begin(),
@@ -89,6 +93,7 @@ public:
 	std::wstring m_secondBrowser;
 	int m_closeEmptyTab;
 	int m_onlyOnAnchorClick;
+	int m_useRegex;
 	MatchingPatterns m_hostNamePatterns;
 	MatchingPatterns m_urlPatterns;
 };
@@ -101,6 +106,7 @@ public:
 		m_defaultBrowser = L"ie";
 		m_closeEmptyTab = true;
 		m_onlyOnAnchorClick = false;
+		m_useRegex = false;
 	}
 	virtual ~DefaultConfig()
 	{
@@ -119,6 +125,7 @@ public:
 			L"SecondBrowser", m_systemWide);
 		::LoadIntRegValue(m_closeEmptyTab, L"CloseEmptyTab", m_systemWide);
 		::LoadIntRegValue(m_onlyOnAnchorClick, L"OnlyOnAnchorClick", m_systemWide);
+		::LoadIntRegValue(m_useRegex, L"UseRegex", m_systemWide);
 		LoadHostNamePatterns(m_hostNamePatterns);
 		LoadURLPatterns(m_urlPatterns);
 	}
@@ -126,7 +133,7 @@ public:
 	{
 	}
 
-	static void LoadMatchingPatterns(
+	void LoadMatchingPatterns(
 		MatchingPatterns &patterns,
 		LPCTSTR type,
 		bool systemWide = false)
@@ -149,7 +156,7 @@ public:
 			result = reg.QueryStringValue(valueName, value, &valueLen);
 
 			TCHAR *browserName = L"";
-			for (DWORD i = 0; i < valueLen; i++) {
+			for (DWORD i = 0; !m_useRegex && i < valueLen; i++) {
 				if (value[i] == '|') {
 					value[i] = '\0';
 					browserName = value + i + 1;
@@ -199,6 +206,7 @@ public:
 		GetIntValue(m_enableIncludeCache, L"Common", L"EnableIncludeCache");
 		GetIntValue(m_closeEmptyTab, L"Common", L"CloseEmptyTab");
 		GetIntValue(m_onlyOnAnchorClick, L"Common", L"OnlyOnAnchorClick");
+		GetIntValue(m_useRegex, L"Common", L"UseRegex");
 		LoadURLPatterns(m_urlPatterns);
 		LoadHostNamePatterns(m_hostNamePatterns);
 
@@ -285,7 +293,7 @@ public:
 				continue;
 
 			TCHAR *browserName = L"";
-			for (DWORD i = 0; i < nWrittenChars; i++) {
+			for (DWORD i = 0; !m_useRegex && i < nWrittenChars; i++) {
 				if (buf[i] == '|') {
 					buf[i] = '\0';
 					browserName = buf + i + 1;
@@ -503,22 +511,56 @@ static std::wstring ensureValidBrowserName(
 		return std::wstring(L"ie");
 }
 
+static bool matchSimpleWildCard(const std::wstring &url, const std::wstring &pattern)
+{
+	static CComAutoCriticalSection symMatchSection;
+	symMatchSection.Lock();
+	BOOL matched = SymMatchStringW(url.c_str(), pattern.c_str(), FALSE);
+	symMatchSection.Unlock();
+	return matched ? true : false;
+}
+
+static bool matchRegex(const std::wstring &url, const std::wstring &pattern)
+{
+	std::string urlASCII, patternASCII;
+	for (DWORD i = 0; i < url.size(); i++) {
+		int ch = url[i];
+		urlASCII += ch;
+	}
+	for (DWORD i = 0; i < pattern.size(); i++) {
+		int ch = pattern[i];
+		patternASCII += ch;
+	}
+
+	try {
+		std::regex re(patternASCII);
+		std::smatch match;
+		return std::regex_match(urlASCII, match, re);
+	} catch (std::regex_error &e) {
+		return false;
+	}
+}
+
+static bool matchURL(const std::wstring &url, const std::wstring &pattern, const Config &config)
+{
+	if (config.m_useRegex)
+		return matchRegex(url, pattern);
+	else
+		return matchSimpleWildCard(url, pattern);
+}
+
 static std::wstring GetBrowserNameToOpenURL(
 	const std::wstring &url,
 	const Config &config)
 {
-	static CComAutoCriticalSection symMatchSection;
-
 	if (url.empty())
 		return ensureValidBrowserName(config);
 
 	MatchingPatterns::const_iterator it;
 
 	for (it = config.m_urlPatterns.begin(); it != config.m_urlPatterns.end(); it++) {
-		symMatchSection.Lock();
 		const std::wstring &urlPattern = it->first;
-		BOOL matched = SymMatchStringW(url.c_str(), urlPattern.c_str(), FALSE);
-		symMatchSection.Unlock();
+		bool matched = matchURL(url, urlPattern, config);
 		if (matched)
 			return ensureValidBrowserName(config, &it->second);
 	}
@@ -529,10 +571,8 @@ static std::wstring GetBrowserNameToOpenURL(
 
 	if (hostName && *hostName) {
 		for (it = config.m_hostNamePatterns.begin(); it != config.m_hostNamePatterns.end(); it++) {
-			symMatchSection.Lock();
 			const std::wstring &hostNamePattern = it->first;
-			BOOL matched = SymMatchStringW(cURL.GetHostName(), hostNamePattern.c_str(), FALSE);
-			symMatchSection.Unlock();
+			bool matched = matchURL(url, hostNamePattern, config);
 			if (matched)
 				return ensureValidBrowserName(config, &it->second);
 		}
