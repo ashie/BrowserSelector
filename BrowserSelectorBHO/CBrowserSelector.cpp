@@ -164,9 +164,6 @@ void STDMETHODCALLTYPE CBrowserSelector::OnNewWindow3(
 		BSTR urlContext,
 		BSTR url)
 {
-	if (!m_config.m_onlyOnAnchorClick)
-		return;
-
 	DoNavigate(url, cancel);
 
 	if (*cancel) {
