@@ -111,7 +111,7 @@ void CBrowserSelector::DoNavigate(BSTR url, VARIANT_BOOL *cancel)
 	bool succeeded = OpenByModernBrowser(browserName, URL);
 
 	if (succeeded) {
-		if (m_config.m_closeEmptyTab && m_isEmptyTab)
+		if (m_config.m_closeEmptyTab && m_isEmptyFrame)
 			m_webBrowser2->Quit();
 		else
 			ConnectDocumentEvents();
@@ -140,12 +140,9 @@ void STDMETHODCALLTYPE CBrowserSelector::OnNavigateComplete2(
 		LPDISPATCH pDisp,
 		VARIANT *url)
 {
-	if (!IsTopLevelFrame(pDisp))
-		return;
-
 	wstring URL(url->bstrVal ? url->bstrVal : L"");
 	if (URL.size() > 0 && URL != L"about:blank" && URL != L"about:NewsFeed")
-		m_isEmptyTab = false;
+		m_isEmptyFrame = false;
 }
 
 void STDMETHODCALLTYPE CBrowserSelector::OnDocumentComplete(
@@ -155,7 +152,7 @@ void STDMETHODCALLTYPE CBrowserSelector::OnDocumentComplete(
 	if (!IsTopLevelFrame(pDisp))
 		return;
 
-	if (!m_isEmptyTab)
+	if (!m_isEmptyFrame)
 		ConnectDocumentEvents();
 }
 
