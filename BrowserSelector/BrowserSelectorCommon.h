@@ -53,7 +53,7 @@ public:
 		pattern.first = buf;
 
 		for (DWORD i = nChars - 1; i >= 0; i--) {
-			if (m_useRegex) {
+			if (m_useRegex > 0) {
 				if (buf[i] != '$')
 					continue;
 				if (i > 0 && buf[i - 1] == '\\') {
@@ -553,7 +553,7 @@ static bool matchRegex(const std::wstring &url, const std::wstring &pattern)
 
 static bool matchURL(const std::wstring &url, const std::wstring &pattern, const Config &config)
 {
-	if (config.m_useRegex)
+	if (config.m_useRegex > 0)
 		return matchRegex(url, pattern);
 	else
 		return matchSimpleWildCard(url, pattern);
