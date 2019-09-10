@@ -6,8 +6,8 @@
 #include <ShellAPI.h>
 #include <Shlobj.h>
 
-typedef std::pair<std::wstring, std::wstring> MatchingPattern;
-typedef std::vector<MatchingPattern> MatchingPatterns;
+typedef std::pair<std::wstring, std::wstring> SwitchingPattern;
+typedef std::vector<SwitchingPattern> SwitchingPatterns;
 
 class Config {
 public:
@@ -48,7 +48,7 @@ public:
 		}
 	}
 
-	void parseMatchingPattern(MatchingPattern &pattern, TCHAR *buf, DWORD nChars)
+	void parseSwitchingPattern(SwitchingPattern &pattern, TCHAR *buf, DWORD nChars)
 	{
 		pattern.first = buf;
 
@@ -83,8 +83,8 @@ public:
 	int m_closeEmptyTab;
 	int m_onlyOnAnchorClick;
 	int m_useRegex;
-	MatchingPatterns m_hostNamePatterns;
-	MatchingPatterns m_urlPatterns;
+	SwitchingPatterns m_hostNamePatterns;
+	SwitchingPatterns m_urlPatterns;
 };
 
 class DefaultConfig : public Config
@@ -159,8 +159,8 @@ public:
 		reg.Close();
 	}
 
-	void LoadMatchingPatterns(
-		MatchingPatterns &patterns,
+	void LoadSwitchingPatterns(
+		SwitchingPatterns &patterns,
 		LPCTSTR type,
 		bool systemWide = false)
 	{
@@ -181,21 +181,21 @@ public:
 			DWORD valueLen = sizeof(value) / sizeof(TCHAR);
 			result = reg.QueryStringValue(valueName, value, &valueLen);
 
-			patterns.push_back(MatchingPattern());
-			parseMatchingPattern(patterns.back(), value, valueLen);
+			patterns.push_back(SwitchingPattern());
+			parseSwitchingPattern(patterns.back(), value, valueLen);
 		}
 
 		reg.Close();
 	}
 
-	void LoadHostNamePatterns(MatchingPatterns &patterns)
+	void LoadHostNamePatterns(SwitchingPatterns &patterns)
 	{
-		LoadMatchingPatterns(patterns, _T("HostNamePatterns"), m_systemWide);
+		LoadSwitchingPatterns(patterns, _T("HostNamePatterns"), m_systemWide);
 	}
 
-	void LoadURLPatterns(MatchingPatterns &patterns)
+	void LoadURLPatterns(SwitchingPatterns &patterns)
 	{
-		LoadMatchingPatterns(patterns, _T("URLPatterns"), m_systemWide);
+		LoadSwitchingPatterns(patterns, _T("URLPatterns"), m_systemWide);
 	}
 
 public:
@@ -287,17 +287,17 @@ public:
 		}
 	}
 
-	void LoadHostNamePatterns(MatchingPatterns &hostNamePatterns)
+	void LoadHostNamePatterns(SwitchingPatterns &hostNamePatterns)
 	{
-		LoadMatchingPatterns(hostNamePatterns, L"HostNamePatterns");
+		LoadSwitchingPatterns(hostNamePatterns, L"HostNamePatterns");
 	}
 
-	void LoadURLPatterns(MatchingPatterns &urlPatterns)
+	void LoadURLPatterns(SwitchingPatterns &urlPatterns)
 	{
-		LoadMatchingPatterns(urlPatterns, L"URLPatterns");
+		LoadSwitchingPatterns(urlPatterns, L"URLPatterns");
 	}
 
-	void LoadMatchingPatterns(MatchingPatterns &patterns, LPCTSTR type)
+	void LoadSwitchingPatterns(SwitchingPatterns &patterns, LPCTSTR type)
 	{
 		std::vector<std::wstring> keys;
 		GetKeys(keys, type);
@@ -310,8 +310,8 @@ public:
 			if (nWrittenChars < 1)
 				continue;
 
-			patterns.push_back(MatchingPattern());
-			parseMatchingPattern(patterns.back(), buf, nWrittenChars);
+			patterns.push_back(SwitchingPattern());
+			parseSwitchingPattern(patterns.back(), buf, nWrittenChars);
 		}
 	}
 
@@ -566,7 +566,7 @@ static std::wstring GetBrowserNameToOpenURL(
 	if (url.empty())
 		return ensureValidBrowserName(config);
 
-	MatchingPatterns::const_iterator it;
+	SwitchingPatterns::const_iterator it;
 
 	for (it = config.m_urlPatterns.begin(); it != config.m_urlPatterns.end(); it++) {
 		const std::wstring &urlPattern = it->first;
