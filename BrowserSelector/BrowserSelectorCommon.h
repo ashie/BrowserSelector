@@ -48,6 +48,33 @@ public:
 		}
 	}
 
+	void parseMatchingPattern(MatchingPattern &pattern, TCHAR *buf, DWORD nChars)
+	{
+		pattern.first = buf;
+
+		for (DWORD i = nChars - 1; i >= 0; i--) {
+			if (m_useRegex) {
+				if (buf[i] != '$')
+					continue;
+				if (i > 0 && buf[i - 1] == '\\') {
+					// '\$' (escaped '$') should be ignored.
+					// Since '\' is not allowed to use in URL, we don't consider the case
+					// '\\\$' in the regex.
+					continue;
+				}
+				pattern.first = pattern.first.substr(0, i + 1);
+				pattern.second = buf + i + 1;
+				return;
+			} else {
+				if (buf[i] != '|')
+					continue;
+				pattern.first = pattern.first.substr(0, i);
+				pattern.second = buf + i + 1;
+				return;
+			}
+		}
+	};
+
 	void LoadAll(HINSTANCE hInstance = nullptr);
 
 public:
@@ -154,16 +181,8 @@ public:
 			DWORD valueLen = sizeof(value) / sizeof(TCHAR);
 			result = reg.QueryStringValue(valueName, value, &valueLen);
 
-			TCHAR *browserName = L"";
-			for (DWORD i = 0; !m_useRegex && i < valueLen; i++) {
-				if (value[i] == '|') {
-					value[i] = '\0';
-					browserName = value + i + 1;
-					break;
-				}
-			}
-
-			patterns.push_back(MatchingPattern(value, browserName));
+			patterns.push_back(MatchingPattern());
+			parseMatchingPattern(patterns.back(), value, valueLen);
 		}
 
 		reg.Close();
@@ -291,16 +310,8 @@ public:
 			if (nWrittenChars < 1)
 				continue;
 
-			TCHAR *browserName = L"";
-			for (DWORD i = 0; !m_useRegex && i < nWrittenChars; i++) {
-				if (buf[i] == '|') {
-					buf[i] = '\0';
-					browserName = buf + i + 1;
-					break;
-				}
-			}
-
-			patterns.push_back(MatchingPattern(buf, browserName));
+			patterns.push_back(MatchingPattern());
+			parseMatchingPattern(patterns.back(), buf, nWrittenChars);
 		}
 	}
 
