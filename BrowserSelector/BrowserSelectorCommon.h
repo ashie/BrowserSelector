@@ -180,6 +180,8 @@ public:
 			TCHAR value[1024];
 			DWORD valueLen = sizeof(value) / sizeof(TCHAR);
 			result = reg.QueryStringValue(valueName, value, &valueLen);
+			if (result != ERROR_SUCCESS || valueLen < 1)
+				continue;
 
 			patterns.push_back(SwitchingPattern());
 			parseSwitchingPattern(patterns.back(), value, valueLen);
