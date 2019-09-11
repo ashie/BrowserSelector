@@ -8,10 +8,13 @@ HRESULT CBrowserSelector::FinalConstruct()
 {
 	m_config.LoadAll(_AtlBaseModule.GetResourceInstance());
 	SwitchingPatterns &patterns(m_config.m_urlPatterns);
-	if (m_config.m_useRegex)
+	if (m_config.m_useRegex) {
 		patterns.insert(patterns.begin(), SwitchingPattern(L"^about:.*", L"ie"));
-	else
+		patterns.insert(patterns.begin(), SwitchingPattern(L"^res://.*", L"ie"));
+	} else {
 		patterns.insert(patterns.begin(), SwitchingPattern(L"about:*", L"ie"));
+		patterns.insert(patterns.begin(), SwitchingPattern(L"res://*", L"ie"));
+	}
 
 	return S_OK;
 }
