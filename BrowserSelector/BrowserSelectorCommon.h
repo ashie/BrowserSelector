@@ -582,7 +582,7 @@ static std::wstring GetBrowserNameToOpenURL(
 	if (hostName && *hostName) {
 		for (it = config.m_hostNamePatterns.begin(); it != config.m_hostNamePatterns.end(); it++) {
 			const std::wstring &hostNamePattern = it->first;
-			bool matched = matchURL(url, hostNamePattern, config);
+			bool matched = matchURL(hostName, hostNamePattern, config);
 			if (matched)
 				return ensureValidBrowserName(config, &it->second);
 		}
