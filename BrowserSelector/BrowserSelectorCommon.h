@@ -50,9 +50,9 @@ public:
 
 	void parseSwitchingPattern(SwitchingPattern &pattern, TCHAR *buf, DWORD nChars)
 	{
-		pattern.first = buf;
+		pattern.first.assign(buf, nChars);
 
-		for (DWORD i = nChars - 1; i >= 0; i--) {
+		for (long i = nChars - 1; i >= 0; i--) {
 			if (m_useRegex > 0) {
 				if (buf[i] != '$')
 					continue;
