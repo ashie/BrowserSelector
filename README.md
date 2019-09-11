@@ -66,12 +66,14 @@ Please see the following *.reg files by way of example:
 
 ### `HostNamePatterns` or `URLPatterns`
 
-You need to set host name or URL patterns to open them by specific browsers.
+#### Simple Pattern Matching
+
+You need to set hostname or URL patterns to open them by specific browsers.
 They are stored under the registry key `HostNamePatterns` and `URLPatterns` as
 string values. Although you can use any characters as the value names, we
 recommend to use numbers such as `0001` to clarify the priority. The value is
-URL pattern. Optionally you can add a browser name to open the URL pattern by
-spliting the value by `|`.
+hostname or URL pattern. Optionally you can add a browser name to open the URL
+pattern by spliting the value by `|`.
 
 e.g.)
 
@@ -80,21 +82,38 @@ e.g.)
   * URLPatterns
     * `0001` = `http://*.example.com|firefox`
 
-The following wildcard characters are supported for specifying host name or URL:
+The following wildcard characters are supported for specifying host names or
+URLs:
 
   * `*`: matches any string
   * `?`: matches any single character
 
-The following values are supported as browser names:
+For browser names, following values are supported:
 
   * `ie`
   * `firefox`
   * `chrome`
 
+#### Regular Expression
+
+You can use also regular expression for hostname or URL patterns when you set
+the following registry value under the top of `BrowserSelector` key:
+
+  * `"UseRegex"` = `dword:00000001`
+
+Please see the following page for the grammer of the regular expression:
+
+  https://en.cppreference.com/w/cpp/regex/ecmascript
+
+A browser names can be added in this case too. Please add a browser name after
+`$` assersion like this:
+
+  * `0001` = `^http(s)?://(.+\\.)?example\\.(org|com)(/.*)?$firefox`
+
 ### `DefaultBrowser`
 
 You can change the browser for opening unmatched URLs by setting the registry
-value "DefaultBrowser".
+value `DefaultBrowser` under the top of `BrowserSelector` key.
 
 e.g)
 
@@ -105,8 +124,9 @@ The default value is `ie`.
 ### `SecondBrowser`
 
 If you leave the browser name empty for each URL patterns, the browser
-specified by `DefaultBrowser` will be used for them. If you change the browser
-for such URL patterns, you can do it by the registry value `SecondBrowser`.
+specified by `DefaultBrowser` will be used for them. If you want to change the
+browser for such URL patterns, you can do it by the registry value
+`SecondBrowser` under the top of `BrowserSelector` key.
 
 e.g.)
 
