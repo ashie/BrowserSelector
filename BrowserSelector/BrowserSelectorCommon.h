@@ -9,10 +9,22 @@
 typedef std::pair<std::wstring, std::wstring> SwitchingPattern;
 typedef std::vector<SwitchingPattern> SwitchingPatterns;
 
+void DebugLog(wchar_t *fmt, ...)
+{
+	va_list args;
+	va_start (args, fmt);
+	wchar_t buf[1024];
+	int nWritten = _vsnwprintf_s(buf, sizeof(buf) / sizeof(wchar_t), fmt, args);
+	if (nWritten > 0)
+		OutputDebugString(buf);
+	va_end(args);
+}
+
 class Config {
 public:
 	Config()
-		: m_closeEmptyTab(-1)
+		: m_debug(-1)
+		, m_closeEmptyTab(-1)
 		, m_onlyOnAnchorClick(-1)
 		, m_useRegex(-1)
 	{
@@ -21,11 +33,45 @@ public:
 	{
 	};
 
+	virtual std::wstring getName()
+	{
+		return std::wstring();
+	};
+
+	virtual void dump()
+	{
+		if (m_debug <= 0)
+			return;
+
+		DebugLog(L"Config: %s", getName().c_str());
+		DebugLog(L"  DefaultBrowser: %s", m_defaultBrowser.c_str());
+		DebugLog(L"  SecondBrowser: %s", m_secondBrowser.c_str());
+		DebugLog(L"  CloseEmptyTab: %d", m_closeEmptyTab);
+		DebugLog(L"  OnlyOnAnchorClick: %d", m_onlyOnAnchorClick);
+		DebugLog(L"  UseRegex: %d", m_useRegex);
+
+		SwitchingPatterns::iterator it;
+
+		DebugLog(L"  URLPatterns:");
+		for (it = m_urlPatterns.begin(); it != m_urlPatterns.end(); it++) {
+			DebugLog(L"    URL: %s Bowser: %s",
+				it->first.c_str(), it->second.c_str());
+		}
+
+		DebugLog(L"  HostNamePatterns");
+		for (it = m_hostNamePatterns.begin(); it != m_hostNamePatterns.end(); it++) {
+			DebugLog(L"    Hostname: %s Bowser: %s",
+				it->first.c_str(), it->second.c_str());
+		}
+	};
+
 	void merge(std::vector<Config*> &configs)
 	{
 		std::vector<Config*>::iterator it;
 		for (it = configs.begin(); it != configs.end(); it++) {
 			Config *config = *it;
+			if (config->m_debug >= 0)
+				m_debug = config->m_debug;
 			if (!config->m_defaultBrowser.empty())
 				m_defaultBrowser = config->m_defaultBrowser;
 			if (!config->m_secondBrowser.empty())
@@ -78,6 +124,7 @@ public:
 	void LoadAll(HINSTANCE hInstance = nullptr);
 
 public:
+	int m_debug;
 	std::wstring m_defaultBrowser;
 	std::wstring m_secondBrowser;
 	int m_closeEmptyTab;
@@ -92,6 +139,7 @@ class DefaultConfig : public Config
 public:
 	DefaultConfig()
 	{
+		m_debug = 0;
 		m_defaultBrowser = L"ie";
 		m_closeEmptyTab = true;
 		m_onlyOnAnchorClick = false;
@@ -100,6 +148,11 @@ public:
 	virtual ~DefaultConfig()
 	{
 	};
+
+	virtual std::wstring getName()
+	{
+		return std::wstring(L"Default");
+	}
 };
 
 class RegistryConfig : public Config
@@ -108,6 +161,8 @@ public:
 	RegistryConfig(bool systemWide = false)
 		: m_systemWide(systemWide)
 	{
+		LoadIntValue(m_debug, L"Debug", m_systemWide);
+
 		LoadStringValue(m_defaultBrowser,
 			L"DefaultBrowser", m_systemWide);
 		LoadStringValue(m_secondBrowser,
@@ -117,9 +172,19 @@ public:
 		LoadIntValue(m_useRegex, L"UseRegex", m_systemWide);
 		LoadHostNamePatterns(m_hostNamePatterns);
 		LoadURLPatterns(m_urlPatterns);
+
+		dump();
 	}
 	virtual ~RegistryConfig()
 	{
+	}
+
+	virtual std::wstring getName()
+	{
+		if (m_systemWide)
+			return std::wstring(L"HKLM");
+		else
+			return std::wstring(L"HKCU");
 	}
 
 	static void LoadStringValue(
@@ -220,6 +285,8 @@ public:
 			return;
 		}
 
+		GetIntValue(m_debug, L"Common", L"Debug");
+
 		GetStringValue(m_defaultBrowser, L"Common", L"DefaultBrowser");
 		GetStringValue(m_secondBrowser, L"Common", L"SecondBrowser");
 		GetStringValue(m_includePath, L"Common", L"Include");
@@ -230,12 +297,28 @@ public:
 		LoadURLPatterns(m_urlPatterns);
 		LoadHostNamePatterns(m_hostNamePatterns);
 
+		dump();
+
 		if (!m_includePath.empty() && !parent)
 			includeINIFile(m_includePath);
 	}
 	virtual ~INIFileConfig()
 	{
 	};
+
+	virtual void dump()
+	{
+		if (m_debug <= 0)
+			return;
+		Config::dump();
+
+		DebugLog(L"  Include: %s", m_includePath.c_str());
+		DebugLog(L"  EnableIncludeCache: %d", m_enableIncludeCache);
+	}
+	virtual std::wstring getName()
+	{
+		return m_path;
+	}
 
 	void includeINIFile(std::wstring &path)
 	{
@@ -464,6 +547,8 @@ void Config::LoadAll(HINSTANCE hInstance)
 	configs.push_back(&userINIFileConfig);
 
 	merge(configs);
+
+	dump();
 }
 
 static void LoadAppPath(std::wstring &wpath, LPCTSTR exeName)
@@ -513,14 +598,21 @@ static std::wstring ensureValidBrowserName(
 	const Config &config,
 	const std::wstring *name = nullptr)
 {
-	if (name && isValidBrowserName(*name))
+	if (name && isValidBrowserName(*name)) {
 		return *name;
-	else if (name && name->empty() && isValidBrowserName(config.m_secondBrowser))
-		 return config.m_secondBrowser;
-	else if (isValidBrowserName(config.m_defaultBrowser))
+	} else if (name && name->empty() && isValidBrowserName(config.m_secondBrowser)) {
+		if (config.m_debug > 0)
+			DebugLog(L"Use second browser: %s", config.m_secondBrowser.c_str());
+		return config.m_secondBrowser;
+	} else if (isValidBrowserName(config.m_defaultBrowser)) {
+		if (config.m_debug > 0)
+			DebugLog(L"Use default browser: %s", config.m_defaultBrowser.c_str());
 		return config.m_defaultBrowser;
-	else
+	} else {
+		if (config.m_debug > 0)
+			DebugLog(L"Fall back to IE");
 		return std::wstring(L"ie");
+	}
 }
 
 static bool matchSimpleWildCard(const std::wstring &url, const std::wstring &pattern)
@@ -532,7 +624,7 @@ static bool matchSimpleWildCard(const std::wstring &url, const std::wstring &pat
 	return matched ? true : false;
 }
 
-static bool matchRegex(const std::wstring &url, const std::wstring &pattern)
+static bool matchRegex(const std::wstring &url, const std::wstring &pattern, const Config &config)
 {
 	std::string urlASCII, patternASCII;
 	for (DWORD i = 0; i < url.size(); i++) {
@@ -549,6 +641,8 @@ static bool matchRegex(const std::wstring &url, const std::wstring &pattern)
 		std::smatch match;
 		return std::regex_match(urlASCII, match, re);
 	} catch (std::regex_error &e) {
+		if (config.m_debug > 0)
+			DebugLog(L"Failed to compile the regex!: %s", pattern.c_str());
 		return false;
 	}
 }
@@ -556,7 +650,7 @@ static bool matchRegex(const std::wstring &url, const std::wstring &pattern)
 static bool matchURL(const std::wstring &url, const std::wstring &pattern, const Config &config)
 {
 	if (config.m_useRegex > 0)
-		return matchRegex(url, pattern);
+		return matchRegex(url, pattern, config);
 	else
 		return matchSimpleWildCard(url, pattern);
 }
@@ -573,8 +667,12 @@ static std::wstring GetBrowserNameToOpenURL(
 	for (it = config.m_urlPatterns.begin(); it != config.m_urlPatterns.end(); it++) {
 		const std::wstring &urlPattern = it->first;
 		bool matched = matchURL(url, urlPattern, config);
-		if (matched)
-			return ensureValidBrowserName(config, &it->second);
+		if (!matched)
+			continue;
+		if (config.m_debug > 0)
+			DebugLog(L"Matched URL pattern: %s Browser: %s",
+				it->first.c_str(), it->second.c_str());
+		return ensureValidBrowserName(config, &it->second);
 	}
 
 	CUrl cURL;
@@ -585,10 +683,16 @@ static std::wstring GetBrowserNameToOpenURL(
 		for (it = config.m_hostNamePatterns.begin(); it != config.m_hostNamePatterns.end(); it++) {
 			const std::wstring &hostNamePattern = it->first;
 			bool matched = matchURL(hostName, hostNamePattern, config);
-			if (matched)
-				return ensureValidBrowserName(config, &it->second);
+			if (!matched)
+				continue;
+			if (config.m_debug > 0)
+				DebugLog(L"Matched hostname pattern: %s Browser: %s",
+					it->first.c_str(), it->second.c_str());
+			return ensureValidBrowserName(config, &it->second);
 		}
 	}
+
+	DebugLog(L"Unmatched: %s", url.c_str());
 
 	return ensureValidBrowserName(config);
 }
