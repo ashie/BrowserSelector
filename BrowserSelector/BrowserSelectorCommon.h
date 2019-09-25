@@ -642,7 +642,9 @@ static bool matchRegex(const std::wstring &url, const std::wstring &pattern, con
 		return std::regex_match(urlASCII, match, re);
 	} catch (std::regex_error &e) {
 		if (config.m_debug > 0)
-			DebugLog(L"Failed to compile the regex!: %s", pattern.c_str());
+			DebugLog(
+				L"Failed to compile the regex! pattern: %s, message: %s",
+				pattern.c_str(), e.what());
 		return false;
 	}
 }
