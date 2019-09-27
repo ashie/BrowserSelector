@@ -2,7 +2,7 @@
 
 ## What's this?
 
-[BrowserSelctor](https://github.com/clear-code/BrowserSelector) is a
+[BrowserSelctor](https://gitlab.com/clear-code/browserselector) is a
 web-browser launcher for Microsoft Windows that aims to select an appropriate
 browser for an URL. Since many tranditional intranet web applications still
 depend on Internet Explorer, so such enterprise users need to switch IE and
