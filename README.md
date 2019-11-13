@@ -17,7 +17,7 @@ This software consists of two modules:
     your desktop.
   * BrowserSelectorBHO.dll:
     A BHO (Browser Helper Object) for IE. It will launch Mozilla Firefox
-	or Google Chrome to open internet sites.
+    or Google Chrome to open internet sites.
 
 If you use Mozilla Firefox as a second browser, we recommend to use them with
 [IE View WE](https://addons.mozilla.org/en-US/firefox/addon/ie-view-we/) to
