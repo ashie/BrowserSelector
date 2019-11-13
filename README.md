@@ -57,7 +57,7 @@ key is:
   * for 32bit OS: `SOFTWARE\ClearCode\BrowserSelector`
 
 If a same named value exists in both `HKLM` adn `HKCU`, they will be merged
-(overriten by `HKCU`'s one).
+(overridden by `HKCU`'s one).
 
 Please see the following *.reg files by way of example:
 
