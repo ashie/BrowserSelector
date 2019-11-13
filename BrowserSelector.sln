@@ -8,9 +8,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		BrowserSelector\BrowserSelectorCommon.h = BrowserSelector\BrowserSelectorCommon.h
 		sample\BrowserSelectorExample.ini = sample\BrowserSelectorExample.ini
 		sample\BrowserSelectorExample.reg = sample\BrowserSelectorExample.reg
+		sample\BrowserSelectorIncludeExample.ini = sample\BrowserSelectorIncludeExample.ini
+		sample\BrowserSelectorRegexExample.ini = sample\BrowserSelectorRegexExample.ini
 		sample\BrowserSelectorWOW64Example.reg = sample\BrowserSelectorWOW64Example.reg
 		COPYING.MIT = COPYING.MIT
 		sample\IE-ElevationPolicy.reg = sample\IE-ElevationPolicy.reg
+		doc\ini-file-spec-ja.txt = doc\ini-file-spec-ja.txt
 		README.md = README.md
 	EndProjectSection
 EndProject
