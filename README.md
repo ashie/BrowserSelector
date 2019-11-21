@@ -54,22 +54,33 @@ If you use only the BHO and don't use BrowserSelector.exe, it's not needed.
 ## How to Configure
 
 This software doesn't have any UI. System administrators have to edit its
-registry entries directly and shouldn't allow users to edit them.
+registry entries or INI files directly and shouldn't allow users to edit them.
+Configurations are loaded from following locations by this order:
 
-If you build 32bit binary of BrowserSelector (it's the default), the registry
-key is:
+  * Registry: `HKEY_LOCAL_MACHINE`（`HKLM`）
+    * HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\ClearCode\BrowserSelector
+	* (For 32bit OS: HKEY_LOCAL_MACHINE\SOFTWARE\ClearCode\BrowserSelector)
+  * INI file: BrowserSelector.ini under the application folder
+    * e.g.) C:\Program Files (x86)\ClearCode\BrowserSelector\BrowserSelector.ini
+	* It doesn't exist by default. Please create it manually.
+  * Registry: `HKEY_CURRENT_USER`（`HKCU`）
+    * HKEY_CURRENT_USER\SOFTWARE\WOW6432Node\ClearCode\BrowserSelector
+    * (For 32bit OS: HKEY_CURRENT_USER\SOFTWARE\ClearCode\BrowserSelector)
+  * INI file: BrowserSelector.ini under a user's AppData folder
+    * e.g.) C:\Users\[UserName]\AppData\Roaming\ClearCode\BrowserSelector\BrowserSelectror.ini
+	* These folder or file don't exist by default. Please create them manually.
 
-* `HKEY_LOCAL_MACHINE` or `HKEY_CURRENT_USER`
-  * for 64bit OS: `SOFTWARE\WOW6432Node\ClearCode\BrowserSelector`
-  * for 32bit OS: `SOFTWARE\ClearCode\BrowserSelector`
+If two or more configurations exist, they are merged (overriden by later one).
 
-If a same named value exists in both `HKLM` adn `HKCU`, they will be merged
-(overridden by `HKCU`'s one).
-
-Please see the following *.reg files by way of example:
+Please see the following files by way of example:
 
   * [For 64bit OS](sample/BrowserSelectorWOW64Example.reg)
   * [For 32bit OS](sample/BrowserSelectorExample.reg)
+  * [INI file](sample/BrowserSelector.ini)
+  
+Available config items are almost same.
+One of difference between them is that the items which are placed at the top of
+the registry key, are placed at `[Common]` section in INI file.
 
 ## Config items
 
@@ -127,9 +138,12 @@ A browser names can be added in this case too. Please add a browser name after
 You can change the browser for opening unmatched URLs by setting the registry
 value `DefaultBrowser` under the top of `BrowserSelector` key.
 
-e.g)
+  * Type: String
+    * `ie`
+    * `firefox`
+    * `chrome`
 
-  * `DefaultBrowser` = `firefox`
+e.g)
 
 The default value of `DefaultBrowser` is `ie`.
 
@@ -140,12 +154,57 @@ specified by `DefaultBrowser` will be used for them. If you want to change the
 browser for such URL patterns, you can do it by the registry value
 `SecondBrowser` under the top of `BrowserSelector` key.
 
+  * Type: String
+    * Empty (Default)
+    * `ie`
+    * `firefox`
+    * `chrome`
+
 e.g.)
 
+  * `SecondBrowser` = `chrome`
   * `URLPagtterns`
     * `0001` = `http://*.example.com`
     * `0002` = `http://*.example.org`
     * ...
-  * `SecondBrowser` = `chrome`
 
-The default value of `SecondBrowser` is empty (use `DefaultBrowser`).
+### `CloseEmptyTab`
+
+Whether or not to close the remaining empty tab after an alternate browser is
+launched.
+
+  * Type: DWORD
+    * 1: Close (Default)
+    * 0: Don't close
+
+### `OnlyOnAnchorClick`
+
+Whether or not to launch an alternate browser only on clicking an link.
+
+  * Type: DWORD
+    * 0: Launch an alternate browser on all navigations
+    * 1: Launch an alternate browser only on clicking an link
+
+### `Include`
+
+The path of external INI file to load additionally. It's effective only in INI
+file. In addition it cannot load other external INI file from an external INI
+file.
+
+  * Type: String
+    * Both following formats are available.
+    * Local Windows Path Fromat: C:\path\to\file.ini
+    * UNC Format: \\HostName\ShareName\path\to\file.ini
+
+### `EnableIncludeCache`
+
+Whether or not to use a cache file when a specified external INI file isn't
+available.
+
+  * Type: DWORD
+    * 0: Don't Use (Default)
+    * 1: Use
+
+The cache files are stored under a user's LocalAppDataLow folder.
+
+  e.g.) C:\Users\[UserName]\AppData\LocalLow\ClearCode\BrowserSelector\BrowserSelectror.ini

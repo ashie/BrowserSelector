@@ -57,22 +57,36 @@ BHOのみを使用してBrowserSelector.exeが必要無い場合、この手順�
 ## 設定方法
 
 このソフトウェアにはユーザーインターフェースがありません。システム管理者がレジ
-ストリ設定を直接管理し、ユーザーには設定を編集させないことを想定しています。
+ストリ設定あるいはINI形式の設定ファイルを直接管理し、ユーザーには設定を編集させ
+ないことを想定しています。設定は以下の箇所から、以下の順番で読み込まれます。
 
-32ビット版のBrowserSelect（通常はこちらが既定のビルド）を使用している場合、レジ
-ストリキーは以下になります。
+  * `HKEY_LOCAL_MACHINE`（`HKLM`）レジストリ
+    * HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\ClearCode\BrowserSelector
+	* （32bit OSの場合: HKEY_LOCAL_MACHINE\SOFTWARE\ClearCode\BrowserSelector）
+  * インストールフォルダのiniファイル
+    * 例: C:\Program Files (x86)\ClearCode\BrowserSelector\BrowserSelector.ini
+    * デフォルトでは上記ファイルは存在しません。
+	  手動で設置する必要があります。
+  * `HKEY_CURRENT_USER`（`HKCU`）レジストリ
+    * HKEY_CURRENT_USER\SOFTWARE\WOW6432Node\ClearCode\BrowserSelector
+    * （32bit OSの場合: HKEY_CURRENT_USER\SOFTWARE\ClearCode\BrowserSelector）
+  * ユーザーフォルダのAppData内のiniファイル
+    * 例: C:\Users\[UserName]\AppData\Roaming\ClearCode\BrowserSelector\BrowserSelectror.ini
+    * デフォルトでは上記フォルダやファイルは存在しません。
+	  手動で設置する必要があります。
 
-  * `HKEY_LOCAL_MACHINE`（`HKLM`） あるいは `HKEY_CURRENT_USER`（`HKCU`）
-    * 64ビットOSの場合: `SOFTWARE\WOW6432Node\ClearCode\BrowserSelector`
-    * 32ビットOSの場合: `SOFTWARE\ClearCode\BrowserSelector`
-
-HKLMとHKCUの両方に設定が存在する場合、それらの設定は統合されます（`HKCU`の設定
+上記複数の設定が存在する場合、それらの設定は統合されます（後に読み込まれる設定
 で上書きされます）。
 
 設定例は以下のファイルを参照して下さい。
 
-  * [64ビットOSの場合](sample/BrowserSelectorWOW64Example.reg)
-  * [32ビットOSの場合](sample/BrowserSelectorExample.reg)
+  * [レジストリ: 64ビットOSの場合](sample/BrowserSelectorWOW64Example.reg)
+  * [レジストリ: 32ビットOSの場合](sample/BrowserSelectorExample.reg)
+  * [INIファイル](sample/BrowserSelector.ini)
+
+設定できる項目は、一部を除いて共通です。
+レジストリ設定においてレジストリキー直下に設定する項目は、INIファイルの場合には
+`[Common]`セクションに記述します。
 
 ## 設定項目
 
@@ -132,11 +146,14 @@ HKLMとHKCUの両方に設定が存在する場合、それらの設定は統合
 `BrowserSelector`キー直下に文字列値`DefaultBrowser`をセットすることで、パターン
 に一致しなかった場合に使用するブラウザを指定することができます。
 
+  * 値の型: 文字列
+    * `ie` （デフォルト）
+    * `firefox`
+    * `chrome`
+
 例)
 
   * `DefaultBrowser` = `firefox`
-
-`DefaultBrowser`の既定の値は`ie`です。
 
 ### `SecondBrowser`
 
@@ -145,12 +162,56 @@ HKLMとHKCUの両方に設定が存在する場合、それらの設定は統合
 ンにマッチしたURLに対して別のブラウザを使用したい場合は、`BrowserSelector`キー
 直下に文字列値`SecondBrowser`をセットして下さい。
 
+  * 値の型: 文字列
+    * 空文字列 (デフォルト)
+    * `ie`
+    * `firefox`
+    * `chrome`
+
 例)
 
+  * `SecondBrowser` = `chrome`
   * `URLPagtterns`
     * `0001` = `http://*.example.com`
     * `0002` = `http://*.example.org`
     * ...
-  * `SecondBrowser` = `chrome`
 
-`SecondBrowser`の既定の値は空です（`DefaultBrowse`が使用されます）。
+### `CloseEmptyTab`
+
+外部ブラウザ起動後に残された空タブを閉じるか否かの設定です。
+
+  * 値の型: DWORD
+    * 1: 閉じる (デフォルト)
+    * 0: 閉じない
+
+### `OnlyOnAnchorClick`
+
+リンクのクリックのみをブラウザ切り替えの対象とするか否かの設定です。
+
+  * 値の型: DWORD
+    * 0: すべてのページ遷移をブラウザ切り替えの対象とする（デフォルト）
+    * 1: リンクのクリックのみをブラウザ切り替えの対象とする
+
+### `Include`
+
+追加で読み込む外部INIファイルのパスを指定します。INIファイルでのみ有効な設定で
+す。また、読み込まれた外部INIファイルからさらに外部INIファイルを読み込むことは
+できません。
+
+  * 値の型: 文字列
+    * 以下のいずれかの形式を使用可能
+    * 通常のWindowsパス形式: C:\path\to\file.ini
+    * UNC形式: \\HostName\ShareName\path\to\file.ini
+
+### `EnableIncludeCache`
+
+外部iniファイルにアクセスできない場合に、キャッシュを使用するかどうかを指定しま
+す。
+
+  * 値の型: DWORD
+    * 0: 使用しない（デフォルト）
+    * 1: 使用する
+
+キャッシュはユーザーフォルダのLocalAppDataLow以下に保存されます。
+
+  例) C:\Users\[UserName]\AppData\LocalLow\ClearCode\BrowserSelector\BrowserSelectror.ini
