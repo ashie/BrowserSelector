@@ -57,13 +57,13 @@ This software doesn't have any UI. System administrators have to edit its
 registry entries or INI files directly and shouldn't allow users to edit them.
 Configurations are loaded from following locations by this order:
 
-  * Registry: `HKEY_LOCAL_MACHINE`（`HKLM`）
+  * Registry: `HKEY_LOCAL_MACHINE` (`HKLM`)
     * HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\ClearCode\BrowserSelector
 	* (For 32bit OS: HKEY_LOCAL_MACHINE\SOFTWARE\ClearCode\BrowserSelector)
   * INI file: BrowserSelector.ini under the application folder
     * e.g.) C:\Program Files (x86)\ClearCode\BrowserSelector\BrowserSelector.ini
 	* It doesn't exist by default. Please create it manually.
-  * Registry: `HKEY_CURRENT_USER`（`HKCU`）
+  * Registry: `HKEY_CURRENT_USER` (`HKCU`)
     * HKEY_CURRENT_USER\SOFTWARE\WOW6432Node\ClearCode\BrowserSelector
     * (For 32bit OS: HKEY_CURRENT_USER\SOFTWARE\ClearCode\BrowserSelector)
   * INI file: BrowserSelector.ini under a user's AppData folder
