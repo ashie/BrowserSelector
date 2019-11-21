@@ -38,7 +38,7 @@ The equivalent for Google Chrome is IE Tab.
 
 ## How to Install
 
-Run built BrowserSelectorSetup/Release/BrowserSelectorSetup.msi or setup.exe.
+Run built BrowserSelectorSetup\Release\BrowserSelectorSetup.msi.
 
 ## Change the Default Browser
 
