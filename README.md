@@ -71,6 +71,8 @@ Please see the following *.reg files by way of example:
   * [For 64bit OS](sample/BrowserSelectorWOW64Example.reg)
   * [For 32bit OS](sample/BrowserSelectorExample.reg)
 
+## Config items
+
 ### `HostNamePatterns` or `URLPatterns`
 
 #### Simple Pattern Matching
