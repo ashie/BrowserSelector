@@ -269,8 +269,6 @@ public:
 	bool m_systemWide;
 };
 
-// INI file feature is deprecated.
-// Won't be documented.
 class INIFileConfig : public Config
 {
 public:
