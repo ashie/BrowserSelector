@@ -19,10 +19,16 @@ This software consists of two modules:
     A BHO (Browser Helper Object) for IE. It will launch Mozilla Firefox
     or Google Chrome to open internet sites.
 
+This software doesn't support switching from other browsers to IE. Please use
+with appropriate extensions for them to do it.
 If you use Mozilla Firefox as a second browser, we recommend to use them with
-[IE View WE](https://addons.mozilla.org/en-US/firefox/addon/ie-view-we/) to
-launch IE from Firefox to open intranet sites.
-The equivalent for Google Chrome is [IE Tab](https://www.ietab.net/).
+IE View WE to launch IE from Firefox to open intranet sites.
+
+  * IE View WE: https://addons.mozilla.org/en-US/firefox/addon/ie-view-we/
+
+The equivalent for Google Chrome is IE Tab.
+
+  * IE Tab: https://www.ietab.net/
 
 ## How to Build
 
@@ -36,8 +42,9 @@ Run built BrowserSelectorSetup/Release/BrowserSelectorSetup.msi or setup.exe.
 
 ## Change the Default Browser
 
-After the installation, you need to set BrowserSelector.exe as the default
-browser on your desktop:
+If you want to switch web browsers automatically from all applications, you
+need to set BrowserSelector.exe as the default browser on your desktop.
+How to do it is depend on your OS and situation. For example:
 
   * https://support.microsoft.com/en-us/help/4028606/windows-10-change-your-default-browser
   * https://docs.microsoft.com/en-us/internet-explorer/ie11-deploy-guide/set-the-default-browser-using-group-policy
@@ -94,6 +101,9 @@ For browser names, following values are supported:
   * `firefox`
   * `chrome`
 
+When the browser name is unspecified, `DefaultBrowser` or `SecondBrowser` will
+be used as described later.
+
 #### Regular Expression
 
 You can use also regular expression for hostname or URL patterns when you set
@@ -119,7 +129,7 @@ e.g)
 
   * `DefaultBrowser` = `firefox`
 
-The default value is `ie`.
+The default value of `DefaultBrowser` is `ie`.
 
 ### `SecondBrowser`
 
@@ -131,9 +141,9 @@ browser for such URL patterns, you can do it by the registry value
 e.g.)
 
   * `URLPagtterns`
-    * `http://*.example.com` = ``
-    * `http://*.example.org` = ``
+    * `0001` = `http://*.example.com`
+    * `0002` = `http://*.example.org`
     * ...
   * `SecondBrowser` = `chrome`
 
-The default value is empty (use `DefaultBrowser`).
+The default value of `SecondBrowser` is empty (use `DefaultBrowser`).
