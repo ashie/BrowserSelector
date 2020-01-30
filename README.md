@@ -4,7 +4,7 @@
 
 [BrowserSelctor](https://gitlab.com/clear-code/browserselector) is a
 web-browser launcher for Microsoft Windows that aims to select an appropriate
-browser for an URL. Since many tranditional intranet web applications still
+browser for an URL. Since many traditional intranet web applications still
 depend on Internet Explorer, so such enterprise users need to switch IE and
 modern web-browsers (such as Mozilla Firefox or Google Chrome) according to
 the situation. This application will do it automatically on clicking or
@@ -44,7 +44,7 @@ Run built BrowserSelectorSetup\Release\BrowserSelectorSetup.msi.
 
 If you want to switch web browsers automatically from all applications, you
 need to set BrowserSelector.exe as the default browser on your desktop.
-How to do it is depend on your OS and situation. For example:
+How to do it depends on your OS and situation. For example:
 
   * https://support.microsoft.com/en-us/help/4028606/windows-10-change-your-default-browser
   * https://docs.microsoft.com/en-us/internet-explorer/ie11-deploy-guide/set-the-default-browser-using-group-policy
@@ -70,7 +70,7 @@ Configurations are loaded from following locations by this order:
     * e.g.) C:\Users\[UserName]\AppData\Roaming\ClearCode\BrowserSelector\BrowserSelectror.ini
 	* These folder or file don't exist by default. Please create them manually.
 
-If two or more configurations exist, they are merged (overriden by later one).
+If two or more configurations exist, they are merged (overridden by later one).
 
 Please see the following files by way of example:
 
@@ -93,7 +93,7 @@ They are stored under the registry key `HostNamePatterns` and `URLPatterns` as
 string values. Although you can use any characters as the value names, we
 recommend to use numbers such as `0001` to clarify the priority. The value is
 hostname or URL pattern. Optionally you can add a browser name to open the URL
-pattern by spliting the value by `|`.
+pattern by splitting the value by `|`.
 
 e.g.)
 
@@ -124,12 +124,12 @@ the following registry value under the top of `BrowserSelector` key:
 
   * `"UseRegex"` = `dword:00000001`
 
-Please see the following page for the grammer of the regular expression:
+Please see the following page for the grammar of the regular expression:
 
   https://en.cppreference.com/w/cpp/regex/ecmascript
 
 A browser names can be added in this case too. Please add a browser name after
-`$` assersion like this:
+`$` assertion like this:
 
   * `0001` = `^http(s)?://(.+\\.)?example\\.(org|com)(/.*)?$firefox`
 
