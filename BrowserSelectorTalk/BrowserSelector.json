@@ -1,7 +1,7 @@
 {
   "name": "BrowserSelectorTalk",
   "description": "BrowserSelector Talk Host",
-  "path": "C:\\Program Files\\ClearCode\\BrowserSelector\\BrowserSelectorTalk.exe",
+  "path": "BrowserSelectorTalk.exe",
   "type": "stdio",
   "allowed_extensions": [ "ieview-we@clear-code.com" ]
 }

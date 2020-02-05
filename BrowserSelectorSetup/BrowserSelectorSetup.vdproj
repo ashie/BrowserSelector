@@ -21,6 +21,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_1A489E3687DD49D3B88C27A04ED48CAB"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_2DA6F27C8C9F48D29B180B027C2340F2"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -39,6 +45,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_8062C5BFD05B4EB18BF76A9216217B38"
+        "OwnerKey" = "8:_C03D314614CD4F4EA4A20243C8EF8F15"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_A41BF1FC9A2F4F4B9FF848DAE2CDB401"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -46,6 +58,12 @@
         "Entry"
         {
         "MsmKey" = "8:_B2DEDD8EDD7248378E828ADBBA787D6A"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_B58A939B42EB49F280F9BD2C26F9AE32"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -63,8 +81,14 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_CD7AF6F187D74944ABF9B18C296DABF7"
-        "OwnerKey" = "8:_C03D314614CD4F4EA4A20243C8EF8F15"
+        "MsmKey" = "8:_C5276CDF628149BA99B77A3242CD7B91"
+        "OwnerKey" = "8:_3BF7B80D023F407197BA479BED617B91"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_C5276CDF628149BA99B77A3242CD7B91"
+        "OwnerKey" = "8:_B58A939B42EB49F280F9BD2C26F9AE32"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -75,14 +99,14 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_EAB9AD2B03A84C4685D57384EF1ABF9B"
+        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_3BF7B80D023F407197BA479BED617B91"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_3BF7B80D023F407197BA479BED617B91"
+        "OwnerKey" = "8:_B58A939B42EB49F280F9BD2C26F9AE32"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -200,6 +224,26 @@
             {
             "SourcePath" = "8:..\\COPYING.MIT"
             "TargetName" = "8:COPYING.MIT"
+            "Tag" = "8:"
+            "Folder" = "8:_EFD80C7B4A164AA691FA4C75A672BE63"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_1A489E3687DD49D3B88C27A04ED48CAB"
+            {
+            "SourcePath" = "8:..\\BrowserSelectorTalk\\BrowserSelector.json"
+            "TargetName" = "8:BrowserSelector.json"
             "Tag" = "8:"
             "Folder" = "8:_EFD80C7B4A164AA691FA4C75A672BE63"
             "Condition" = "8:"
@@ -404,7 +448,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:BrowserSelector"
         "ProductCode" = "8:{F9F870E9-CA89-427D-99AC-90A784FE7751}"
-        "PackageCode" = "8:{F848A56F-3903-48B6-827B-E3AC00E428B3}"
+        "PackageCode" = "8:{E73B90FF-A24E-49D6-AD20-99A2CF1AA52A}"
         "UpgradeCode" = "8:{864B7071-7281-4A14-B718-57CB190FE7B7}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -806,6 +850,56 @@
                                             "ValueTypes" = "3:1"
                                             "Value" = "8:BrowserSelector HTML Document"
                                             }
+                                        }
+                                    }
+                                }
+                                "Values"
+                                {
+                                }
+                            }
+                            "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_BE936EBD92C74846ACF6EE595C9D44DE"
+                            {
+                            "Name" = "8:Mozilla"
+                            "Condition" = "8:"
+                            "AlwaysCreate" = "11:FALSE"
+                            "DeleteAtUninstall" = "11:FALSE"
+                            "Transitive" = "11:FALSE"
+                                "Keys"
+                                {
+                                    "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_10086AD17203496E8D3B114F023BAA4A"
+                                    {
+                                    "Name" = "8:NativeMessagingHosts"
+                                    "Condition" = "8:"
+                                    "AlwaysCreate" = "11:FALSE"
+                                    "DeleteAtUninstall" = "11:FALSE"
+                                    "Transitive" = "11:FALSE"
+                                        "Keys"
+                                        {
+                                            "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_D66DD4EE7DE54CA8A68DE3274BA572A6"
+                                            {
+                                            "Name" = "8:BrowserSelectorTalk"
+                                            "Condition" = "8:"
+                                            "AlwaysCreate" = "11:FALSE"
+                                            "DeleteAtUninstall" = "11:FALSE"
+                                            "Transitive" = "11:FALSE"
+                                                "Keys"
+                                                {
+                                                }
+                                                "Values"
+                                                {
+                                                    "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_1DE9EFC3330F437091C279823DC1951B"
+                                                    {
+                                                    "Name" = "8:"
+                                                    "Condition" = "8:"
+                                                    "Transitive" = "11:FALSE"
+                                                    "ValueTypes" = "3:1"
+                                                    "Value" = "8:[TARGETDIR]BrowserSelector.json"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        "Values"
+                                        {
                                         }
                                     }
                                 }
@@ -1476,7 +1570,7 @@
         }
         "MergeModule"
         {
-            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_CD7AF6F187D74944ABF9B18C296DABF7"
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_8062C5BFD05B4EB18BF76A9216217B38"
             {
             "UseDynamicProperties" = "11:TRUE"
             "IsDependency" = "11:TRUE"
@@ -1490,7 +1584,7 @@
             "Feature" = "8:"
             "IsolateTo" = "8:"
             }
-            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_EAB9AD2B03A84C4685D57384EF1ABF9B"
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_C5276CDF628149BA99B77A3242CD7B91"
             {
             "UseDynamicProperties" = "11:TRUE"
             "IsDependency" = "11:TRUE"
@@ -1530,6 +1624,34 @@
             "OutputConfiguration" = "8:"
             "OutputGroupCanonicalName" = "8:Built"
             "OutputProjectGuid" = "8:{AE9FFFAA-81B6-4B4D-BC28-D6E2B9D3B7C4}"
+            "ShowKeyOutput" = "11:TRUE"
+                "ExcludeFilters"
+                {
+                }
+            }
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_B58A939B42EB49F280F9BD2C26F9AE32"
+            {
+            "SourcePath" = "8:..\\Release\\BrowserSelectorTalk.exe"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_EFD80C7B4A164AA691FA4C75A672BE63"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            "ProjectOutputGroupRegister" = "3:1"
+            "OutputConfiguration" = "8:"
+            "OutputGroupCanonicalName" = "8:Built"
+            "OutputProjectGuid" = "8:{A4D67B59-28E3-43B2-A93A-898506DFFE29}"
             "ShowKeyOutput" = "11:TRUE"
                 "ExcludeFilters"
                 {
