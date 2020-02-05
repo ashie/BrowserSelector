@@ -5,6 +5,7 @@
 #include <atlutil.h>
 #include <ShellAPI.h>
 #include <Shlobj.h>
+#include <Ddeml.h>
 
 typedef std::pair<std::wstring, std::wstring> SwitchingPattern;
 typedef std::vector<SwitchingPattern> SwitchingPatterns;
@@ -572,7 +573,7 @@ static void LoadBrowserPath(std::wstring &path, const std::wstring &browserName)
 {
 	if (browserName == L"ie")
 		LoadAppPath(path, _T("iexplore.exe"));
-	if (browserName == L"firefox")
+	else if (browserName == L"firefox")
 		LoadAppPath(path, _T("firefox.exe"));
 	else if (browserName == L"chrome")
 		LoadAppPath(path, _T("chrome.exe"));
@@ -708,4 +709,58 @@ bool OpenByModernBrowser(const std::wstring &browserName, const std::wstring &ur
 		return (reinterpret_cast<int>(hInstance) > 32);
 	}
 	return false;
+}
+
+/*
+ * OpenByExistingIE
+ */
+static HDDEDATA CALLBACK DDECallback(
+	WORD     wType,
+	WORD     wFmt,
+	HCONV    hConv,
+	HSZ      hsz1,
+	HSZ      hsz2,
+	HDDEDATA hData,
+	DWORD    lData1,
+	DWORD    lData2)
+{
+	return (HDDEDATA)0;
+}
+
+static bool OpenByExistingIE(const std::wstring &url)
+{
+	DWORD dwDDEID = 0;
+
+	UINT err = DdeInitializeW(
+		&dwDDEID,
+		(PFNCALLBACK)MakeProcInstance((FARPROC)DDECallback, ghInstance),
+		CBF_SKIP_ALLNOTIFICATIONS | APPCMD_CLIENTONLY, 0L);
+	if (err != DMLERR_NO_ERROR)
+		return false;
+
+	HSZ hszService = DdeCreateStringHandleW(dwDDEID, L"IEXPLORE", CP_WINUNICODE);
+	HSZ hszTopic = DdeCreateStringHandleW(dwDDEID, L"WWW_OpenURL", CP_WINUNICODE);
+	HCONV hConv = DdeConnect(dwDDEID, hszService, hszTopic, NULL);
+	DdeFreeStringHandle(dwDDEID, hszService);
+	DdeFreeStringHandle(dwDDEID, hszTopic);
+
+	if(!hConv)
+		return false;
+
+	CString cmd = url.c_str();
+	HDDEDATA hDDEData = DdeClientTransaction(
+		(LPBYTE)url.c_str(),
+		static_cast<DWORD>(((url.size() + 1) * sizeof(wchar_t))),
+		hConv,
+		0,
+		0,
+		XTYP_EXECUTE,
+		10000,
+		NULL);
+	if (hDDEData)
+		DdeFreeDataHandle(hDDEData);
+	DdeDisconnect(hConv);
+	DdeUninitialize(dwDDEID);
+
+	return true;
 }
