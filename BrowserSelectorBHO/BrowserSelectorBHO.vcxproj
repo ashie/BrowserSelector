@@ -271,7 +271,10 @@
   <ItemGroup>
     <None Include="BrowserSelector.rgs" />
     <None Include="BrowserSelectorBHO.def" />
-    <None Include="BrowserSelectorBHO.rgs" />
+    <None Include="BrowserSelectorBHO.rgs">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Midl Include="BrowserSelectorBHO.idl" />
