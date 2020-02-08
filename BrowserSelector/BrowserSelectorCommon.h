@@ -701,24 +701,32 @@ static std::wstring GetBrowserNameToOpenURL(
 bool OpenByModernBrowser(
 	const std::wstring &browserName,
 	const std::wstring &url,
-	bool bypassElevationPolicy = false)
+	bool bypassElevationDialog = false)
 {
-	HINSTANCE hInstance = 0;
-	if (bypassElevationPolicy) {
+	std::wstring command;
+	std::wstring args(std::wstring(L"\"") + url + std::wstring(L"\""));
+
+	if (bypassElevationDialog) {
 		// Avoid showing the elevation warning dialog of IE. BrowserSelector.exe is
 		// registered as Policy == 3 (don't show the dialog) by the installer.
-		hInstance = ::ShellExecute(
+		command = L"BrowserSelector.exe";
+		args += std::wstring(L" --browser=") + browserName;
+	} else {
+		if (browserName == L"firefox")
+			command = L"firefox.exe";
+		else if (browserName == L"chrome")
+			command = L"chrome.exe";
+	}
+
+	HINSTANCE hInstance = 0;
+	if (!command.empty())
+		hInstance = ::ShellExecuteW(
 			NULL, // HWND
-			_T("open"), _T("BrowserSelector.exe"), url.c_str(),
+			L"open",
+			command.c_str(),
+			args.c_str(),
 			NULL, // Directory
 			SW_SHOW);
-	} else {
-		if (browserName == L"firefox") {
-			hInstance = ::ShellExecute(NULL, _T("open"), _T("firefox.exe"), url.c_str(), NULL, SW_SHOW);
-		} else if (browserName == L"chrome") {
-			hInstance = ::ShellExecute(NULL, _T("open"), _T("chrome.exe"), url.c_str(), NULL, SW_SHOW);
-		}
-	}
 	return (reinterpret_cast<int>(hInstance) > 32);
 }
 

@@ -118,8 +118,8 @@ void CBrowserSelector::DoNavigate(BSTR url, VARIANT_BOOL *cancel)
 	if (browserName == L"ie")
 		return;
 
-	const bool bypassElevationPolicy = true;
-	bool succeeded = OpenByModernBrowser(browserName, URL, bypassElevationPolicy);
+	const bool bypassElevationDialog = true;
+	bool succeeded = OpenByModernBrowser(browserName, URL, bypassElevationDialog);
 	*cancel= succeeded ? VARIANT_TRUE : VARIANT_FALSE;
 }
 

@@ -21,19 +21,31 @@ int APIENTRY _tWinMain(
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(nCmdShow);
 
-	Config config;
-	config.LoadAll();
-
 	wstring url;
+	wstring browserName;
+
 	if (lpCmdLine && *lpCmdLine) {
 		int nArgs = 0;
 		LPWSTR *args = ::CommandLineToArgvW(lpCmdLine, &nArgs);
-		if (nArgs >= 1)
-			url = args[0];
+		// Pick up only last URL and last browser name.
+		// Others are discarded.
+		for (int i = 0; i < nArgs; i++) {
+			wstring prefix(L"--browser=");
+			wstring arg(args[i]);
+			if (arg.find(prefix) == 0) {
+				browserName = arg.substr(prefix.size());
+			} else {
+				url = arg;
+			}
+		}
 		LocalFree(args);
 	}
 
-	wstring browserName = ::GetBrowserNameToOpenURL(url, config);
+	if (browserName.empty()) {
+		Config config;
+		config.LoadAll();
+		browserName = ::GetBrowserNameToOpenURL(url, config);
+	}
 
 	bool openByIE = true;
 	if (browserName != L"ie")
