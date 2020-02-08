@@ -21,6 +21,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_1EFE442DF78141D4B00C66D7465AE369"
+        "OwnerKey" = "8:_C03D314614CD4F4EA4A20243C8EF8F15"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_2DA6F27C8C9F48D29B180B027C2340F2"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -45,26 +51,20 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_880C7DD1B35543E4914EC2C5730190FE"
-        "OwnerKey" = "8:_C03D314614CD4F4EA4A20243C8EF8F15"
+        "MsmKey" = "8:_864690ED6B51467B8821E68F42D59522"
+        "OwnerKey" = "8:_3BF7B80D023F407197BA479BED617B91"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_864690ED6B51467B8821E68F42D59522"
+        "OwnerKey" = "8:_B58A939B42EB49F280F9BD2C26F9AE32"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_A41BF1FC9A2F4F4B9FF848DAE2CDB401"
         "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_B08542D121184278872FB75E974C96C8"
-        "OwnerKey" = "8:_3BF7B80D023F407197BA479BED617B91"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_B08542D121184278872FB75E974C96C8"
-        "OwnerKey" = "8:_B58A939B42EB49F280F9BD2C26F9AE32"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -448,7 +448,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:BrowserSelector"
         "ProductCode" = "8:{F9F870E9-CA89-427D-99AC-90A784FE7751}"
-        "PackageCode" = "8:{F4389CF5-B8CB-4159-999E-F6AD53C7AF3D}"
+        "PackageCode" = "8:{3E70C436-D46A-4F67-AB0D-6D86ACFFF43B}"
         "UpgradeCode" = "8:{864B7071-7281-4A14-B718-57CB190FE7B7}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -520,6 +520,86 @@
                             "Transitive" = "11:FALSE"
                                 "Keys"
                                 {
+                                    "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_AF46E0B8908541AAA1FC536C937904C8"
+                                    {
+                                    "Name" = "8:Internet Explorer"
+                                    "Condition" = "8:"
+                                    "AlwaysCreate" = "11:FALSE"
+                                    "DeleteAtUninstall" = "11:FALSE"
+                                    "Transitive" = "11:FALSE"
+                                        "Keys"
+                                        {
+                                            "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_1B106FB04F3348118465564173955810"
+                                            {
+                                            "Name" = "8:Low Rights"
+                                            "Condition" = "8:"
+                                            "AlwaysCreate" = "11:FALSE"
+                                            "DeleteAtUninstall" = "11:FALSE"
+                                            "Transitive" = "11:FALSE"
+                                                "Keys"
+                                                {
+                                                    "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_E44689DEA94C482FB3901920215E9B43"
+                                                    {
+                                                    "Name" = "8:ElevationPolicy"
+                                                    "Condition" = "8:"
+                                                    "AlwaysCreate" = "11:FALSE"
+                                                    "DeleteAtUninstall" = "11:FALSE"
+                                                    "Transitive" = "11:FALSE"
+                                                        "Keys"
+                                                        {
+                                                            "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_761E9443D1F947228EA8B0C3B26AFE67"
+                                                            {
+                                                            "Name" = "8:{0DA124F2-E49B-4B8B-A462-EF6305282B40}"
+                                                            "Condition" = "8:"
+                                                            "AlwaysCreate" = "11:FALSE"
+                                                            "DeleteAtUninstall" = "11:FALSE"
+                                                            "Transitive" = "11:FALSE"
+                                                                "Keys"
+                                                                {
+                                                                }
+                                                                "Values"
+                                                                {
+                                                                    "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_0731D1CE9DCE4365AACD62F5CB7B4C0B"
+                                                                    {
+                                                                    "Name" = "8:AppName"
+                                                                    "Condition" = "8:"
+                                                                    "Transitive" = "11:FALSE"
+                                                                    "ValueTypes" = "3:1"
+                                                                    "Value" = "8:BrowserSelector.exe"
+                                                                    }
+                                                                    "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_43DA97F333FE4167AE8C92193A11F7D6"
+                                                                    {
+                                                                    "Name" = "8:AppPath"
+                                                                    "Condition" = "8:"
+                                                                    "Transitive" = "11:FALSE"
+                                                                    "ValueTypes" = "3:1"
+                                                                    "Value" = "8:[TARGETDIR]"
+                                                                    }
+                                                                    "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_A11535A3DE434D1489BC629F83D634DB"
+                                                                    {
+                                                                    "Name" = "8:Policy"
+                                                                    "Condition" = "8:"
+                                                                    "Transitive" = "11:FALSE"
+                                                                    "ValueTypes" = "3:3"
+                                                                    "Value" = "3:3"
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                        "Values"
+                                                        {
+                                                        }
+                                                    }
+                                                }
+                                                "Values"
+                                                {
+                                                }
+                                            }
+                                        }
+                                        "Values"
+                                        {
+                                        }
+                                    }
                                     "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_E097ED16D8374C3F96EB2CB9C23F5954"
                                     {
                                     "Name" = "8:Windows"
@@ -1570,7 +1650,7 @@
         }
         "MergeModule"
         {
-            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_880C7DD1B35543E4914EC2C5730190FE"
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_1EFE442DF78141D4B00C66D7465AE369"
             {
             "UseDynamicProperties" = "11:TRUE"
             "IsDependency" = "11:TRUE"
@@ -1584,7 +1664,7 @@
             "Feature" = "8:"
             "IsolateTo" = "8:"
             }
-            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_B08542D121184278872FB75E974C96C8"
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_864690ED6B51467B8821E68F42D59522"
             {
             "UseDynamicProperties" = "11:TRUE"
             "IsDependency" = "11:TRUE"
