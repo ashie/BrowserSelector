@@ -14,7 +14,6 @@ static bool OpenIE(const wstring &url)
 {
 	int ret;
 	wstring iepath;
-	wchar_t args[1024];
 	PROCESS_INFORMATION pi;
 	STARTUPINFO si;
 
@@ -24,18 +23,17 @@ static bool OpenIE(const wstring &url)
 	memset(&si, 0, sizeof(si));
 	si.cb = sizeof(si);
 
-	if (wcschr(url.c_str(), L'"')) {
+	if (url.find('"') !=  std::wstring::npos) {
 		fprintf(stderr, "URL contains a double quote: '%ls'", url.c_str());
 		return false;
 	}
 
-	if (swprintf(args, 1024, L" \"%ls\"", url.c_str()) < 0) {
-		fprintf(stderr, "URL too long: '%ls'", url.c_str());
-		return false;
-	}
+	wstring args(L" \"");
+	args += url;
+	args += L"\"";
 
 	ret = CreateProcess(iepath.c_str(), /* lpApplicationName */
-						args,           /* lpCommandLine */
+						const_cast<LPWSTR>(args.c_str()), /* lpCommandLine */
 						NULL,           /* lpProcessAttributes  */
 						NULL,           /* lpThreadAttributes */
 						FALSE,          /* bInheritHandles */
