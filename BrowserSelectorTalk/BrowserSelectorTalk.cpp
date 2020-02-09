@@ -167,12 +167,12 @@ static int HandleTalkProtocol(const Config *config)
 	}
 
 	switch (wcmd[0]) {
-		case L'Q':
-			ret = HandleTalkQuery(wcmd, config);
-			break;
-		default:
-			fprintf(stderr, "unknown command '%ls'", wcmd);
-			break;
+	case L'Q':
+		ret = HandleTalkQuery(wcmd, config);
+		break;
+	default:
+		fprintf(stderr, "unknown command '%ls'", wcmd);
+		break;
 	}
 	free(cmd);
 	free(wcmd);
