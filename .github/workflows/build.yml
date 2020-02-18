@@ -2,6 +2,9 @@ name: Windows
 on:
   push:
   pull_request:
+env:
+  DEVENV_PATH: C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\IDE\devenv.com
+  SLN_PATH: BrowserSelector.sln
 jobs:
   build:
     name: Build
@@ -12,4 +15,4 @@ jobs:
       - uses: actions/checkout@master
       - name: Build
         run: |
-          'C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\IDE\devenv.com' BrowserSelector.sln /build Release
+          "%DEVENV_PATH%" "%SLN_PATH%" /build Release
