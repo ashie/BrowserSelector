@@ -12,4 +12,4 @@ jobs:
       - uses: actions/checkout@master
       - name: Build
         run: |
-          " C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\IDE\devenv.com" BrowserSelector.sln /build Release
+          'C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\IDE\devenv.com' BrowserSelector.sln /build Release
