@@ -27,12 +27,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_332763CA782B48BFA3D6E8179B1BDDA8"
-        "OwnerKey" = "8:_C03D314614CD4F4EA4A20243C8EF8F15"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_3BF7B80D023F407197BA479BED617B91"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -47,18 +41,6 @@
         {
         "MsmKey" = "8:_6F1EEC7F38A543589065420AEBF15D0A"
         "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_A1F87A6ADC134A2484AAC74D1FD834A8"
-        "OwnerKey" = "8:_3BF7B80D023F407197BA479BED617B91"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_A1F87A6ADC134A2484AAC74D1FD834A8"
-        "OwnerKey" = "8:_B58A939B42EB49F280F9BD2C26F9AE32"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -106,13 +88,13 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_C03D314614CD4F4EA4A20243C8EF8F15"
+        "OwnerKey" = "8:_B58A939B42EB49F280F9BD2C26F9AE32"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_B58A939B42EB49F280F9BD2C26F9AE32"
+        "OwnerKey" = "8:_C03D314614CD4F4EA4A20243C8EF8F15"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -573,7 +555,7 @@
                                                                     "Condition" = "8:"
                                                                     "Transitive" = "11:FALSE"
                                                                     "ValueTypes" = "3:1"
-                                                                    "Value" = "8:[TARGETDIR]"
+                                                                    "Value" = "8:[ProgramFilesFolder][Manufacturer]\\[ProductName]"
                                                                     }
                                                                     "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_A11535A3DE434D1489BC629F83D634DB"
                                                                     {
@@ -687,7 +669,7 @@
                                                                     "Condition" = "8:"
                                                                     "Transitive" = "11:FALSE"
                                                                     "ValueTypes" = "3:1"
-                                                                    "Value" = "8:[TARGETDIR][ProductName].exe"
+                                                                    "Value" = "8:[ProgramFilesFolder][Manufacturer]\\[ProductName]\\[ProductName].exe"
                                                                     }
                                                                     "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_F34327DA541C4AF5869184CE02C4B016"
                                                                     {
@@ -695,7 +677,7 @@
                                                                     "Condition" = "8:"
                                                                     "Transitive" = "11:FALSE"
                                                                     "ValueTypes" = "3:1"
-                                                                    "Value" = "8:[TARGETDIR]"
+                                                                    "Value" = "8:[ProgramFilesFolder][Manufacturer]\\[ProductName]"
                                                                     }
                                                                 }
                                                             }
@@ -819,7 +801,7 @@
                                                     "Condition" = "8:"
                                                     "Transitive" = "11:FALSE"
                                                     "ValueTypes" = "3:1"
-                                                    "Value" = "8:[TARGETDIR][ProductName].exe,0"
+                                                    "Value" = "8:[ProgramFilesFolder][Manufacturer]\\[ProductName]\\[ProductName].exe,0"
                                                     }
                                                     "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_6ADADFA6263E46A3A52321DC0D8328CE"
                                                     {
@@ -883,7 +865,7 @@
                                                                     "Condition" = "8:"
                                                                     "Transitive" = "11:FALSE"
                                                                     "ValueTypes" = "3:1"
-                                                                    "Value" = "8:\"[TARGETDIR][ProductName].exe\" \"%1\""
+                                                                    "Value" = "8:\"[ProgramFilesFolder][Manufacturer]\\[ProductName]\\[ProductName].exe\" \"%1\""
                                                                     }
                                                                 }
                                                             }
@@ -915,7 +897,7 @@
                                                     "Condition" = "8:"
                                                     "Transitive" = "11:FALSE"
                                                     "ValueTypes" = "3:1"
-                                                    "Value" = "8:[TARGETDIR][ProductName].exe,0"
+                                                    "Value" = "8:[ProgramFilesFolder][Manufacturer]\\[ProductName]\\[ProductName].exe,0"
                                                     }
                                                 }
                                             }
@@ -973,7 +955,7 @@
                                                     "Condition" = "8:"
                                                     "Transitive" = "11:FALSE"
                                                     "ValueTypes" = "3:1"
-                                                    "Value" = "8:[TARGETDIR][ProductName]Talk.json"
+                                                    "Value" = "8:[ProgramFilesFolder][Manufacturer]\\[ProductName]\\[ProductName]Talk.json"
                                                     }
                                                 }
                                             }
@@ -1154,7 +1136,7 @@
                                                             "Condition" = "8:"
                                                             "Transitive" = "11:FALSE"
                                                             "ValueTypes" = "3:1"
-                                                            "Value" = "8:[TARGETDIR][ProductName].exe,0"
+                                                            "Value" = "8:[ProgramFilesFolder][Manufacturer]\\[ProductName]\\[ProductName].exe,0"
                                                             }
                                                             "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_D583BFBDC52F4DBD861555293BAE4C15"
                                                             {
@@ -1650,34 +1632,6 @@
         }
         "MergeModule"
         {
-            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_332763CA782B48BFA3D6E8179B1BDDA8"
-            {
-            "UseDynamicProperties" = "11:TRUE"
-            "IsDependency" = "11:TRUE"
-            "SourcePath" = "8:Microsoft_VC100_ATL_x86.msm"
-                "Properties"
-                {
-                }
-            "LanguageId" = "3:0"
-            "Exclude" = "11:FALSE"
-            "Folder" = "8:"
-            "Feature" = "8:"
-            "IsolateTo" = "8:"
-            }
-            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_A1F87A6ADC134A2484AAC74D1FD834A8"
-            {
-            "UseDynamicProperties" = "11:TRUE"
-            "IsDependency" = "11:TRUE"
-            "SourcePath" = "8:Microsoft_VC100_CRT_x86.msm"
-                "Properties"
-                {
-                }
-            "LanguageId" = "3:0"
-            "Exclude" = "11:FALSE"
-            "Folder" = "8:"
-            "Feature" = "8:"
-            "IsolateTo" = "8:"
-            }
         }
         "ProjectOutput"
         {
