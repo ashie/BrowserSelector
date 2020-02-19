@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@master
       - name: Download dependencies
         run: |
-          curl -s -S -o InstallerProjects.vsix https://marketplace.visualstudio.com/_apis/public/gallery/publishers/VisualStudioClient/vsextensions/MicrosoftVisualStudio2017InstallerProjects/0.9.6/vspackage
+          wget -O InstallerProjects.vsix https://marketplace.visualstudio.com/_apis/public/gallery/publishers/VisualStudioClient/vsextensions/MicrosoftVisualStudio2017InstallerProjects/0.9.6/vspackage
         shell: cmd
       - name: Install dependencies
         run: |
