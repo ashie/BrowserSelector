@@ -13,6 +13,6 @@ jobs:
       - name: Build
         run: |
           curl -s -S -o InstallerProjects.vsix https://marketplace.visualstudio.com/_apis/public/gallery/publishers/VisualStudioClient/vsextensions/MicrosoftVisualStudio2017InstallerProjects/0.9.6/vspackage
-          "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\IDE\devenv.com" /quiet InstallerProjects.vsix
+          "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\IDE\VSIXInstaller.exe" /quiet InstallerProjects.vsix
           "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\IDE\devenv.com" BrowserSelector.sln /build Release
         shell: cmd
