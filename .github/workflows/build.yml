@@ -10,9 +10,13 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@master
-      - name: Install dependencies
+      - name: Download dependencies
         run: |
           curl -s -S -o InstallerProjects.vsix https://marketplace.visualstudio.com/_apis/public/gallery/publishers/VisualStudioClient/vsextensions/MicrosoftVisualStudio2017InstallerProjects/0.9.6/vspackage
+        shell: cmd
+      - name: Install dependencies
+        run: |
+          "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\IDE\VSIXInstaller.exe" /quiet InstallerProjects.vsix
         shell: cmd
       - name: Build
         run: |
