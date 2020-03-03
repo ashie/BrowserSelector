@@ -48,6 +48,30 @@ RESPONSE
     {"status": "OK", "open": true, "close_tab": true}
     {"status": "OK", "open": false}
 
+## Config command
+
+Ask BrowserSelector about the current configuration.
+
+REQUEST
+
+    "C chrome"
+     - ------
+       Origin
+
+RESEPONSE
+
+    {"status": "OK", "config": {
+        "DefaultBrowser": "ie",
+        "SecondBrowser": "chrome",
+        "CloseEmptyTab": 1,
+        "UseRegex": 0,
+        "HostNamePaterns": [],
+        "URLPatterns": [
+            ["https://*.example.com", "ie"],
+            ["https://*.example.com/*", "ie"]
+        ]
+    }}
+
 TODO
 ----
 
