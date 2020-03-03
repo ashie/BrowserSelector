@@ -1,0 +1,9 @@
+{
+  "name": "com.clear_code.browserselector_talk",
+  "description": "BrowserSelector Talk Host",
+  "path": "BrowserSelectorTalk.exe",
+  "type": "stdio",
+  "allowed_origins": [
+    "chrome-extension://giieimcgnnfaigngjhknobldhjplijbo/"
+  ]
+}
