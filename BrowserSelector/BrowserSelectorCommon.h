@@ -66,6 +66,54 @@ public:
 		}
 	};
 
+	virtual void dumpAsJson(std::wstring &buf) const
+	{
+		wchar_t tmp[10];
+		SwitchingPatterns::const_iterator it;
+
+		buf = L"{";
+
+		buf += L"\"DefaultBrowser\":\"";
+		buf += m_defaultBrowser;
+		buf += L"\",";
+
+		buf += L"\"SecondBrowser\":\"";
+		buf += m_secondBrowser;
+		buf += L"\",";
+
+		buf += L"\"CloseEmptyTab\":";
+		buf += _itow(m_closeEmptyTab, tmp, 10);
+		buf += L",";
+
+		buf += L"\"OnlyOnAnchorClick\":";
+		buf += _itow(m_onlyOnAnchorClick, tmp, 10);
+		buf += L",";
+
+		buf += L"\"URLPatterns\":[";
+		for (it = m_urlPatterns.begin(); it != m_urlPatterns.end(); it++) {
+			if (it != m_urlPatterns.begin())
+				buf += L",";
+			buf += L"[\"";
+			buf += it->first;
+			buf += L"\",\"";
+			buf += it->second;
+			buf += L"\"]";
+		}
+		buf += L"],";
+
+		buf += L"\"HostNamePatterns\":[";
+		for (it = m_hostNamePatterns.begin(); it != m_hostNamePatterns.end(); it++) {
+			if (it != m_hostNamePatterns.begin())
+				buf += L",";
+			buf += L"[\"";
+			buf += it->first;
+			buf += L"\",\"";
+			buf += it->second;
+			buf += L"\"]";
+		}
+		buf += L"]}";
+	};
+
 	void merge(std::vector<Config*> &configs)
 	{
 		std::vector<Config*>::iterator it;

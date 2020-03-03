@@ -120,6 +120,14 @@ static int HandleTalkQuery(wchar_t *wcmd, const Config *config)
 	return 0;
 }
 
+static int HandleTalkConfig(wchar_t *wcmd, const Config *config)
+{
+    std::wstring buf(1024, '\0'); /* 1kb pre-allocation */
+    config->dumpAsJson(buf);
+    TalkResponse("{\"status\":\"OK\",\"config\":%ls}", buf.c_str());
+    return 0;
+}
+
 static int HandleTalkProtocol(const Config *config)
 {
 	int len;
@@ -169,6 +177,9 @@ static int HandleTalkProtocol(const Config *config)
 	switch (wcmd[0]) {
 	case L'Q':
 		ret = HandleTalkQuery(wcmd, config);
+		break;
+	case L'C':
+		ret = HandleTalkConfig(wcmd, config);
 		break;
 	default:
 		fprintf(stderr, "unknown command '%ls'", wcmd);
