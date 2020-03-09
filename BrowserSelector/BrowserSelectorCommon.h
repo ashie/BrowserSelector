@@ -89,6 +89,10 @@ public:
 		buf += _itow(m_onlyOnAnchorClick, tmp, 10);
 		buf += L",";
 
+		buf += L"\"UseRegex\":";
+		buf += _itow(m_useRegex, tmp, 10);
+		buf += L",";
+
 		buf += L"\"URLPatterns\":[";
 		for (it = m_urlPatterns.begin(); it != m_urlPatterns.end(); it++) {
 			if (it != m_urlPatterns.begin())
