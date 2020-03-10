@@ -11,6 +11,24 @@ static void OpenByIE(const wstring &url)
 		::ShellExecute(NULL, _T("open"), _T("iexplore.exe"), url.c_str(), NULL, SW_SHOW);
 }
 
+static int DumpConfig(const wstring &path)
+{
+	Config config;
+	std::wstring buf;
+	FILE *fp;
+
+	config.LoadAll();
+	config.dumpAsJson(buf);
+
+	fp = _wfopen(path.c_str(), L"w,ccs=UTF-8");
+	if (fp == NULL)
+		return -1;
+
+	fwrite(buf.c_str(), sizeof(wchar_t), buf.size(), fp);
+	fclose(fp);
+	return 0;
+}
+
 int APIENTRY _tWinMain(
 	HINSTANCE hInstance,
 	HINSTANCE hPrevInstance,
@@ -23,6 +41,7 @@ int APIENTRY _tWinMain(
 
 	wstring url;
 	wstring browserName;
+	wstring dumpPath;
 
 	if (lpCmdLine && *lpCmdLine) {
 		int nArgs = 0;
@@ -31,15 +50,21 @@ int APIENTRY _tWinMain(
 		// Others are discarded.
 		for (int i = 0; i < nArgs; i++) {
 			wstring prefix(L"--browser=");
+			wstring dumpPrefix(L"--dump-config=");
 			wstring arg(args[i]);
 			if (arg.find(prefix) == 0) {
 				browserName = arg.substr(prefix.size());
+			} else if (arg.find(dumpPrefix) == 0) {
+				dumpPath = arg.substr(dumpPrefix.size());
 			} else {
 				url = arg;
 			}
 		}
 		LocalFree(args);
 	}
+
+	if (!dumpPath.empty())
+		return DumpConfig(dumpPath);
 
 	if (browserName.empty()) {
 		Config config;
