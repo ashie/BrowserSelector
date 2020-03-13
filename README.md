@@ -32,9 +32,23 @@ The equivalent for Google Chrome is IE Tab.
 
 ## How to Build
 
-  * Open BrowserSelector.sln by Microsoft Visual Studio 2010 (or later)
+### Prerequisites
+
+  * Microsoft Visual Studio 2019
+  * Visual Studio extension "Microsoft Visual Studio Installer Projects"
+    * https://marketplace.visualstudio.com/items?itemName=VisualStudioClient.MicrosoftVisualStudio2017InstallerProjects
+
+### Build Steps
+
+  * Open BrowserSelector.sln by Microsoft Visual Studio 2019
   * Select "Release" (or "Debug") from the toolbar
   * Press F7 key
+
+  or you can do it in command line:
+
+    * Open "Developer Command Prompt for VS 2019" from the start menu
+    * `cd \path\to\BrowserSelector`
+    * `devenv.com BrowserSelector.sln /build Release`
 
 ## How to Install
 

@@ -33,9 +33,23 @@ Google Chromeでの同等の拡張機能としてはIE Tabがあります。
 
 ## ビルド方法
 
+### 必要なもの
+
+  * Microsoft Visual Studio 2019
+  * Visual Studio拡張機能「Microsoft Visual Studio Installer Projects」
+    * https://marketplace.visualstudio.com/items?itemName=VisualStudioClient.MicrosoftVisualStudio2017InstallerProjects
+
+### ビルド手順
+
   * Microsoft Visual Studio 2010でBrowserSelector.slnを開きます
   * ツールバーの「ソリューション構成」で「リリース」を選択します
   * F7キーを押下してビルドします
+
+ あるいはコマンドラインで実行することもできます。
+
+    * スタートメニューから「Developer Command Prompt for VS 2019」を開く
+    * `cd \path\to\BrowserSelector`
+    * `devenv.com BrowserSelector.sln /build Release`
 
 ## インストール方法
 
