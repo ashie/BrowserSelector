@@ -55,13 +55,13 @@ public:
 
 		DebugLog(L"  URLPatterns:");
 		for (it = m_urlPatterns.begin(); it != m_urlPatterns.end(); it++) {
-			DebugLog(L"    URL: %s Bowser: %s",
+			DebugLog(L"    URL: %s Browser: %s",
 				it->first.c_str(), it->second.c_str());
 		}
 
 		DebugLog(L"  HostNamePatterns");
 		for (it = m_hostNamePatterns.begin(); it != m_hostNamePatterns.end(); it++) {
-			DebugLog(L"    Hostname: %s Bowser: %s",
+			DebugLog(L"    Hostname: %s Browser: %s",
 				it->first.c_str(), it->second.c_str());
 		}
 
