@@ -64,6 +64,13 @@ public:
 			DebugLog(L"    Hostname: %s Bowser: %s",
 				it->first.c_str(), it->second.c_str());
 		}
+
+		DebugLog(L"  ZonePatterns");
+		for (it = m_zonePatterns.begin(); it != m_zonePatterns.end(); it++) {
+			DebugLog(L"    Zone: %s Browser: %s",
+				it->first.c_str(), it->second.c_str());
+		}
+
 	};
 
 	virtual void dumpAsJson(std::wstring &buf) const
@@ -115,6 +122,19 @@ public:
 			buf += it->second;
 			buf += L"\"]";
 		}
+		buf += L"],";
+
+		buf += L"\"ZonePatterns\":[";
+		for (it = m_zonePatterns.begin(); it != m_zonePatterns.end(); it++) {
+			if (it != m_zonePatterns.begin())
+				buf += L",";
+			buf += L"[\"";
+			buf += it->first;
+			buf += L"\",\"";
+			buf += it->second;
+			buf += L"\"]";
+		}
+
 		buf += L"]}";
 	};
 
@@ -136,6 +156,10 @@ public:
 			if (config->m_useRegex >= 0)
 				m_useRegex = config->m_useRegex;
 
+			m_zonePatterns.insert(
+				m_zonePatterns.begin(),
+				config->m_zonePatterns.begin(),
+				config->m_zonePatterns.end());
 			m_hostNamePatterns.insert(
 				m_hostNamePatterns.begin(),
 				config->m_hostNamePatterns.begin(),
@@ -183,6 +207,7 @@ public:
 	int m_closeEmptyTab;
 	int m_onlyOnAnchorClick;
 	int m_useRegex;
+	SwitchingPatterns m_zonePatterns;
 	SwitchingPatterns m_hostNamePatterns;
 	SwitchingPatterns m_urlPatterns;
 };
@@ -223,6 +248,7 @@ public:
 		LoadIntValue(m_closeEmptyTab, L"CloseEmptyTab", m_systemWide);
 		LoadIntValue(m_onlyOnAnchorClick, L"OnlyOnAnchorClick", m_systemWide);
 		LoadIntValue(m_useRegex, L"UseRegex", m_systemWide);
+		LoadZonePatterns(m_zonePatterns);
 		LoadHostNamePatterns(m_hostNamePatterns);
 		LoadURLPatterns(m_urlPatterns);
 
@@ -308,6 +334,11 @@ public:
 		reg.Close();
 	}
 
+	void LoadZonePatterns(SwitchingPatterns &patterns)
+	{
+		LoadSwitchingPatterns(patterns, _T("ZonePatterns"), m_systemWide);
+	}
+
 	void LoadHostNamePatterns(SwitchingPatterns &patterns)
 	{
 		LoadSwitchingPatterns(patterns, _T("HostNamePatterns"), m_systemWide);
@@ -347,6 +378,7 @@ public:
 		GetIntValue(m_useRegex, L"Common", L"UseRegex");
 		LoadURLPatterns(m_urlPatterns);
 		LoadHostNamePatterns(m_hostNamePatterns);
+		LoadZonePatterns(m_zonePatterns);
 
 		dump();
 
@@ -421,6 +453,11 @@ public:
 				key = buf + i + 1;
 			}
 		}
+	}
+
+	void LoadZonePatterns(SwitchingPatterns &zonePatterns)
+	{
+		LoadSwitchingPatterns(zonePatterns, L"ZonePatterns");
 	}
 
 	void LoadHostNamePatterns(SwitchingPatterns &hostNamePatterns)
@@ -700,6 +737,47 @@ static bool matchRegex(const std::wstring &url, const std::wstring &pattern, con
 	}
 }
 
+static bool matchZone(const std::wstring &url, const std::wstring &zoneName, const Config &config)
+{
+	static const wchar_t *zones[] = {L"local", L"intranet", L"trusted", L"internet", L"restricted"};
+	DWORD index = -1;
+	HRESULT ret;
+	CComPtr<IInternetSecurityManager> securityManager;
+
+	/* It is safe to call CoInitialize() several times, as long as
+	 * we uninitialize COM just as many times.
+	 *
+	 * https://docs.microsoft.com/en-us/windows/win32/api/objbase/nf-objbase-coinitialize
+	 */
+	CoInitialize(NULL);
+
+	ret = securityManager.CoCreateInstance(CLSID_InternetSecurityManager, NULL, CLSCTX_INPROC_SERVER);
+	if (!SUCCEEDED(ret)) {
+		DebugLog(L"Failed to initialize COM Object");
+		CoUninitialize();
+		return false;
+	}
+
+	/* Map URL to Internet Zone */
+	ret = securityManager->MapUrlToZone(url.c_str(), &index, 0);
+
+	/* Let's clean up COM here. */
+	securityManager.Release();
+	CoUninitialize();
+
+	if (!SUCCEEDED(ret)) {
+		DebugLog(L"Failed to map '%s' to zone", url.c_str());
+		return false;
+	}
+
+	if (index < 0 || 4 < index) {
+		DebugLog(L"Unknown zone %i for '%s'", index, url.c_str());
+		return false;
+	}
+
+	return zoneName == zones[index];
+}
+
 static bool matchURL(const std::wstring &url, const std::wstring &pattern, const Config &config)
 {
 	if (config.m_useRegex > 0)
@@ -743,6 +821,17 @@ static std::wstring GetBrowserNameToOpenURL(
 					it->first.c_str(), it->second.c_str());
 			return ensureValidBrowserName(config, &it->second);
 		}
+	}
+
+	for (it = config.m_zonePatterns.begin(); it != config.m_zonePatterns.end(); it++) {
+		const std::wstring &zone = it->first;
+		bool matched = matchZone(url, zone, config);
+		if (!matched)
+			continue;
+		if (config.m_debug > 0)
+			DebugLog(L"Matched Zone pattern: %s Browser: %s",
+				it->first.c_str(), it->second.c_str());
+		return ensureValidBrowserName(config, &it->second);
 	}
 
 	DebugLog(L"Unmatched: %s", url.c_str());
