@@ -66,15 +66,15 @@ int APIENTRY _tWinMain(
 	if (!dumpPath.empty())
 		return DumpConfig(dumpPath);
 
-	if (browserName.empty()) {
-		Config config;
-		config.LoadAll();
+	Config config;
+	config.LoadAll();
+
+	if (browserName.empty())
 		browserName = ::GetBrowserNameToOpenURL(url, config);
-	}
 
 	bool openByIE = true;
 	if (browserName != L"ie")
-		openByIE = !OpenByModernBrowser(browserName, url);
+		openByIE = !OpenByModernBrowser(browserName, url, config);
 	if (openByIE)
 		OpenByIE(url);
 

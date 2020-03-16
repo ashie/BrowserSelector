@@ -50,10 +50,10 @@ static bool OpenIE(const wstring &url)
 	return true;
 }
 
-static bool BrowserOpen(const wstring browser, const wstring &url)
+static bool BrowserOpen(const wstring browser, const wstring &url, const Config *config)
 {
 	if (browser != L"ie")
-		return OpenByModernBrowser(browser, url);
+		return OpenByModernBrowser(browser, url, *config);
 
 	if (!OpenByExistingIE(url))
 		return OpenIE(url);
@@ -111,7 +111,7 @@ static int HandleTalkQuery(wchar_t *wcmd, const Config *config)
 	wstring browser = ::GetBrowserNameToOpenURL(url, *config);
 	if (browser == origin) {
 		TalkResponse("{\"status\":\"OK\",\"open\":0}");
-	} else if (BrowserOpen(browser, url)) {
+	} else if (BrowserOpen(browser, url, config)) {
 		TalkResponse("{\"status\":\"OK\",\"open\":1,\"close_tab\":%d}", config->m_closeEmptyTab);
 	} else {
 		fprintf(stderr, "cannot open '%ls' with '%ls'", url.c_str(), browser.c_str());
@@ -122,10 +122,10 @@ static int HandleTalkQuery(wchar_t *wcmd, const Config *config)
 
 static int HandleTalkConfig(wchar_t *wcmd, const Config *config)
 {
-    std::wstring buf(1024, '\0'); /* 1kb pre-allocation */
-    config->dumpAsJson(buf);
-    TalkResponse("{\"status\":\"OK\",\"config\":%ls}", buf.c_str());
-    return 0;
+	std::wstring buf(1024, '\0'); /* 1kb pre-allocation */
+	config->dumpAsJson(buf);
+	TalkResponse("{\"status\":\"OK\",\"config\":%ls}", buf.c_str());
+	return 0;
 }
 
 static int HandleTalkProtocol(const Config *config)

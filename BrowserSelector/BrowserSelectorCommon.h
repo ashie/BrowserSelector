@@ -21,6 +21,33 @@ void DebugLog(wchar_t *fmt, ...)
 	va_end(args);
 }
 
+/*
+ * Convert wstring into JSON reporesentation (i.e. aiu\n -> "aiu\\n")
+ *
+ * The escape list below is retrieved from CPython's implementation.
+ * https://github.com/python/cpython/blob/3.7/Lib/json/encoder.py#L21
+ */
+std::wstring ToJsonString(std::wstring src, std::wstring dest)
+{
+	const wchar_t *ptr = src.c_str();
+	dest = L'"';
+	while (*ptr) {
+		switch (*ptr) {
+			case L'\\': dest += L"\\\\"; break;
+			case L'\"': dest += L"\\\""; break;
+			case L'\b': dest += L"\\b"; break;
+			case L'\f': dest += L"\\f"; break;
+			case L'\n': dest += L"\\n"; break;
+			case L'\r': dest += L"\\r"; break;
+			case L'\t': dest += L"\\t"; break;
+			default: dest += *ptr;
+		}
+		ptr++;
+	}
+	dest += L'"';
+	return dest;
+}
+
 class Config {
 public:
 	Config()
@@ -47,6 +74,7 @@ public:
 		DebugLog(L"Config: %s", getName().c_str());
 		DebugLog(L"  DefaultBrowser: %s", m_defaultBrowser.c_str());
 		DebugLog(L"  SecondBrowser: %s", m_secondBrowser.c_str());
+		DebugLog(L"  FirefoxCommand: %s", m_firefoxCommand.c_str());
 		DebugLog(L"  CloseEmptyTab: %d", m_closeEmptyTab);
 		DebugLog(L"  OnlyOnAnchorClick: %d", m_onlyOnAnchorClick);
 		DebugLog(L"  UseRegex: %d", m_useRegex);
@@ -76,6 +104,7 @@ public:
 	virtual void dumpAsJson(std::wstring &buf) const
 	{
 		wchar_t tmp[10];
+		std::wstring strbuf;
 		SwitchingPatterns::const_iterator it;
 
 		buf = L"{";
@@ -87,6 +116,10 @@ public:
 		buf += L"\"SecondBrowser\":\"";
 		buf += m_secondBrowser;
 		buf += L"\",";
+
+		buf += L"\"FirefoxCommand\":";
+		buf += ToJsonString(m_firefoxCommand, strbuf);
+		buf += L",";
 
 		buf += L"\"CloseEmptyTab\":";
 		buf += _itow(m_closeEmptyTab, tmp, 10);
@@ -149,6 +182,8 @@ public:
 				m_defaultBrowser = config->m_defaultBrowser;
 			if (!config->m_secondBrowser.empty())
 				m_secondBrowser = config->m_secondBrowser;
+			if (!config->m_firefoxCommand.empty())
+				m_firefoxCommand = config->m_firefoxCommand;
 			if (config->m_closeEmptyTab >= 0)
 				m_closeEmptyTab = config->m_closeEmptyTab;
 			if (config->m_onlyOnAnchorClick >= 0)
@@ -204,6 +239,7 @@ public:
 	int m_debug;
 	std::wstring m_defaultBrowser;
 	std::wstring m_secondBrowser;
+	std::wstring m_firefoxCommand;
 	int m_closeEmptyTab;
 	int m_onlyOnAnchorClick;
 	int m_useRegex;
@@ -245,6 +281,8 @@ public:
 			L"DefaultBrowser", m_systemWide);
 		LoadStringValue(m_secondBrowser,
 			L"SecondBrowser", m_systemWide);
+		LoadStringValue(m_firefoxCommand,
+			L"FirefoxCommand", m_systemWide);
 		LoadIntValue(m_closeEmptyTab, L"CloseEmptyTab", m_systemWide);
 		LoadIntValue(m_onlyOnAnchorClick, L"OnlyOnAnchorClick", m_systemWide);
 		LoadIntValue(m_useRegex, L"UseRegex", m_systemWide);
@@ -371,6 +409,7 @@ public:
 
 		GetStringValue(m_defaultBrowser, L"Common", L"DefaultBrowser");
 		GetStringValue(m_secondBrowser, L"Common", L"SecondBrowser");
+		GetStringValue(m_firefoxCommand, L"Common", L"FirefoxCommand");
 		GetStringValue(m_includePath, L"Common", L"Include");
 		GetIntValue(m_enableIncludeCache, L"Common", L"EnableIncludeCache");
 		GetIntValue(m_closeEmptyTab, L"Common", L"CloseEmptyTab");
@@ -675,10 +714,12 @@ static bool isInSystemPath(const std::wstring &browserName)
 	return !path.empty();
 }
 
-static bool isValidBrowserName(const std::wstring &browserName)
+static bool isValidBrowserName(const std::wstring &browserName, const Config &config)
 {
 	if (browserName.empty())
 		return false;
+	if (browserName == L"firefox" && !config.m_firefoxCommand.empty())
+		return true;
 	return isInSystemPath(browserName);
 }
 
@@ -686,13 +727,13 @@ static std::wstring ensureValidBrowserName(
 	const Config &config,
 	const std::wstring *name = nullptr)
 {
-	if (name && isValidBrowserName(*name)) {
+	if (name && isValidBrowserName(*name, config)) {
 		return *name;
-	} else if (name && name->empty() && isValidBrowserName(config.m_secondBrowser)) {
+	} else if (name && name->empty() && isValidBrowserName(config.m_secondBrowser, config)) {
 		if (config.m_debug > 0)
 			DebugLog(L"Use second browser: %s", config.m_secondBrowser.c_str());
 		return config.m_secondBrowser;
-	} else if (isValidBrowserName(config.m_defaultBrowser)) {
+	} else if (isValidBrowserName(config.m_defaultBrowser, config)) {
 		if (config.m_debug > 0)
 			DebugLog(L"Use default browser: %s", config.m_defaultBrowser.c_str());
 		return config.m_defaultBrowser;
@@ -842,6 +883,7 @@ static std::wstring GetBrowserNameToOpenURL(
 bool OpenByModernBrowser(
 	const std::wstring &browserName,
 	const std::wstring &url,
+	const Config &config,
 	bool bypassElevationDialog = false)
 {
 	std::wstring command;
@@ -853,10 +895,15 @@ bool OpenByModernBrowser(
 		command = L"BrowserSelector.exe";
 		args += std::wstring(L" --browser=") + browserName;
 	} else {
-		if (browserName == L"firefox")
-			command = L"firefox.exe";
-		else if (browserName == L"chrome")
+		if (browserName == L"firefox") {
+			if (!config.m_firefoxCommand.empty()) {
+				command = config.m_firefoxCommand;
+			} else {
+				command = L"firefox.exe";
+			}
+		} else if (browserName == L"chrome") {
 			command = L"chrome.exe";
+		}
 	}
 
 	HINSTANCE hInstance = 0;
