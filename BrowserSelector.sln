@@ -1,6 +1,8 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29806.167
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BrowserSelectorBHO", "BrowserSelectorBHO\BrowserSelectorBHO.vcxproj", "{5AC47C86-1BED-4FA4-9A12-FC88A11459D3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4C18C7D1-9F89-4B2D-8026-71E32324F434}"
@@ -65,5 +67,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {94730E55-66CF-46CE-B76A-B9382A8E24F9}
 	EndGlobalSection
 EndGlobal
