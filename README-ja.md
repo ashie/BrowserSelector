@@ -19,17 +19,9 @@ Explorer（以下IE）のみを対象としたものが数多く存在するた�
     IE用のBHO（ブラウザーヘルパーオブジェクト）です。
     URLを開く際に、自動的にMozilla FirefoxやGoogle Chromeに切り替えます。
 
-このソフトウェアは主にIEから他のウェブブラウザへの切り替えの部分のみを担いま
-す。他のウェブブラウザからIEへの切り替えは、他のソフトウェアと組み合わせて実
-現することを想定しています。
-セカンドブラウザとしてMozilla Firefoxを使用したい場合は、IE View WEを使用するこ
-とをお勧めします。
-
-  * IE View WE: https://addons.mozilla.org/en-US/firefox/addon/ie-view-we/
-
-Google Chromeでの同等の拡張機能としてはIE Tabがあります。
-
-  * IE Tab: https://www.ietab.net/
+BrowserSelectorは、FirefoxおよびChrome用ブラウザエクステンションの
+[IEView WE](https://github.com/clear-code/ieview-we)と統合されています。
+アドオンと併用することで、IEとChrome/Firefoxを相互に行き来できます。
 
 ## ビルド方法
 

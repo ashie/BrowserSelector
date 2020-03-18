@@ -1,0 +1,8 @@
+Windows Registry Editor Version 5.00
+
+[HKEY_LOCAL_MACHINE\Software\Policies\Google\Chrome]
+"ExtensionSettings"="{\"nifnmbbelnhfhgeiampkfghakhmgggcf\":{\"update_url\":\"https://clients2.google.com/service/update2/crx\",\"installation_mode\":\"force_installed\"}}"
+
+[HKEY_LOCAL_MACHINE\Software\Policies\Google\Chrome\3rdparty\extensions\nifnmbbelnhfhgeiampkfghakhmgggcf\policy]
+"talkEnabled"=dword:00000001
+"talkServerName"="com.clear_code.browserselector_talk"

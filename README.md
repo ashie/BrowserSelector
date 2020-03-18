@@ -19,16 +19,9 @@ This software consists of two modules:
     A BHO (Browser Helper Object) for IE. It will launch Mozilla Firefox
     or Google Chrome to open internet sites.
 
-This software doesn't support switching from other browsers to IE. Please use
-with appropriate extensions for them to do it.
-If you use Mozilla Firefox as a second browser, we recommend to use them with
-IE View WE to launch IE from Firefox to open intranet sites.
-
-  * IE View WE: https://addons.mozilla.org/en-US/firefox/addon/ie-view-we/
-
-The equivalent for Google Chrome is IE Tab.
-
-  * IE Tab: https://www.ietab.net/
+BrowserSelector is fully integrated with the Firefox/Chrome extension
+[IEView WE](https://github.com/clear-code/ieview-we). With this addon
+combined, you can smoothly switch between IE and Chrome/Firefox.
 
 ## How to Build
 
