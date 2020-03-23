@@ -140,6 +140,28 @@ A browser names can be added in this case too. Please add a browser name after
 
   * `0001` = `^http(s)?://(.+\\.)?example\\.(org|com)(/.*)?$firefox`
 
+### `ZonePatterns`
+
+Use this option to map browsers to security zones in Internet Explorer.
+The configuration syntax is the same as URLPatterns and HostNamePatterns.
+
+e.g.)
+
+  * `0001` = `intranet|ie`
+  * `0002` = `internet`
+
+The following security zone names are supported.
+
+  * Type: String
+    * `local`
+    * `intranet`
+    * `trusted`
+    * `internet`
+    * `restricted`
+
+Note that `URLPatterns` and `HostNamePatterns` take precedence over
+`ZonePatterns`.
+
 ### `DefaultBrowser`
 
 You can change the browser for opening unmatched URLs by setting the registry
@@ -174,6 +196,15 @@ e.g.)
     * `0001` = `http://*.example.com`
     * `0002` = `http://*.example.org`
     * ...
+
+### `FirefoxCommand`
+
+If you have a multiple versions of Firefox installed on your system, you can
+use this option to specify which Firefox you want to launch.
+
+ * Type: String
+   * Empty (Default)
+   * Local Windows Path Fromat: C:\path\to\firefox.exe
 
 ### `CloseEmptyTab`
 

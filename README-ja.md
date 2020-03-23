@@ -129,6 +129,28 @@ BHOのみを使用してBrowserSelector.exeが必要無い場合、この手順�
 ブラウザ名を指定しない場合は後述の`DefaultBrowser`や`SecondBrowser`が使用されま
 す。
 
+### `ZonePatterns`
+
+Internet Explorerのセキュリティゾーンごとに起動するブラウザを設定します。
+記法は`URLPatterns`および`HostNamePatterns`と同様です。
+
+例)
+
+  * `0001` = `intranet|ie`
+  * `0002` = `internet`
+
+以下のセキュリティゾーン名がサポートされています。　
+
+  * Type: String
+    * `local`
+    * `intranet`
+    * `trusted`
+    * `internet`
+    * `restricted`
+
+`URLPatterns`と`HostNamePatterns`のルールは`ZonePatterns`に優先することに
+注意してください。
+
 #### 正規表現
 
 ホスト名やURLのパターンを指定する方法として、単純なワイルドカードではなく、正規
@@ -181,6 +203,16 @@ BHOのみを使用してBrowserSelector.exeが必要無い場合、この手順�
     * `0001` = `http://*.example.com`
     * `0002` = `http://*.example.org`
     * ...
+
+### `FirefoxCommand`
+
+システムに複数のバージョンのFirefoxをインストールしている場合に、どのFirefoxを
+起動するかを指定できます。
+
+
+ * 値の型: 文字列
+   * 空文字列 (デフォルト)
+   * 通常のWindowsパス形式: C:\path\to\firefox.exe
 
 ### `CloseEmptyTab`
 
