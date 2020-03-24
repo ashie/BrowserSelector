@@ -780,7 +780,7 @@ static bool matchRegex(const std::wstring &url, const std::wstring &pattern, con
 
 static bool matchZone(const std::wstring &url, const std::wstring &zoneName, const Config &config)
 {
-	static const wchar_t *zones[] = {L"local", L"intranet", L"trusted", L"internet", L"restricted"};
+	static const wchar_t *zones[] = {L"local", L"intra", L"trusted", L"internet", L"restricted"};
 	DWORD index = -1;
 	HRESULT ret;
 	CComPtr<IInternetSecurityManager> securityManager;

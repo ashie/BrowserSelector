@@ -147,14 +147,14 @@ The configuration syntax is the same as URLPatterns and HostNamePatterns.
 
 e.g.)
 
-  * `0001` = `intranet|ie`
+  * `0001` = `intra|ie`
   * `0002` = `internet`
 
 The following security zone names are supported.
 
   * Type: String
     * `local`
-    * `intranet`
+    * `intra`
     * `trusted`
     * `internet`
     * `restricted`
