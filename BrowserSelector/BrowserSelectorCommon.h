@@ -274,6 +274,7 @@ class RegistryConfig : public Config
 public:
 	RegistryConfig(bool systemWide = false)
 		: m_systemWide(systemWide)
+		, m_enableIncludeCache(-1)
 	{
 		LoadIntValue(m_debug, L"Debug", m_systemWide);
 
@@ -283,6 +284,9 @@ public:
 			L"SecondBrowser", m_systemWide);
 		LoadStringValue(m_firefoxCommand,
 			L"FirefoxCommand", m_systemWide);
+		LoadStringValue(m_includePath,
+			L"Include", m_systemWide);
+		LoadIntValue(m_enableIncludeCache, L"EnableIncludeCache", m_systemWide);
 		LoadIntValue(m_closeEmptyTab, L"CloseEmptyTab", m_systemWide);
 		LoadIntValue(m_onlyOnAnchorClick, L"OnlyOnAnchorClick", m_systemWide);
 		LoadIntValue(m_useRegex, L"UseRegex", m_systemWide);
@@ -291,10 +295,15 @@ public:
 		LoadURLPatterns(m_urlPatterns);
 
 		dump();
+
+		if (!m_includePath.empty())
+			includeINIFile(m_includePath);
 	}
 	virtual ~RegistryConfig()
 	{
 	}
+
+	void includeINIFile(std::wstring &path);
 
 	virtual std::wstring getName()
 	{
@@ -389,6 +398,8 @@ public:
 
 public:
 	bool m_systemWide;
+	std::wstring m_includePath;
+	int m_enableIncludeCache;
 };
 
 class INIFileConfig : public Config
@@ -656,6 +667,21 @@ public:
 	bool m_notFound;
 	INIFileConfig *m_parent;
 };
+
+void RegistryConfig::includeINIFile(std::wstring &path)
+{
+	INIFileConfig child(path);
+	if (m_enableIncludeCache) {
+		if (child.isSucceededToLoad())
+			child.WriteCache();
+		else
+			child.ReadCache();
+	}
+
+	std::vector<Config*> configs;
+	configs.push_back(&child);
+	merge(configs);
+}
 
 void Config::LoadAll(HINSTANCE hInstance)
 {
