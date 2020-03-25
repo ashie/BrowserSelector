@@ -225,9 +225,8 @@ Whether or not to launch an alternate browser only on clicking an link.
 
 ### `Include`
 
-The path of external INI file to load additionally. It's effective only in INI
-file. In addition it cannot load other external INI file from an external INI
-file.
+The path of external INI file to load additionally. Note that it does not
+support recursive loading (`Include` in the child config is ignored).
 
   * Type: String
     * Both following formats are available.
