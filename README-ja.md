@@ -136,14 +136,14 @@ Internet Explorerのセキュリティゾーンごとに起動するブラウザ
 
 例)
 
-  * `0001` = `intranet|ie`
+  * `0001` = `intra|ie`
   * `0002` = `internet`
 
 以下のセキュリティゾーン名がサポートされています。　
 
   * Type: String
     * `local`
-    * `intranet`
+    * `intra`
     * `trusted`
     * `internet`
     * `restricted`
