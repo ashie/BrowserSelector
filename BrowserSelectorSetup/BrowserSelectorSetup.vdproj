@@ -45,6 +45,18 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_410639E4373C41A6A66A40D6FF90C521"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_70862CE947C6440BAC06511E3774EBA4"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_A41BF1FC9A2F4F4B9FF848DAE2CDB401"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -252,6 +264,46 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_410639E4373C41A6A66A40D6FF90C521"
+            {
+            "SourcePath" = "8:..\\sample\\chrome.reg"
+            "TargetName" = "8:chrome.reg"
+            "Tag" = "8:"
+            "Folder" = "8:_3613CB428E7E46C8B8B34688C6638883"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_70862CE947C6440BAC06511E3774EBA4"
+            {
+            "SourcePath" = "8:..\\sample\\policies.json"
+            "TargetName" = "8:policies.json"
+            "Tag" = "8:"
+            "Folder" = "8:_3613CB428E7E46C8B8B34688C6638883"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A41BF1FC9A2F4F4B9FF848DAE2CDB401"
             {
             "SourcePath" = "8:..\\sample\\BrowserSelectorExample.reg"
@@ -420,7 +472,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:BrowserSelector"
         "ProductCode" = "8:{5CF30851-232A-4CD8-ACF3-5FD01C97E65D}"
-        "PackageCode" = "8:{6D17C0D0-4317-4D86-B070-E2EDE41C5575}"
+        "PackageCode" = "8:{79720455-E503-4923-A35B-402C2EF2BB55}"
         "UpgradeCode" = "8:{864B7071-7281-4A14-B718-57CB190FE7B7}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
