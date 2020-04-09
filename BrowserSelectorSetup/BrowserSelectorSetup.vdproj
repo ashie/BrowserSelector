@@ -1045,7 +1045,7 @@
                                         {
                                             "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_D66DD4EE7DE54CA8A68DE3274BA572A6"
                                             {
-                                            "Name" = "8:BrowserSelectorTalk"
+                                            "Name" = "8:com.clear_code.browserselector_talk"
                                             "Condition" = "8:"
                                             "AlwaysCreate" = "11:FALSE"
                                             "DeleteAtUninstall" = "11:TRUE"
