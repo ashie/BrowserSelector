@@ -115,7 +115,7 @@
       <SubSystem>Windows</SubSystem>
       <ModuleDefinitionFile>.\BrowserSelectorBHO.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <RegisterOutput>true</RegisterOutput>
+      <RegisterOutput>false</RegisterOutput>
       <PerUserRedirection>true</PerUserRedirection>
       <AdditionalDependencies>dbghelp.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
