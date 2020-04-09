@@ -18,6 +18,9 @@
     <None Include="BrowserSelectorTalk.json">
       <Filter>Resources</Filter>
     </None>
+    <None Include="Makefile">
+      <Filter>Resources</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
