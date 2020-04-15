@@ -89,7 +89,6 @@ private:
 private:
 	CComQIPtr<IWebBrowser2, &IID_IWebBrowser2> m_webBrowser2;
 	Config m_config;
-	bool m_shouldCloseEmptyTab;
 	bool m_isEmptyFrame;
 	DWORD m_lastClickedTime;
 	std::wstring m_lastPressedURL;
