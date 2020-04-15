@@ -25,21 +25,6 @@ void CBrowserSelector::FinalRelease()
 	DebugLog(L"FinalRelease: %p", this);
 }
 
-static HRESULT GetConnectionPoint(
-	CComPtr<IWebBrowser2> browser,
-	CComPtr<IConnectionPoint> &connectionPoint)
-{
-	CComQIPtr<IConnectionPointContainer, &IID_IConnectionPointContainer> container(browser);
-	if (container == NULL)
-		return E_POINTER;
-
-	HRESULT hr = container->FindConnectionPoint(DIID_DWebBrowserEvents2, &connectionPoint);
-	if (!SUCCEEDED(hr))
-		return hr;
-
-	return S_OK;
-}
-
 HRESULT CBrowserSelector::ConnectBrowserEvents(void)
 {
 	DebugLog(L"Try connecting browser events...");
