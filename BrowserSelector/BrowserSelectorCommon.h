@@ -104,6 +104,7 @@ public:
 	virtual void dumpAsJson(std::wstring &buf) const
 	{
 		wchar_t tmp[10];
+		const size_t tmpLen = sizeof(tmp) / sizeof(wchar_t);
 		std::wstring strbuf;
 		SwitchingPatterns::const_iterator it;
 
@@ -122,15 +123,15 @@ public:
 		buf += L",";
 
 		buf += L"\"CloseEmptyTab\":";
-		buf += _itow(m_closeEmptyTab, tmp, 10);
+		buf += _itow_s(m_closeEmptyTab, tmp, tmpLen, 10);
 		buf += L",";
 
 		buf += L"\"OnlyOnAnchorClick\":";
-		buf += _itow(m_onlyOnAnchorClick, tmp, 10);
+		buf += _itow_s(m_onlyOnAnchorClick, tmp, tmpLen, 10);
 		buf += L",";
 
 		buf += L"\"UseRegex\":";
-		buf += _itow(m_useRegex, tmp, 10);
+		buf += _itow_s(m_useRegex, tmp, tmpLen, 10);
 		buf += L",";
 
 		buf += L"\"URLPatterns\":[";
