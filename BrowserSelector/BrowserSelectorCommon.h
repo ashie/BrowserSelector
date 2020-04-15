@@ -817,7 +817,11 @@ static bool matchZone(const std::wstring &url, const std::wstring &zoneName, con
 	 *
 	 * https://docs.microsoft.com/en-us/windows/win32/api/objbase/nf-objbase-coinitialize
 	 */
-	CoInitialize(NULL);
+	ret = CoInitialize(NULL);
+	if (!SUCCEEDED(ret)) {
+		DebugLog(L"Failed to call CoInitialize()");
+		return false;
+	}
 
 	ret = securityManager.CoCreateInstance(CLSID_InternetSecurityManager, NULL, CLSCTX_INPROC_SERVER);
 	if (!SUCCEEDED(ret)) {
