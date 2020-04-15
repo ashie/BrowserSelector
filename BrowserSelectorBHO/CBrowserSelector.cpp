@@ -6,6 +6,7 @@ using namespace std;
 
 HRESULT CBrowserSelector::FinalConstruct()
 {
+	DebugLog(L"FinalConstruct: %p", this);
 	m_config.LoadAll(_AtlBaseModule.GetResourceInstance());
 	SwitchingPatterns &patterns(m_config.m_urlPatterns);
 	if (m_config.m_useRegex) {
@@ -21,6 +22,7 @@ HRESULT CBrowserSelector::FinalConstruct()
 
 void CBrowserSelector::FinalRelease()
 {
+	DebugLog(L"FinalRelease: %p", this);
 }
 
 static HRESULT GetConnectionPoint(
@@ -40,12 +42,25 @@ static HRESULT GetConnectionPoint(
 
 HRESULT CBrowserSelector::ConnectBrowserEvents(void)
 {
-	return IDispEventImpl<1, CBrowserSelector, &DIID_DWebBrowserEvents2, &LIBID_SHDocVw, 1, 1>::DispEventAdvise(m_webBrowser2);
+	DebugLog(L"Try connecting browser events...");
+	HRESULT hr = IDispEventImpl<1, CBrowserSelector, &DIID_DWebBrowserEvents2, &LIBID_SHDocVw, 1, 1>::DispEventAdvise(m_webBrowser2);
+	if (SUCCEEDED(hr)) {
+		DebugLog(L"Succeeded to connect document events.");
+	} else {
+		DebugLog(L"Failed to connect document events.");
+	}
+	return hr;
 }
 
 HRESULT CBrowserSelector::DisconnectBrowserEvents(void)
 {
-	return IDispEventImpl<1, CBrowserSelector, &DIID_DWebBrowserEvents2, &LIBID_SHDocVw, 1, 1>::DispEventUnadvise(m_webBrowser2);
+	HRESULT hr = IDispEventImpl<1, CBrowserSelector, &DIID_DWebBrowserEvents2, &LIBID_SHDocVw, 1, 1>::DispEventUnadvise(m_webBrowser2);
+	if (SUCCEEDED(hr)) {
+		DebugLog(L"Succeeded to disconnect document events.");
+	} else {
+		DebugLog(L"Failed to disconnect document events.");
+	}
+	return hr;
 }
 
 HRESULT CBrowserSelector::ConnectDocumentEvents(void)
@@ -56,12 +71,20 @@ HRESULT CBrowserSelector::ConnectDocumentEvents(void)
 	if (m_isEmptyFrame)
 		return S_OK;
 
+	DebugLog(L"Try connecting document events...");
+
 	CComPtr<IDispatch> pDispDocument;
 	m_webBrowser2->get_Document(&pDispDocument);
 	CComQIPtr<IHTMLDocument3, &IID_IHTMLDocument3> document(pDispDocument);
 	if (!document)
 		return S_OK;
-	return IDispEventImpl<2, CBrowserSelector, &DIID_HTMLDocumentEvents2, &LIBID_MSHTML, 4, 0>::DispEventAdvise(document);
+	HRESULT hr = IDispEventImpl<2, CBrowserSelector, &DIID_HTMLDocumentEvents2, &LIBID_MSHTML, 4, 0>::DispEventAdvise(document);
+	if (SUCCEEDED(hr)) {
+		DebugLog(L"Succeeded to connect document events.");
+	} else {
+		DebugLog(L"Failed to connect document events.");
+	}
+	return hr;
 }
 
 HRESULT CBrowserSelector::DisconnectDocumentEvents(void)
@@ -69,16 +92,25 @@ HRESULT CBrowserSelector::DisconnectDocumentEvents(void)
 	if (!m_config.m_onlyOnAnchorClick)
 		return S_OK;
 
+	DebugLog(L"Try disconnecting document events...");
+
 	CComPtr<IDispatch> pDispDocument;
 	m_webBrowser2->get_Document(&pDispDocument);
 	CComQIPtr<IHTMLDocument3, &IID_IHTMLDocument3> document(pDispDocument);
 	if (!document)
 		return S_OK;
-	return IDispEventImpl<2, CBrowserSelector, &DIID_HTMLDocumentEvents2, &LIBID_MSHTML, 4, 0>::DispEventUnadvise(document);
+	HRESULT hr = IDispEventImpl<2, CBrowserSelector, &DIID_HTMLDocumentEvents2, &LIBID_MSHTML, 4, 0>::DispEventUnadvise(document);
+	if (SUCCEEDED(hr)) {
+		DebugLog(L"Succeeded to disconnect document events.");
+	} else {
+		DebugLog(L"Failed to disconnect document events.");
+	}
+	return hr;
 }
 
 STDMETHODIMP CBrowserSelector::SetSite(IUnknown *pUnkSite)
 {
+	DebugLog(L"SetSite: %p %p", this, pUnkSite);
 	m_webBrowser2 = pUnkSite;
 	if (m_webBrowser2 == NULL)
 		return E_INVALIDARG;
@@ -120,7 +152,12 @@ void CBrowserSelector::DoNavigate(BSTR url, VARIANT_BOOL *cancel)
 
 	const bool bypassElevationDialog = true;
 	bool succeeded = OpenByModernBrowser(browserName, URL, m_config, bypassElevationDialog);
-	*cancel= succeeded ? VARIANT_TRUE : VARIANT_FALSE;
+	if (succeeded) {
+		*cancel = VARIANT_TRUE;
+		DebugLog(L"Succeeded to open modern browser.");
+	} else {
+		DebugLog(L"Failed to open modern browser!");
+	}
 }
 
 void STDMETHODCALLTYPE CBrowserSelector::OnBeforeNavigate2(
@@ -135,15 +172,20 @@ void STDMETHODCALLTYPE CBrowserSelector::OnBeforeNavigate2(
 	if (!IsTopLevelFrame(pDisp))
 		return;
 
+	DebugLog(L"OnBeforeNavigate2 for top level frame: %ls", url->bstrVal);
+
 	DisconnectDocumentEvents();
 
 	DoNavigate(url->bstrVal, cancel);
 
 	if (*cancel) {
-		if (m_config.m_closeEmptyTab && m_isEmptyFrame)
+		if (m_config.m_closeEmptyTab && m_isEmptyFrame) {
+			DebugLog(L"Close empty tab...");
 			m_webBrowser2->Quit();
-		else
+			DebugLog(L"Done closing empty tab.");
+		} else {
 			ConnectDocumentEvents();
+		}
 	}
 }
 
@@ -173,18 +215,25 @@ void STDMETHODCALLTYPE CBrowserSelector::OnNewWindow3(
 		BSTR urlContext,
 		BSTR url)
 {
+	DebugLog(L"OnNewWindow3: %ls", url);
+
 	DoNavigate(url, cancel);
 
 	if (*cancel) {
-		if (m_config.m_closeEmptyTab && m_isEmptyFrame)
+		if (m_config.m_closeEmptyTab && m_isEmptyFrame) {
+			DebugLog(L"Close empty tab...");
 			m_webBrowser2->Quit();
+			DebugLog(L"Done closing empty tab.");
+		}
 	}
 }
 
 void STDMETHODCALLTYPE CBrowserSelector::OnQuit(LPDISPATCH pDisp)
 {
+	DebugLog(L"OnQuit: this=%p, pDisp=%p", this, pDisp);
 	DisconnectDocumentEvents();
 	DisconnectBrowserEvents();
+	DebugLog(L"OnQuit done");
 }
 
 static void GetLink(std::wstring &url, IHTMLEventObj *pEventObj)
@@ -220,12 +269,16 @@ static void GetLink(std::wstring &url, IHTMLEventObj *pEventObj)
 
 bool STDMETHODCALLTYPE CBrowserSelector::OnMouseDown(IHTMLEventObj *pEventObj)
 {
+	DebugLog(L"OnMouseDown");
 	GetLink(m_lastPressedURL, pEventObj);
+	DebugLog(L"Pressed link: %ls", m_lastPressedURL.c_str());
 	return true;
 }
 
 bool STDMETHODCALLTYPE CBrowserSelector::OnMouseUp(IHTMLEventObj *pEventObj)
 {
+	DebugLog(L"OnMouseUp");
+
 	std::wstring lastPressedURL(m_lastPressedURL), url;
 	if (m_lastPressedURL.empty())
 		return true;
@@ -233,10 +286,16 @@ bool STDMETHODCALLTYPE CBrowserSelector::OnMouseUp(IHTMLEventObj *pEventObj)
 	m_lastPressedURL.clear();
 
 	GetLink(m_lastClickedURL, pEventObj);
+	DebugLog(L"Released link: %ls", m_lastClickedURL.c_str());
 
 	if (!m_lastClickedURL.empty() && lastPressedURL != m_lastClickedURL)
 		m_lastClickedURL.clear();
 	m_lastClickedTime = ::GetTickCount();
+
+	if (!url.empty()) {
+		DebugLog(L"Clicked link: %ls", url.c_str());
+	}
+
 	return true;
 }
 
