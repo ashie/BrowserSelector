@@ -15,13 +15,13 @@ static int DumpConfig(const wstring &path)
 {
 	Config config;
 	std::wstring buf;
-	FILE *fp;
+	FILE *fp = NULL;
 
 	config.LoadAll();
 	config.dumpAsJson(buf);
 
-	fp = _wfopen(path.c_str(), L"w,ccs=UTF-8");
-	if (fp == NULL)
+	errno_t err = _wfopen_s(&fp, path.c_str(), L"w,ccs=UTF-8");
+	if (err || !fp)
 		return -1;
 
 	fwrite(buf.c_str(), sizeof(wchar_t), buf.size(), fp);
