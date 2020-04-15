@@ -71,10 +71,10 @@ public:
 		if (m_debug <= 0)
 			return;
 
-		DebugLog(L"Config: %s", getName().c_str());
-		DebugLog(L"  DefaultBrowser: %s", m_defaultBrowser.c_str());
-		DebugLog(L"  SecondBrowser: %s", m_secondBrowser.c_str());
-		DebugLog(L"  FirefoxCommand: %s", m_firefoxCommand.c_str());
+		DebugLog(L"Config: %ls", getName().c_str());
+		DebugLog(L"  DefaultBrowser: %ls", m_defaultBrowser.c_str());
+		DebugLog(L"  SecondBrowser: %ls", m_secondBrowser.c_str());
+		DebugLog(L"  FirefoxCommand: %ls", m_firefoxCommand.c_str());
 		DebugLog(L"  CloseEmptyTab: %d", m_closeEmptyTab);
 		DebugLog(L"  OnlyOnAnchorClick: %d", m_onlyOnAnchorClick);
 		DebugLog(L"  UseRegex: %d", m_useRegex);
@@ -83,19 +83,19 @@ public:
 
 		DebugLog(L"  URLPatterns:");
 		for (it = m_urlPatterns.begin(); it != m_urlPatterns.end(); it++) {
-			DebugLog(L"    URL: %s Browser: %s",
+			DebugLog(L"    URL: %ls Browser: %ls",
 				it->first.c_str(), it->second.c_str());
 		}
 
 		DebugLog(L"  HostNamePatterns");
 		for (it = m_hostNamePatterns.begin(); it != m_hostNamePatterns.end(); it++) {
-			DebugLog(L"    Hostname: %s Browser: %s",
+			DebugLog(L"    Hostname: %ls Browser: %ls",
 				it->first.c_str(), it->second.c_str());
 		}
 
 		DebugLog(L"  ZonePatterns");
 		for (it = m_zonePatterns.begin(); it != m_zonePatterns.end(); it++) {
-			DebugLog(L"    Zone: %s Browser: %s",
+			DebugLog(L"    Zone: %ls Browser: %ls",
 				it->first.c_str(), it->second.c_str());
 		}
 
@@ -445,7 +445,7 @@ public:
 			return;
 		Config::dump();
 
-		DebugLog(L"  Include: %s", m_includePath.c_str());
+		DebugLog(L"  Include: %ls", m_includePath.c_str());
 		DebugLog(L"  EnableIncludeCache: %d", m_enableIncludeCache);
 	}
 	virtual std::wstring getName()
@@ -757,11 +757,11 @@ static std::wstring ensureValidBrowserName(
 		return *name;
 	} else if (name && name->empty() && isValidBrowserName(config.m_secondBrowser, config)) {
 		if (config.m_debug > 0)
-			DebugLog(L"Use second browser: %s", config.m_secondBrowser.c_str());
+			DebugLog(L"Use second browser: %ls", config.m_secondBrowser.c_str());
 		return config.m_secondBrowser;
 	} else if (isValidBrowserName(config.m_defaultBrowser, config)) {
 		if (config.m_debug > 0)
-			DebugLog(L"Use default browser: %s", config.m_defaultBrowser.c_str());
+			DebugLog(L"Use default browser: %ls", config.m_defaultBrowser.c_str());
 		return config.m_defaultBrowser;
 	} else {
 		if (config.m_debug > 0)
@@ -798,7 +798,7 @@ static bool matchRegex(const std::wstring &url, const std::wstring &pattern, con
 	} catch (std::regex_error &e) {
 		if (config.m_debug > 0)
 			DebugLog(
-				L"Failed to compile the regex! pattern: %s, message: %s",
+				L"Failed to compile the regex! pattern: %ls, message: %ls",
 				pattern.c_str(), e.what());
 		return false;
 	}
@@ -833,12 +833,12 @@ static bool matchZone(const std::wstring &url, const std::wstring &zoneName, con
 	CoUninitialize();
 
 	if (!SUCCEEDED(ret)) {
-		DebugLog(L"Failed to map '%s' to zone", url.c_str());
+		DebugLog(L"Failed to map '%ls' to zone", url.c_str());
 		return false;
 	}
 
 	if (index < 0 || 4 < index) {
-		DebugLog(L"Unknown zone %i for '%s'", index, url.c_str());
+		DebugLog(L"Unknown zone %i for '%ls'", index, url.c_str());
 		return false;
 	}
 
@@ -868,7 +868,7 @@ static std::wstring GetBrowserNameToOpenURL(
 		if (!matched)
 			continue;
 		if (config.m_debug > 0)
-			DebugLog(L"Matched URL pattern: %s Browser: %s",
+			DebugLog(L"Matched URL pattern: %ls Browser: %ls",
 				it->first.c_str(), it->second.c_str());
 		return ensureValidBrowserName(config, &it->second);
 	}
@@ -884,7 +884,7 @@ static std::wstring GetBrowserNameToOpenURL(
 			if (!matched)
 				continue;
 			if (config.m_debug > 0)
-				DebugLog(L"Matched hostname pattern: %s Browser: %s",
+				DebugLog(L"Matched hostname pattern: %ls Browser: %ls",
 					it->first.c_str(), it->second.c_str());
 			return ensureValidBrowserName(config, &it->second);
 		}
@@ -896,12 +896,12 @@ static std::wstring GetBrowserNameToOpenURL(
 		if (!matched)
 			continue;
 		if (config.m_debug > 0)
-			DebugLog(L"Matched Zone pattern: %s Browser: %s",
+			DebugLog(L"Matched Zone pattern: %ls Browser: %ls",
 				it->first.c_str(), it->second.c_str());
 		return ensureValidBrowserName(config, &it->second);
 	}
 
-	DebugLog(L"Unmatched: %s", url.c_str());
+	DebugLog(L"Unmatched: %ls", url.c_str());
 
 	return ensureValidBrowserName(config);
 }
