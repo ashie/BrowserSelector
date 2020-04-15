@@ -10,7 +10,7 @@
 typedef std::pair<std::wstring, std::wstring> SwitchingPattern;
 typedef std::vector<SwitchingPattern> SwitchingPatterns;
 
-void DebugLog(wchar_t *fmt, ...)
+static void DebugLog(wchar_t *fmt, ...)
 {
 	va_list args;
 	va_start (args, fmt);
@@ -27,7 +27,7 @@ void DebugLog(wchar_t *fmt, ...)
  * The escape list below is retrieved from CPython's implementation.
  * https://github.com/python/cpython/blob/3.7/Lib/json/encoder.py#L21
  */
-std::wstring ToJsonString(std::wstring src, std::wstring dest)
+static std::wstring ToJsonString(std::wstring src, std::wstring dest)
 {
 	const wchar_t *ptr = src.c_str();
 	dest = L'"';
