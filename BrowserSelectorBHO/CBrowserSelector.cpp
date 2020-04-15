@@ -178,9 +178,20 @@ void STDMETHODCALLTYPE CBrowserSelector::OnNavigateComplete2(
 		LPDISPATCH pDisp,
 		VARIANT *url)
 {
+	if (!IsTopLevelFrame(pDisp))
+		return;
+
+	DebugLog(L"OnNavigateComplete2: %ls", url->bstrVal);
+
 	wstring URL(url->bstrVal ? url->bstrVal : L"");
-	if (URL.size() > 0 && URL != L"about:blank" && URL != L"about:NewsFeed")
+	if (URL.size() > 0 && URL != L"about:blank" && URL != L"about:NewsFeed") {
+		if (m_isEmptyFrame)
+			DebugLog(L"Detect as non-empty tab: this=%p, pDisp=%p", this, pDisp);
 		m_isEmptyFrame = false;
+	} else {
+		if (m_isEmptyFrame)
+			DebugLog(L"Still detected as an empty tab: this=%p, pDisp=%p");
+	}
 }
 
 void STDMETHODCALLTYPE CBrowserSelector::OnDocumentComplete(
