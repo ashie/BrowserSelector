@@ -26,6 +26,8 @@ Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "BrowserSelectorSetup", "Bro
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BrowserSelectorTalk", "BrowserSelectorTalk\BrowserSelectorTalk.vcxproj", "{A4D67B59-28E3-43B2-A93A-898506DFFE29}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UnitTest", "UnitTest\UnitTest.vcxproj", "{A79160AF-B0A6-4C57-858B-19967870B391}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -66,6 +68,14 @@ Global
 		{A4D67B59-28E3-43B2-A93A-898506DFFE29}.Release|Win32.Build.0 = Release|Win32
 		{A4D67B59-28E3-43B2-A93A-898506DFFE29}.Release|x64.ActiveCfg = Release|Win32
 		{A4D67B59-28E3-43B2-A93A-898506DFFE29}.Release|x64.Build.0 = Release|Win32
+		{A79160AF-B0A6-4C57-858B-19967870B391}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A79160AF-B0A6-4C57-858B-19967870B391}.Debug|Win32.Build.0 = Debug|Win32
+		{A79160AF-B0A6-4C57-858B-19967870B391}.Debug|x64.ActiveCfg = Debug|x64
+		{A79160AF-B0A6-4C57-858B-19967870B391}.Debug|x64.Build.0 = Debug|x64
+		{A79160AF-B0A6-4C57-858B-19967870B391}.Release|Win32.ActiveCfg = Release|Win32
+		{A79160AF-B0A6-4C57-858B-19967870B391}.Release|Win32.Build.0 = Release|Win32
+		{A79160AF-B0A6-4C57-858B-19967870B391}.Release|x64.ActiveCfg = Release|x64
+		{A79160AF-B0A6-4C57-858B-19967870B391}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
