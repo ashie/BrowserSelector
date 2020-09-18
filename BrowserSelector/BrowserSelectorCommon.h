@@ -329,10 +329,44 @@ public:
 		parent.merge(configs);
 	}
 
+	static bool GetFileModifiedTime(const std::wstring &path, LPFILETIME time)
+	{
+		HANDLE hFile = CreateFile(
+			path.c_str(), GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING,
+			FILE_ATTRIBUTE_NORMAL, nullptr);
+
+		if (!hFile)
+			return false;
+
+		bool ret = GetFileTime(hFile, nullptr, nullptr, time);
+
+		CloseHandle(hFile);
+
+		return ret;
+	}
+
+	static bool IsCacheUpdated(const std::wstring &path, const std::wstring &cachePath)
+	{
+		FILETIME ft1, ft2;
+		if (!GetFileModifiedTime(path, &ft1))
+			return false;
+		if (!GetFileModifiedTime(cachePath, &ft2))
+			return false;
+
+		LONG ret = CompareFileTime(&ft1, &ft2);
+		return (ret <= 0);
+	}
+
 	static void Include(Config &parent, const std::wstring &path, bool useCache = false)
 	{
 		std::wstring cachePath = GetCachePath(path);
 		std::wstring tmpPath;
+
+		if (!cachePath.empty() && IsCacheUpdated(path, cachePath)) {
+			DebugLog(L"Cache file for %ls is updated, load from it.", path.c_str());
+			MergeINIFile(parent, cachePath);
+			return;
+		}
 
 		bool succeeded = CopyToTempFile(path, tmpPath);
 		if (!succeeded) {
