@@ -298,13 +298,13 @@ public:
 		dump();
 
 		if (!m_includePath.empty())
-			includeINIFile(m_includePath);
+			IncludeINIFile(m_includePath);
 	}
 	virtual ~RegistryConfig()
 	{
 	}
 
-	void includeINIFile(std::wstring &path);
+	void IncludeINIFile(const std::wstring &path);
 
 	virtual std::wstring getName()
 	{
@@ -406,7 +406,7 @@ public:
 class INIFileConfig : public Config
 {
 public:
-	INIFileConfig(const std::wstring &path, INIFileConfig *parent = nullptr)
+	INIFileConfig(const std::wstring &path, Config *parent = nullptr)
 		: m_path(path)
 		, m_parent(parent)
 		, m_enableIncludeCache(false)
@@ -434,7 +434,7 @@ public:
 		dump();
 
 		if (!m_includePath.empty() && !parent)
-			includeINIFile(m_includePath);
+			Include(*this, m_includePath, m_enableIncludeCache);
 	}
 	virtual ~INIFileConfig()
 	{
@@ -454,10 +454,10 @@ public:
 		return m_path;
 	}
 
-	void includeINIFile(std::wstring &path)
+	static void Include(Config &parent, const std::wstring &path, bool useCache = false)
 	{
-		INIFileConfig child(path, this);
-		if (m_enableIncludeCache) {
+		INIFileConfig child(path, &parent);
+		if (useCache) {
 			if (child.isSucceededToLoad())
 				child.WriteCache();
 			else
@@ -466,7 +466,7 @@ public:
 
 		std::vector<Config*> configs;
 		configs.push_back(&child);
-		merge(configs);
+		parent.merge(configs);
 	}
 
 	bool isSucceededToLoad()
@@ -666,22 +666,12 @@ public:
 	std::wstring m_includePath;
 	int m_enableIncludeCache;
 	bool m_notFound;
-	INIFileConfig *m_parent;
+	Config *m_parent;
 };
 
-void RegistryConfig::includeINIFile(std::wstring &path)
+void RegistryConfig::IncludeINIFile(const std::wstring &path)
 {
-	INIFileConfig child(path);
-	if (m_enableIncludeCache) {
-		if (child.isSucceededToLoad())
-			child.WriteCache();
-		else
-			child.ReadCache();
-	}
-
-	std::vector<Config*> configs;
-	configs.push_back(&child);
-	merge(configs);
+	INIFileConfig::Include(*this, path, m_enableIncludeCache);
 }
 
 void Config::LoadAll(HINSTANCE hInstance)
