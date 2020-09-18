@@ -277,10 +277,8 @@ public:
 		: m_path(path)
 		, m_parent(parent)
 		, m_enableIncludeCache(false)
-		, m_notFound(false)
 	{
 		if (m_path.empty() || !::PathFileExists(m_path.c_str())) {
-			m_notFound = true;
 			return;
 		}
 
@@ -395,11 +393,6 @@ public:
 			if (!succeeded)
 				DebugLog(L"Failed to delete tmp INI file!: %ls", tmpPath.c_str());
 		}
-	}
-
-	bool isSucceededToLoad()
-	{
-		return !m_notFound;
 	}
 
 	void GetIntValue(int &value, const std::wstring &section, const std::wstring &key)
@@ -583,7 +576,6 @@ public:
 	std::wstring m_path;
 	std::wstring m_includePath;
 	int m_enableIncludeCache;
-	bool m_notFound;
 	Config *m_parent;
 };
 
