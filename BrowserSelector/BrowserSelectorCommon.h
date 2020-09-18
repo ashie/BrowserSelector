@@ -321,19 +321,46 @@ public:
 		return m_path;
 	}
 
-	static void Include(Config &parent, const std::wstring &path, bool useCache = false)
+	static void MergeINIFile(Config& parent, std::wstring& path)
 	{
 		INIFileConfig child(path, &parent);
-		if (useCache) {
-			if (child.isSucceededToLoad())
-				child.WriteCache();
-			else
-				child.ReadCache();
-		}
-
 		std::vector<Config*> configs;
 		configs.push_back(&child);
 		parent.merge(configs);
+	}
+
+	static void Include(Config &parent, const std::wstring &path, bool useCache = false)
+	{
+		std::wstring cachePath = GetCachePath(path);
+		std::wstring tmpPath;
+
+		bool succeeded = CopyToTempFile(path, tmpPath);
+		if (!succeeded) {
+			DebugLog(L"Failed to load external INI file!: %ls", path.c_str());
+
+			// Fallback to the local cache file
+			if (!cachePath.empty())
+				MergeINIFile(parent, cachePath);
+
+			// Ensure to clean the tmp file
+			DeleteFile(tmpPath.c_str());
+
+			return;
+		}
+
+		MergeINIFile(parent, tmpPath);
+		if (useCache) {
+			succeeded = MoveFileEx(tmpPath.c_str(), cachePath.c_str(), MOVEFILE_REPLACE_EXISTING);
+			if (!succeeded) {
+				DebugLog(L"Failed to write INI file cache!: %ls", cachePath.c_str());
+				// Ensure to clean the tmp file
+				DeleteFile(tmpPath.c_str());
+			}
+		} else {
+			succeeded = DeleteFile(tmpPath.c_str());
+			if (!succeeded)
+				DebugLog(L"Failed to delete tmp INI file!: %ls", tmpPath.c_str());
+		}
 	}
 
 	bool isSucceededToLoad()
@@ -406,24 +433,15 @@ public:
 		}
 	}
 
-	void ReadCache()
-	{
-		std::wstring path = GetCachePath(m_path);
-		if (path.empty())
-			return;
-		INIFileConfig cache(path, this);
-		std::vector<Config*> configs;
-		configs.push_back(&cache);
-		merge(configs);
-	}
-
-	void WriteCache()
+public:
+	static bool CopyToTempFile(const std::wstring& srcPath, std::wstring &tmpPath)
 	{
 		std::wstring folderPath = GetCacheFolderPath();
-		std::wstring cachePath = GetCachePath(m_path);
-
+		std::wstring cachePath = GetCachePath(srcPath);
 		if (cachePath.empty())
-			return;
+			return false;
+
+		tmpPath = cachePath + L".tmp";
 
 		unsigned int pos = GetDataFolderPath().size();
 		do
@@ -433,17 +451,16 @@ public:
 			if (pos == std::string::npos)
 				path = folderPath;
 			else
-				path = cachePath.substr(0, pos).c_str();
+				path = tmpPath.substr(0, pos).c_str();
 			::CreateDirectory(path.c_str(), NULL);
 		} while (pos != std::string::npos);
 
 		if (!::PathFileExists(folderPath.c_str()))
-			return;
+			return false;
 
-		::CopyFile(m_path.c_str(), cachePath.c_str(), FALSE);
+		return ::CopyFile(srcPath.c_str(), tmpPath.c_str(), FALSE);
 	}
 
-public:
 	static std::wstring GetSystemConfigPath(HINSTANCE hInstance = nullptr)
 	{
 		TCHAR buf[MAX_PATH];
