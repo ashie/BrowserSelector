@@ -74,13 +74,14 @@ static void TalkResponse(const char *msg, ...)
 	/* Prevent Windows from translating CRLF */
 	setmode(_fileno(stdout), O_BINARY);
 
-	va_start(args, msg);
-
 	// Print 4-byte header
+	va_start(args, msg);
 	len = vsnprintf(NULL, 0, msg, args);
 	fwrite(&len, sizeof(len), 1, stdout);
+	va_end(args);
 
 	// Push the remaining body to stdout
+	va_start(args, msg);
 	vfprintf(stdout, msg, args);
 	fflush(stdout);
 	va_end(args);
