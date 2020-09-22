@@ -1,4 +1,6 @@
 #include "../BrowserSelector/BrowserSelectorCommon.h"
+#include <io.h>
+#include <fcntl.h>
 
 using namespace std;
 
@@ -68,6 +70,10 @@ static void TalkResponse(const char *msg, ...)
 {
 	va_list args;
 	int len;
+
+	/* Prevent Windows from translating CRLF */
+	setmode(_fileno(stdout), O_BINARY);
+
 	va_start(args, msg);
 
 	// Print 4-byte header
