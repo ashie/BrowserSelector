@@ -279,6 +279,7 @@ public:
 		, m_enableIncludeCache(false)
 	{
 		if (m_path.empty() || !::PathFileExists(m_path.c_str())) {
+			DebugLog(L"INI file %ls doesn't exist", m_path.c_str());
 			return;
 		}
 
@@ -360,8 +361,11 @@ public:
 		std::wstring cachePath = GetCachePath(path);
 		std::wstring tmpPath;
 
+		DebugLog(L"Try to include %ls", path.c_str());
+
 		if (!cachePath.empty() && IsCacheUpdated(path, cachePath)) {
-			DebugLog(L"Cache file for %ls is updated, load from it.", path.c_str());
+			DebugLog(L"Cache file for %ls is updated, attempt to load from it.", path.c_str());
+			DebugLog(L"Cache path: %ls", cachePath.c_str());
 			MergeINIFile(parent, cachePath);
 			return;
 		}
@@ -393,6 +397,9 @@ public:
 			if (!succeeded)
 				DebugLog(L"Failed to delete tmp INI file!: %ls", tmpPath.c_str());
 		}
+
+		if (succeeded)
+			DebugLog(L"Succeeded to include %ls", path.c_str());
 	}
 
 	void GetIntValue(int &value, const std::wstring &section, const std::wstring &key)
