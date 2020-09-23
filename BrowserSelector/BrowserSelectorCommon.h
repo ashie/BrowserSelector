@@ -363,7 +363,7 @@ public:
 
 		DebugLog(L"Try to include %ls", path.c_str());
 
-		if (!cachePath.empty() && IsCacheUpdated(path, cachePath)) {
+		if (useCache && !cachePath.empty() && IsCacheUpdated(path, cachePath)) {
 			DebugLog(L"Cache file for %ls is updated, attempt to load from it.", path.c_str());
 			DebugLog(L"Cache path: %ls", cachePath.c_str());
 			MergeINIFile(parent, cachePath);
