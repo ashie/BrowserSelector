@@ -584,7 +584,7 @@ class RegistryConfig : public Config
 public:
 	RegistryConfig(bool systemWide = false)
 		: m_systemWide(systemWide)
-		, m_enableIncludeCache(-1)
+		, m_enableIncludeCache(false)
 	{
 		LoadIntValue(m_debug, L"Debug", m_systemWide);
 
