@@ -375,7 +375,7 @@ public:
 			DebugLog(L"Failed to load external INI file!: %ls", path.c_str());
 
 			// Fallback to the local cache file
-			if (!cachePath.empty())
+			if (useCache && !cachePath.empty())
 				MergeINIFile(parent, cachePath);
 
 			// Ensure to clean the tmp file
