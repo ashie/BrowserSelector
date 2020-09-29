@@ -30,9 +30,9 @@ HRESULT CBrowserSelector::ConnectBrowserEvents(void)
 	DebugLog(L"Try connecting browser events...");
 	HRESULT hr = IDispEventImpl<1, CBrowserSelector, &DIID_DWebBrowserEvents2, &LIBID_SHDocVw, 1, 1>::DispEventAdvise(m_webBrowser2);
 	if (SUCCEEDED(hr)) {
-		DebugLog(L"Succeeded to connect document events.");
+		DebugLog(L"Succeeded to connect browser events.");
 	} else {
-		DebugLog(L"Failed to connect document events.");
+		DebugLog(L"Failed to connect browser events.");
 	}
 	return hr;
 }
@@ -41,9 +41,9 @@ HRESULT CBrowserSelector::DisconnectBrowserEvents(void)
 {
 	HRESULT hr = IDispEventImpl<1, CBrowserSelector, &DIID_DWebBrowserEvents2, &LIBID_SHDocVw, 1, 1>::DispEventUnadvise(m_webBrowser2);
 	if (SUCCEEDED(hr)) {
-		DebugLog(L"Succeeded to disconnect document events.");
+		DebugLog(L"Succeeded to disconnect browser events.");
 	} else {
-		DebugLog(L"Failed to disconnect document events.");
+		DebugLog(L"Failed to disconnect browser events.");
 	}
 	return hr;
 }
