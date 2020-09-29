@@ -52,5 +52,11 @@ namespace UnitTest
 			wstring pattern(L"https://www.example.com/path/to/resource");
 			Assert::IsTrue(matchSimpleWildCard(url, pattern));
 		}
+		TEST_METHOD(UNCPath)
+		{
+			wstring url(L"\\\\shared\\folder");
+			wstring pattern(L"\\\\\\\\shared\\\\folder");
+			Assert::IsTrue(matchSimpleWildCard(url, pattern));
+		}
 	};
 }
