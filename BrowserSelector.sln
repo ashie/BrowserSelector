@@ -15,6 +15,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		sample\BrowserSelectorWOW64Example.reg = sample\BrowserSelectorWOW64Example.reg
 		sample\chrome.reg = sample\chrome.reg
 		COPYING.MIT = COPYING.MIT
+		sample\CrashDump.reg = sample\CrashDump.reg
 		sample\policies.json = sample\policies.json
 		README-ja.md = README-ja.md
 		README.md = README.md
