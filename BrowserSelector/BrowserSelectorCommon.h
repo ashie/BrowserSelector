@@ -315,6 +315,7 @@ public:
 		DebugLog(L"  Include: %ls", m_includePath.c_str());
 		DebugLog(L"  EnableIncludeCache: %d", m_enableIncludeCache);
 	}
+
 	virtual std::wstring getName()
 	{
 		return m_path;
@@ -618,6 +619,16 @@ public:
 	}
 	virtual ~RegistryConfig()
 	{
+	}
+
+	virtual void dump()
+	{
+		if (m_debug <= 0)
+			return;
+		Config::dump();
+
+		DebugLog(L"  Include: %ls", m_includePath.c_str());
+		DebugLog(L"  EnableIncludeCache: %d", m_enableIncludeCache);
 	}
 
 	virtual std::wstring getName()
