@@ -498,7 +498,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:BrowserSelector"
         "ProductCode" = "8:{915FEA38-B270-475E-B90E-7104DB5DBA80}"
-        "PackageCode" = "8:{41457DC4-D4C6-45ED-8332-1C61BAFAAF44}"
+        "PackageCode" = "8:{EFD165FD-7068-4D5F-AB9D-D9E24B17E618}"
         "UpgradeCode" = "8:{864B7071-7281-4A14-B718-57CB190FE7B7}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -521,7 +521,7 @@
         "UseSystemSearchPath" = "11:TRUE"
         "TargetPlatform" = "3:0"
         "PreBuildEvent" = "8:"
-        "PostBuildEvent" = "8:"
+        "PostBuildEvent" = "8:powershell Compress-Archive -Force -Path $(ProjectDir)/../$(Configuration)/BrowserSelector*.pdb -DestinationPath $(ProjectDir)/$(Configuration)/BrowserSelectorDebug-1.6.2.zip"
         "RunPostBuildEvent" = "3:0"
         }
         "Registry"
