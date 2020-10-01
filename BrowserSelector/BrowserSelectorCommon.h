@@ -10,14 +10,20 @@
 typedef std::pair<std::wstring, std::wstring> SwitchingPattern;
 typedef std::vector<SwitchingPattern> SwitchingPatterns;
 
+static void DebugLogV(wchar_t* fmt, va_list args)
+{
+	wchar_t buf[1024];
+	size_t len = sizeof(buf) / sizeof(wchar_t);
+	int nWritten = _vsnwprintf_s(buf, len, _TRUNCATE, fmt, args);
+	if (nWritten > 0)
+		OutputDebugString(buf);
+}
+
 static void DebugLog(wchar_t *fmt, ...)
 {
 	va_list args;
 	va_start (args, fmt);
-	wchar_t buf[1024];
-	int nWritten = _vsnwprintf_s(buf, sizeof(buf) / sizeof(wchar_t), fmt, args);
-	if (nWritten > 0)
-		OutputDebugString(buf);
+	DebugLogV(fmt, args);
 	va_end(args);
 }
 

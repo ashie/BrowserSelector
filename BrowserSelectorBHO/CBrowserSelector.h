@@ -53,6 +53,15 @@ public:
 	STDMETHOD(SetSite)(IUnknown *pUnkSite);
 
 private:
+	void DebugLog(wchar_t* fmt, ...)
+	{
+		if (!m_config.m_debug > 0)
+			return;
+		va_list args;
+		va_start(args, fmt);
+		DebugLogV(fmt, args);
+		va_end(args);
+	}
 	HRESULT ConnectBrowserEvents(void);
 	HRESULT DisconnectBrowserEvents(void);
 	HRESULT ConnectDocumentEvents(void);
