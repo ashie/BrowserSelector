@@ -6,7 +6,6 @@ using namespace std;
 
 HRESULT CBrowserSelector::FinalConstruct()
 {
-	DebugLog(L"FinalConstruct: %p", this);
 	m_config.LoadAll(_AtlBaseModule.GetResourceInstance());
 	SwitchingPatterns &patterns(m_config.m_urlPatterns);
 	if (m_config.m_useRegex) {

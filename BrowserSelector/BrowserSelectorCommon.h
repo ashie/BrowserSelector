@@ -284,10 +284,8 @@ public:
 		, m_parent(parent)
 		, m_enableIncludeCache(false)
 	{
-		if (m_path.empty() || !::PathFileExists(m_path.c_str())) {
-			DebugLog(L"INI file %ls doesn't exist", m_path.c_str());
+		if (m_path.empty() || !::PathFileExists(m_path.c_str()))
 			return;
-		}
 
 		GetIntValue(m_debug, L"Common", L"Debug");
 
@@ -306,7 +304,7 @@ public:
 		dump();
 
 		if (!m_includePath.empty() && !parent)
-			Include(*this, m_includePath, m_enableIncludeCache);
+			Include(*this, m_includePath, m_enableIncludeCache, m_debug > 0);
 	}
 	virtual ~INIFileConfig()
 	{
@@ -363,23 +361,27 @@ public:
 		return (ret <= 0);
 	}
 
-	static void Include(Config &parent, const std::wstring &path, bool useCache = false)
+	static void Include(Config &parent, const std::wstring &path, bool useCache = false, bool debug = false)
 	{
 		std::wstring cachePath = GetCachePath(path);
 		std::wstring tmpPath;
 
-		DebugLog(L"Try to include %ls", path.c_str());
+		if (debug)
+			DebugLog(L"Try to include %ls", path.c_str());
 
 		if (useCache && !cachePath.empty() && IsCacheUpdated(path, cachePath)) {
-			DebugLog(L"Cache file for %ls is updated, attempt to load from it.", path.c_str());
-			DebugLog(L"Cache path: %ls", cachePath.c_str());
+			if (debug) {
+				DebugLog(L"Cache file for %ls is updated, attempt to load from it.", path.c_str());
+				DebugLog(L"Cache path: %ls", cachePath.c_str());
+			}
 			MergeINIFile(parent, cachePath);
 			return;
 		}
 
 		bool succeeded = CopyToTempFile(path, tmpPath);
 		if (!succeeded) {
-			DebugLog(L"Failed to load external INI file!: %ls", path.c_str());
+			if (debug)
+				DebugLog(L"Failed to load external INI file!: %ls", path.c_str());
 
 			// Fallback to the local cache file
 			if (useCache && !cachePath.empty())
@@ -395,18 +397,21 @@ public:
 		if (useCache) {
 			succeeded = MoveFileEx(tmpPath.c_str(), cachePath.c_str(), MOVEFILE_REPLACE_EXISTING);
 			if (!succeeded) {
-				DebugLog(L"Failed to write INI file cache!: %ls", cachePath.c_str());
+				if (debug)
+					DebugLog(L"Failed to write INI file cache!: %ls", cachePath.c_str());
 				// Ensure to clean the tmp file
 				DeleteFile(tmpPath.c_str());
 			}
 		} else {
 			succeeded = DeleteFile(tmpPath.c_str());
 			if (!succeeded)
-				DebugLog(L"Failed to delete tmp INI file!: %ls", tmpPath.c_str());
+				if (debug)
+					DebugLog(L"Failed to delete tmp INI file!: %ls", tmpPath.c_str());
 		}
 
 		if (succeeded)
-			DebugLog(L"Succeeded to include %ls", path.c_str());
+			if (debug)
+				DebugLog(L"Succeeded to include %ls", path.c_str());
 	}
 
 	void GetIntValue(int &value, const std::wstring &section, const std::wstring &key)
@@ -621,7 +626,7 @@ public:
 		dump();
 
 		if (!m_includePath.empty())
-			INIFileConfig::Include(*this, m_includePath, m_enableIncludeCache);
+			INIFileConfig::Include(*this, m_includePath, m_enableIncludeCache, m_debug > 0);
 	}
 	virtual ~RegistryConfig()
 	{
@@ -956,7 +961,8 @@ static std::wstring GetBrowserNameToOpenURL(
 		return ensureValidBrowserName(config, &it->second);
 	}
 
-	DebugLog(L"Unmatched: %ls", url.c_str());
+	if (config.m_debug > 0)
+		DebugLog(L"Unmatched: %ls", url.c_str());
 
 	return ensureValidBrowserName(config);
 }
