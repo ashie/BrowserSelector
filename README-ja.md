@@ -37,11 +37,11 @@ BrowserSelectorは、FirefoxおよびChrome用ブラウザエクステンショ�
   * ツールバーの「ソリューション構成」で「リリース」を選択します
   * F7キーを押下してビルドします
 
- あるいはコマンドラインで実行することもできます。
+あるいはコマンドラインで実行することもできます。
 
-    * スタートメニューから「Developer Command Prompt for VS 2019」を開く
-    * `cd \path\to\BrowserSelector`
-    * `devenv.com BrowserSelector.sln /build Release`
+  * スタートメニューから「Developer Command Prompt for VS 2019」を開く
+  * `cd \path\to\BrowserSelector`
+  * `devenv.com BrowserSelector.sln /build Release`
 
 ## インストール方法
 

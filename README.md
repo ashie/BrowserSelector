@@ -37,11 +37,11 @@ combined, you can smoothly switch between IE and Chrome/Firefox.
   * Select "Release" (or "Debug") from the toolbar
   * Press F7 key
 
-  or you can do it in command line:
+or you can do it in command line:
 
-    * Open "Developer Command Prompt for VS 2019" from the start menu
-    * `cd \path\to\BrowserSelector`
-    * `devenv.com BrowserSelector.sln /build Release`
+  * Open "Developer Command Prompt for VS 2019" from the start menu
+  * `cd \path\to\BrowserSelector`
+  * `devenv.com BrowserSelector.sln /build Release`
 
 ## How to Install
 
