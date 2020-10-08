@@ -967,6 +967,71 @@ static std::wstring GetBrowserNameToOpenURL(
 	return ensureValidBrowserName(config);
 }
 
+/*
+ * Create a new string buffer with std::wstring.
+ */
+static wchar_t *CreateStringBufferW(std::wstring &str)
+{
+	size_t len = str.length() + 1;
+	wchar_t *buf;
+
+	buf = (wchar_t *) calloc(1, sizeof(wchar_t) * len);
+	if (buf == NULL)
+		return NULL;
+
+	if (wcscpy_s(buf, len, str.c_str())) {
+		free(buf);
+		return NULL;
+	}
+	return buf;
+}
+
+bool OpenByChrome(const std::wstring &url, const Config &config)
+{
+	std::wstring cmd;
+	std::wstring args(L"");
+	wchar_t *buf;
+	PROCESS_INFORMATION pi;
+	STARTUPINFO si;
+
+	ZeroMemory(&si, sizeof(si));
+	si.cb = sizeof(si);
+	ZeroMemory(&pi, sizeof(pi));
+
+	LoadBrowserPath(cmd, _T("chrome"));
+
+	args += L"\"";
+	args += cmd;
+	args += L"\" -- \"";
+	args += url;
+	args += L"\"";
+
+	buf = CreateStringBufferW(args);
+	if (buf == NULL)
+		return false;
+
+	if (!CreateProcess(cmd.c_str(), buf, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi)) {
+		if (config.m_debug > 0)
+			DebugLog(L"CreateProcess failed (err=%i)", GetLastError());
+		free(buf);
+		return false;
+	}
+
+	if (config.m_debug > 0)
+		DebugLog(L"Launch chrome.exe (pid=%i)", pi.dwProcessId);
+
+	/*
+	 * Chrome seems to crash if the parent process exits too
+	 * early. Let's wait 1.5 sec for startup.
+	 */
+	WaitForSingleObject(pi.hProcess, 1500);
+
+	CloseHandle(pi.hProcess);
+	CloseHandle(pi.hThread);
+	free(buf);
+	return true;
+}
+
 bool OpenByModernBrowser(
 	const std::wstring &browserName,
 	const std::wstring &url,
@@ -989,7 +1054,7 @@ bool OpenByModernBrowser(
 				command = L"firefox.exe";
 			}
 		} else if (browserName == L"chrome") {
-			command = L"chrome.exe";
+			return OpenByChrome(url, config);
 		}
 	}
 
