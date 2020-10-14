@@ -1011,8 +1011,7 @@ bool OpenByChrome(const std::wstring &url, const Config &config)
 		return false;
 
 	if (!CreateProcess(cmd.c_str(), buf, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi)) {
-		if (config.m_debug > 0)
-			DebugLog(L"CreateProcess failed (err=%i)", GetLastError());
+		DebugLog(L"CreateProcess failed (err=%i, cmd=%ls)", GetLastError(), cmd.c_str());
 		free(buf);
 		return false;
 	}
