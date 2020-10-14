@@ -986,7 +986,13 @@ static wchar_t *CreateStringBufferW(std::wstring &str)
 	return buf;
 }
 
-bool OpenByChrome(const std::wstring &url, const Config &config)
+/*
+ * Open the given URL with Google Chrome.
+ *
+ * "flags" is passed to CreateProcess() as dwCreationFlags.
+ * Just use 0 except when you specially need other flags.
+ */
+bool OpenByChrome(const std::wstring &url, const Config &config, int flags)
 {
 	std::wstring cmd;
 	std::wstring args(L"");
@@ -1010,7 +1016,7 @@ bool OpenByChrome(const std::wstring &url, const Config &config)
 	if (buf == NULL)
 		return false;
 
-	if (!CreateProcess(cmd.c_str(), buf, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi)) {
+	if (!CreateProcess(cmd.c_str(), buf, NULL, NULL, FALSE, flags, NULL, NULL, &si, &pi)) {
 		DebugLog(L"CreateProcess failed (err=%i, cmd=%ls)", GetLastError(), cmd.c_str());
 		free(buf);
 		return false;
@@ -1053,7 +1059,7 @@ bool OpenByModernBrowser(
 				command = L"firefox.exe";
 			}
 		} else if (browserName == L"chrome") {
-			return OpenByChrome(url, config);
+			return OpenByChrome(url, config, 0);
 		}
 	}
 
