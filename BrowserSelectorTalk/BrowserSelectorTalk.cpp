@@ -54,6 +54,9 @@ static bool OpenIE(const wstring &url)
 
 static bool BrowserOpen(const wstring browser, const wstring &url, const Config *config)
 {
+	if (browser == L"chrome")
+		return OpenByChrome(url, *config, CREATE_BREAKAWAY_FROM_JOB);
+
 	if (browser != L"ie")
 		return OpenByModernBrowser(browser, url, *config);
 
