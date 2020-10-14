@@ -4,11 +4,16 @@
 
 using namespace std;
 
-static void OpenByIE(const wstring &url)
+static bool OpenByIE(const wstring &url)
 {
 	bool succeeded = OpenByExistingIE(url);
-	if (!succeeded)
-		::ShellExecute(NULL, _T("open"), _T("iexplore.exe"), url.c_str(), NULL, SW_SHOW);
+	if (!succeeded) {
+		HINSTANCE hInstance = ::ShellExecute(NULL, _T("open"), _T("iexplore.exe"), url.c_str(), NULL, SW_SHOW);
+		succeeded = reinterpret_cast<int>(hInstance) > 32;
+		if (!succeeded)
+			DebugLog(L"Failed to launch IE: code=%d, url=%ls", hInstance, url.c_str());
+	}
+	return succeeded;
 }
 
 static int DumpConfig(const wstring &path)
@@ -42,6 +47,7 @@ int APIENTRY _tWinMain(
 	wstring url;
 	wstring browserName;
 	wstring dumpPath;
+	bool enableIEFallback = true;
 
 	if (lpCmdLine && *lpCmdLine) {
 		int nArgs = 0;
@@ -54,6 +60,7 @@ int APIENTRY _tWinMain(
 			wstring arg(args[i]);
 			if (arg.find(prefix) == 0) {
 				browserName = arg.substr(prefix.size());
+				enableIEFallback = false;
 			} else if (arg.find(dumpPrefix) == 0) {
 				dumpPath = arg.substr(dumpPrefix.size());
 			} else {
@@ -72,11 +79,14 @@ int APIENTRY _tWinMain(
 	if (browserName.empty())
 		browserName = ::GetBrowserNameToOpenURL(url, config);
 
-	bool openByIE = true;
-	if (browserName != L"ie")
-		openByIE = !OpenByModernBrowser(browserName, url, config);
-	if (openByIE)
-		OpenByIE(url);
+	bool succeeded = false;
+	if (browserName == L"ie") {
+		succeeded = OpenByIE(url);
+	} else {
+		bool succeeded = OpenByModernBrowser(browserName, url, config);
+		if (!succeeded && enableIEFallback)
+			succeeded = OpenByIE(url);
+	}
 
-	return 0;
+	return succeeded ? 0 : 1;
 }

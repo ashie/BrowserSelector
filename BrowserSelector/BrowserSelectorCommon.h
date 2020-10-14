@@ -1067,7 +1067,13 @@ bool OpenByModernBrowser(
 			args.c_str(),
 			NULL, // Directory
 			SW_SHOW);
-	return (reinterpret_cast<int>(hInstance) > 32);
+
+	if (reinterpret_cast<int>(hInstance) > 32) {
+		return true;
+	} else {
+		DebugLog(L"Failed to launch: code=%d, browser=%ls, url=%ls", hInstance, browserName.c_str(), url.c_str());
+		return false;
+	}
 }
 
 /*
