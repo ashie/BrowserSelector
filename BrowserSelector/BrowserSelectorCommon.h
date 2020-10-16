@@ -987,6 +987,31 @@ static wchar_t *CreateStringBufferW(std::wstring &str)
 }
 
 /*
+ * Get the executable path to launch Firefox.
+ *
+ * This supports environmental variables in FirefoxCommand.
+ * (e.g. "%ProgramFiles%\Mozilla Firefox\firefox.exe")
+ */
+static std::wstring GetFirefoxCommand(const Config &config)
+{
+	std::wstring cmd = config.m_firefoxCommand;
+	wchar_t path[MAX_PATH];
+
+	if (cmd.empty())
+		return std::wstring(L"firefox.exe");
+
+	if (!ExpandEnvironmentStringsW(cmd.c_str(), path, MAX_PATH)) {
+		DebugLog(L"Failed to expand envs (err=%i)", GetLastError());
+		DebugLog(L"Falling back to '%s'...", cmd.c_str());
+		return cmd;
+	}
+	if (config.m_debug > 0)
+		DebugLog(L"Expanded FirefoxCommand to '%s'", path);
+
+	return std::wstring(path);
+}
+
+/*
  * Open the given URL with Google Chrome.
  *
  * "flags" is passed to CreateProcess() as dwCreationFlags.
@@ -1053,11 +1078,7 @@ bool OpenByModernBrowser(
 		args += std::wstring(L" --browser=") + browserName;
 	} else {
 		if (browserName == L"firefox") {
-			if (!config.m_firefoxCommand.empty()) {
-				command = config.m_firefoxCommand;
-			} else {
-				command = L"firefox.exe";
-			}
+			command = GetFirefoxCommand(config);
 		} else if (browserName == L"chrome") {
 			return OpenByChrome(url, config, 0);
 		}
