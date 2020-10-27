@@ -20,7 +20,8 @@ class ATL_NO_VTABLE CBrowserSelector :
 {
 public:
 	CBrowserSelector()
-		: m_isEmptyFrame(true)
+		: m_app(m_config)
+		, m_isEmptyFrame(true)
 		, m_lastClickedTime(0)
 	{
 	}

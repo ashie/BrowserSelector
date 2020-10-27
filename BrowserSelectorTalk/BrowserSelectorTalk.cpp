@@ -52,13 +52,13 @@ static bool OpenIE(const wstring &url)
 	return true;
 }
 
-static bool BrowserOpen(const BrowserSelector &app, const wstring browser, const wstring &url, const Config *config)
+static bool BrowserOpen(const BrowserSelector &app, const wstring browser, const wstring &url)
 {
 	if (browser == L"chrome")
-		return app.OpenByChrome(url, *config, CREATE_BREAKAWAY_FROM_JOB);
+		return app.OpenByChrome(url, CREATE_BREAKAWAY_FROM_JOB);
 
 	if (browser != L"ie")
-		return app.OpenByModernBrowser(browser, url, *config);
+		return app.OpenByModernBrowser(browser, url);
 
 	if (!app.OpenByExistingIE(url))
 		return OpenIE(url);
@@ -90,7 +90,7 @@ static void TalkResponse(const char *msg, ...)
 	va_end(args);
 }
 
-static int HandleTalkQuery(const BrowserSelector &app, wchar_t *wcmd, const Config *config)
+static int HandleTalkQuery(const BrowserSelector &app, wchar_t *wcmd)
 {
 	wchar_t *space;
 
@@ -118,11 +118,11 @@ static int HandleTalkQuery(const BrowserSelector &app, wchar_t *wcmd, const Conf
 	 */
 	wstring url(space + 1);
 
-	wstring browser = app.GetBrowserNameToOpenURL(url, *config);
+	wstring browser = app.GetBrowserNameToOpenURL(url);
 	if (browser == origin) {
 		TalkResponse("{\"status\":\"OK\",\"open\":0}");
-	} else if (BrowserOpen(app, browser, url, config)) {
-		TalkResponse("{\"status\":\"OK\",\"open\":1,\"close_tab\":%d}", config->m_closeEmptyTab);
+	} else if (BrowserOpen(app, browser, url)) {
+		TalkResponse("{\"status\":\"OK\",\"open\":1,\"close_tab\":%d}", app.m_config.m_closeEmptyTab);
 	} else {
 		fprintf(stderr, "cannot open '%ls' with '%ls'", url.c_str(), browser.c_str());
 		return -1;
@@ -138,7 +138,7 @@ static int HandleTalkConfig(wchar_t *wcmd, const Config *config)
 	return 0;
 }
 
-static int HandleTalkProtocol(const BrowserSelector &app, const Config *config)
+static int HandleTalkProtocol(const BrowserSelector &app)
 {
 	int len;
 	int ret = -1;
@@ -186,10 +186,10 @@ static int HandleTalkProtocol(const BrowserSelector &app, const Config *config)
 
 	switch (wcmd[0]) {
 	case L'Q':
-		ret = HandleTalkQuery(app, wcmd, config);
+		ret = HandleTalkQuery(app, wcmd);
 		break;
 	case L'C':
-		ret = HandleTalkConfig(wcmd, config);
+		ret = HandleTalkConfig(wcmd, &app.m_config);
 		break;
 	default:
 		fprintf(stderr, "unknown command '%ls'", wcmd);
@@ -204,6 +204,6 @@ int main(int argc, char *argv[])
 {
 	Config config;
 	config.LoadAll();
-	BrowserSelector app;
-	return HandleTalkProtocol(app, &config);
+	BrowserSelector app(config);
+	return HandleTalkProtocol(app);
 }

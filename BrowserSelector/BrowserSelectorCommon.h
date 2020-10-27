@@ -799,7 +799,8 @@ static bool isInSystemPath(const std::wstring &browserName)
 class BrowserSelector
 {
 public:
-	BrowserSelector()
+	BrowserSelector(const Config &config)
+		: m_config(config)
 	{
 	}
 
@@ -807,31 +808,32 @@ public:
 	{
 	}
 
-	bool isValidBrowserName(const std::wstring &browserName, const Config &config) const
+	const Config &m_config;
+
+	bool isValidBrowserName(const std::wstring &browserName) const
 	{
 		if (browserName.empty())
 			return false;
-		if (browserName == L"firefox" && !config.m_firefoxCommand.empty())
+		if (browserName == L"firefox" && !m_config.m_firefoxCommand.empty())
 			return true;
 		return isInSystemPath(browserName);
 	}
 
 	std::wstring ensureValidBrowserName(
-		const Config &config,
 		const std::wstring *name = nullptr) const
 	{
-		if (name && isValidBrowserName(*name, config)) {
+		if (name && isValidBrowserName(*name)) {
 			return *name;
-		} else if (name && name->empty() && isValidBrowserName(config.m_secondBrowser, config)) {
-			if (config.m_debug > 0)
-				DebugLog(L"Use second browser: %ls", config.m_secondBrowser.c_str());
-			return config.m_secondBrowser;
-		} else if (isValidBrowserName(config.m_defaultBrowser, config)) {
-			if (config.m_debug > 0)
-				DebugLog(L"Use default browser: %ls", config.m_defaultBrowser.c_str());
-			return config.m_defaultBrowser;
+		} else if (name && name->empty() && isValidBrowserName(m_config.m_secondBrowser)) {
+			if (m_config.m_debug > 0)
+				DebugLog(L"Use second browser: %ls", m_config.m_secondBrowser.c_str());
+			return m_config.m_secondBrowser;
+		} else if (isValidBrowserName(m_config.m_defaultBrowser)) {
+			if (m_config.m_debug > 0)
+				DebugLog(L"Use default browser: %ls", m_config.m_defaultBrowser.c_str());
+			return m_config.m_defaultBrowser;
 		} else {
-			if (config.m_debug > 0)
+			if (m_config.m_debug > 0)
 				DebugLog(L"Fall back to IE");
 			return std::wstring(L"ie");
 		}
@@ -846,7 +848,7 @@ public:
 		return matched ? true : false;
 	}
 
-	bool matchRegex(const std::wstring &url, const std::wstring &pattern, const Config &config) const
+	bool matchRegex(const std::wstring &url, const std::wstring &pattern) const
 	{
 		std::string urlASCII, patternASCII;
 		for (DWORD i = 0; i < url.size(); i++) {
@@ -864,7 +866,7 @@ public:
 			return std::regex_match(urlASCII, match, re);
 		}
 		catch (std::regex_error &e) {
-			if (config.m_debug > 0)
+			if (m_config.m_debug > 0)
 				DebugLog(
 					L"Failed to compile the regex! pattern: %ls, message: %ls",
 					pattern.c_str(), e.what());
@@ -872,7 +874,7 @@ public:
 		}
 	}
 
-	bool matchZone(const std::wstring &url, const std::wstring &zoneName, const Config &config) const
+	bool matchZone(const std::wstring &url, const std::wstring &zoneName) const
 	{
 		static const wchar_t *zones[] = { L"local", L"intra", L"trusted", L"internet", L"restricted" };
 		DWORD index = -1;
@@ -917,32 +919,30 @@ public:
 		return zoneName == zones[index];
 	}
 
-	bool matchURL(const std::wstring &url, const std::wstring &pattern, const Config &config) const
+	bool matchURL(const std::wstring &url, const std::wstring &pattern) const
 	{
-		if (config.m_useRegex > 0)
-			return matchRegex(url, pattern, config);
+		if (m_config.m_useRegex > 0)
+			return matchRegex(url, pattern);
 		else
 			return matchSimpleWildCard(url, pattern);
 	}
 
-	std::wstring GetBrowserNameToOpenURL(
-		const std::wstring &url,
-		const Config &config) const
+	std::wstring GetBrowserNameToOpenURL(const std::wstring &url) const
 	{
 		if (url.empty())
-			return ensureValidBrowserName(config);
+			return ensureValidBrowserName();
 
 		SwitchingPatterns::const_iterator it;
 
-		for (it = config.m_urlPatterns.begin(); it != config.m_urlPatterns.end(); it++) {
+		for (it = m_config.m_urlPatterns.begin(); it != m_config.m_urlPatterns.end(); it++) {
 			const std::wstring &urlPattern = it->first;
-			bool matched = matchURL(url, urlPattern, config);
+			bool matched = matchURL(url, urlPattern);
 			if (!matched)
 				continue;
-			if (config.m_debug > 0)
+			if (m_config.m_debug > 0)
 				DebugLog(L"Matched URL pattern: %ls Browser: %ls",
 					it->first.c_str(), it->second.c_str());
-			return ensureValidBrowserName(config, &it->second);
+			return ensureValidBrowserName(&it->second);
 		}
 
 		CUrl cURL;
@@ -950,33 +950,33 @@ public:
 		LPCTSTR hostName = cURL.GetHostName();
 
 		if (hostName && *hostName) {
-			for (it = config.m_hostNamePatterns.begin(); it != config.m_hostNamePatterns.end(); it++) {
+			for (it = m_config.m_hostNamePatterns.begin(); it != m_config.m_hostNamePatterns.end(); it++) {
 				const std::wstring &hostNamePattern = it->first;
-				bool matched = matchURL(hostName, hostNamePattern, config);
+				bool matched = matchURL(hostName, hostNamePattern);
 				if (!matched)
 					continue;
-				if (config.m_debug > 0)
+				if (m_config.m_debug > 0)
 					DebugLog(L"Matched hostname pattern: %ls Browser: %ls",
 						it->first.c_str(), it->second.c_str());
-				return ensureValidBrowserName(config, &it->second);
+				return ensureValidBrowserName(&it->second);
 			}
 		}
 
-		for (it = config.m_zonePatterns.begin(); it != config.m_zonePatterns.end(); it++) {
+		for (it = m_config.m_zonePatterns.begin(); it != m_config.m_zonePatterns.end(); it++) {
 			const std::wstring &zone = it->first;
-			bool matched = matchZone(url, zone, config);
+			bool matched = matchZone(url, zone);
 			if (!matched)
 				continue;
-			if (config.m_debug > 0)
+			if (m_config.m_debug > 0)
 				DebugLog(L"Matched Zone pattern: %ls Browser: %ls",
 					it->first.c_str(), it->second.c_str());
-			return ensureValidBrowserName(config, &it->second);
+			return ensureValidBrowserName(&it->second);
 		}
 
-		if (config.m_debug > 0)
+		if (m_config.m_debug > 0)
 			DebugLog(L"Unmatched: %ls", url.c_str());
 
-		return ensureValidBrowserName(config);
+		return ensureValidBrowserName();
 	}
 
 	/*
@@ -1004,9 +1004,9 @@ public:
 	 * This supports environmental variables in FirefoxCommand.
 	 * (e.g. "%ProgramFiles%\Mozilla Firefox\firefox.exe")
 	 */
-	std::wstring GetFirefoxCommand(const Config &config) const
+	std::wstring GetFirefoxCommand(void) const
 	{
-		std::wstring cmd = config.m_firefoxCommand;
+		std::wstring cmd = m_config.m_firefoxCommand;
 		wchar_t path[MAX_PATH];
 
 		if (cmd.empty())
@@ -1017,7 +1017,7 @@ public:
 			DebugLog(L"Falling back to '%s'...", cmd.c_str());
 			return cmd;
 		}
-		if (config.m_debug > 0)
+		if (m_config.m_debug > 0)
 			DebugLog(L"Expanded FirefoxCommand to '%s'", path);
 
 		return std::wstring(path);
@@ -1029,7 +1029,7 @@ public:
 	 * "flags" is passed to CreateProcess() as dwCreationFlags.
 	 * Just use 0 except when you specially need other flags.
 	 */
-	bool OpenByChrome(const std::wstring &url, const Config &config, int flags) const
+	bool OpenByChrome(const std::wstring &url, int flags) const
 	{
 		std::wstring cmd;
 		std::wstring args(L"");
@@ -1059,7 +1059,7 @@ public:
 			return false;
 		}
 
-		if (config.m_debug > 0)
+		if (m_config.m_debug > 0)
 			DebugLog(L"Launch chrome.exe (pid=%i)", pi.dwProcessId);
 
 		/*
@@ -1077,7 +1077,6 @@ public:
 	bool OpenByModernBrowser(
 		const std::wstring &browserName,
 		const std::wstring &url,
-		const Config &config,
 		bool bypassElevationDialog = false) const
 	{
 		std::wstring command;
@@ -1090,9 +1089,9 @@ public:
 			args += std::wstring(L" --browser=") + browserName;
 		} else {
 			if (browserName == L"firefox") {
-				command = GetFirefoxCommand(config);
+				command = GetFirefoxCommand();
 			} else if (browserName == L"chrome") {
-				return OpenByChrome(url, config, 0);
+				return OpenByChrome(url, 0);
 			}
 		}
 

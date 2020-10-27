@@ -75,16 +75,16 @@ int APIENTRY _tWinMain(
 
 	Config config;
 	config.LoadAll();
-	BrowserSelector app;
+	BrowserSelector app(config);
 
 	if (browserName.empty())
-		browserName = app.GetBrowserNameToOpenURL(url, config);
+		browserName = app.GetBrowserNameToOpenURL(url);
 
 	bool succeeded = false;
 	if (browserName == L"ie") {
 		succeeded = OpenByIE(app, url);
 	} else {
-		bool succeeded = app.OpenByModernBrowser(browserName, url, config);
+		bool succeeded = app.OpenByModernBrowser(browserName, url);
 		if (!succeeded && enableIEFallback)
 			succeeded = OpenByIE(app, url);
 	}
