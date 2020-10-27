@@ -56,7 +56,7 @@ public:
 private:
 	void DebugLog(wchar_t* fmt, ...)
 	{
-		if (!m_config.m_debug > 0)
+		if (m_config.m_debug > 0)
 			return;
 		va_list args;
 		va_start(args, fmt);

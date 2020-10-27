@@ -810,6 +810,24 @@ public:
 
 	const Config &m_config;
 
+	void DebugLog(wchar_t *fmt, ...) const
+	{
+		if (m_config.m_debug > 0)
+			return;
+		va_list args;
+		va_start(args, fmt);
+		DebugLogV(fmt, args);
+		va_end(args);
+	}
+
+	void ErrorLog(wchar_t *fmt, ...) const
+	{
+		va_list args;
+		va_start(args, fmt);
+		DebugLogV(fmt, args);
+		va_end(args);
+	}
+
 	bool isValidBrowserName(const std::wstring &browserName) const
 	{
 		if (browserName.empty())
@@ -825,16 +843,13 @@ public:
 		if (name && isValidBrowserName(*name)) {
 			return *name;
 		} else if (name && name->empty() && isValidBrowserName(m_config.m_secondBrowser)) {
-			if (m_config.m_debug > 0)
-				DebugLog(L"Use second browser: %ls", m_config.m_secondBrowser.c_str());
+			DebugLog(L"Use second browser: %ls", m_config.m_secondBrowser.c_str());
 			return m_config.m_secondBrowser;
 		} else if (isValidBrowserName(m_config.m_defaultBrowser)) {
-			if (m_config.m_debug > 0)
-				DebugLog(L"Use default browser: %ls", m_config.m_defaultBrowser.c_str());
+			DebugLog(L"Use default browser: %ls", m_config.m_defaultBrowser.c_str());
 			return m_config.m_defaultBrowser;
 		} else {
-			if (m_config.m_debug > 0)
-				DebugLog(L"Fall back to IE");
+			DebugLog(L"Fall back to IE");
 			return std::wstring(L"ie");
 		}
 	}
@@ -866,10 +881,7 @@ public:
 			return std::regex_match(urlASCII, match, re);
 		}
 		catch (std::regex_error &e) {
-			if (m_config.m_debug > 0)
-				DebugLog(
-					L"Failed to compile the regex! pattern: %ls, message: %ls",
-					pattern.c_str(), e.what());
+			DebugLog(L"Failed to compile the regex! pattern: %ls, message: %ls", pattern.c_str(), e.what());
 			return false;
 		}
 	}
@@ -888,13 +900,13 @@ public:
 		 */
 		ret = CoInitialize(NULL);
 		if (!SUCCEEDED(ret)) {
-			DebugLog(L"Failed to call CoInitialize()");
+			ErrorLog(L"Failed to call CoInitialize()");
 			return false;
 		}
 
 		ret = securityManager.CoCreateInstance(CLSID_InternetSecurityManager, NULL, CLSCTX_INPROC_SERVER);
 		if (!SUCCEEDED(ret)) {
-			DebugLog(L"Failed to initialize COM Object");
+			ErrorLog(L"Failed to initialize COM Object");
 			CoUninitialize();
 			return false;
 		}
@@ -907,12 +919,12 @@ public:
 		CoUninitialize();
 
 		if (!SUCCEEDED(ret)) {
-			DebugLog(L"Failed to map '%ls' to zone", url.c_str());
+			ErrorLog(L"Failed to map '%ls' to zone", url.c_str());
 			return false;
 		}
 
 		if (index < 0 || 4 < index) {
-			DebugLog(L"Unknown zone %i for '%ls'", index, url.c_str());
+			ErrorLog(L"Unknown zone %i for '%ls'", index, url.c_str());
 			return false;
 		}
 
@@ -939,9 +951,7 @@ public:
 			bool matched = matchURL(url, urlPattern);
 			if (!matched)
 				continue;
-			if (m_config.m_debug > 0)
-				DebugLog(L"Matched URL pattern: %ls Browser: %ls",
-					it->first.c_str(), it->second.c_str());
+			DebugLog(L"Matched URL pattern: %ls Browser: %ls", it->first.c_str(), it->second.c_str());
 			return ensureValidBrowserName(&it->second);
 		}
 
@@ -955,9 +965,7 @@ public:
 				bool matched = matchURL(hostName, hostNamePattern);
 				if (!matched)
 					continue;
-				if (m_config.m_debug > 0)
-					DebugLog(L"Matched hostname pattern: %ls Browser: %ls",
-						it->first.c_str(), it->second.c_str());
+				DebugLog(L"Matched hostname pattern: %ls Browser: %ls", it->first.c_str(), it->second.c_str());
 				return ensureValidBrowserName(&it->second);
 			}
 		}
@@ -967,14 +975,11 @@ public:
 			bool matched = matchZone(url, zone);
 			if (!matched)
 				continue;
-			if (m_config.m_debug > 0)
-				DebugLog(L"Matched Zone pattern: %ls Browser: %ls",
-					it->first.c_str(), it->second.c_str());
+			DebugLog(L"Matched Zone pattern: %ls Browser: %ls", it->first.c_str(), it->second.c_str());
 			return ensureValidBrowserName(&it->second);
 		}
 
-		if (m_config.m_debug > 0)
-			DebugLog(L"Unmatched: %ls", url.c_str());
+		DebugLog(L"Unmatched: %ls", url.c_str());
 
 		return ensureValidBrowserName();
 	}
@@ -1013,12 +1018,11 @@ public:
 			return std::wstring(L"firefox.exe");
 
 		if (!ExpandEnvironmentStringsW(cmd.c_str(), path, MAX_PATH)) {
-			DebugLog(L"Failed to expand envs (err=%i)", GetLastError());
-			DebugLog(L"Falling back to '%s'...", cmd.c_str());
+			ErrorLog(L"Failed to expand envs (err=%i)", GetLastError());
+			ErrorLog(L"Falling back to '%s'...", cmd.c_str());
 			return cmd;
 		}
-		if (m_config.m_debug > 0)
-			DebugLog(L"Expanded FirefoxCommand to '%s'", path);
+		DebugLog(L"Expanded FirefoxCommand to '%s'", path);
 
 		return std::wstring(path);
 	}
@@ -1054,13 +1058,12 @@ public:
 			return false;
 
 		if (!CreateProcess(cmd.c_str(), buf, NULL, NULL, FALSE, flags, NULL, NULL, &si, &pi)) {
-			DebugLog(L"CreateProcess failed (err=%i, cmd=%ls)", GetLastError(), cmd.c_str());
+			ErrorLog(L"CreateProcess failed (err=%i, cmd=%ls)", GetLastError(), cmd.c_str());
 			free(buf);
 			return false;
 		}
 
-		if (m_config.m_debug > 0)
-			DebugLog(L"Launch chrome.exe (pid=%i)", pi.dwProcessId);
+		DebugLog(L"Launch chrome.exe (pid=%i)", pi.dwProcessId);
 
 		/*
 		 * Chrome seems to crash if the parent process exits too
@@ -1108,7 +1111,7 @@ public:
 		if (reinterpret_cast<int>(hInstance) > 32) {
 			return true;
 		} else {
-			DebugLog(L"Failed to launch: code=%d, browser=%ls, url=%ls", hInstance, browserName.c_str(), url.c_str());
+			ErrorLog(L"Failed to launch: code=%d, browser=%ls, url=%ls", hInstance, browserName.c_str(), url.c_str());
 			return false;
 		}
 	}
