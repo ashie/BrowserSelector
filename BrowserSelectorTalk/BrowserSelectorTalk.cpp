@@ -52,15 +52,15 @@ static bool OpenIE(const wstring &url)
 	return true;
 }
 
-static bool BrowserOpen(const wstring browser, const wstring &url, const Config *config)
+static bool BrowserOpen(const BrowserSelector &app, const wstring browser, const wstring &url, const Config *config)
 {
 	if (browser == L"chrome")
-		return OpenByChrome(url, *config, CREATE_BREAKAWAY_FROM_JOB);
+		return app.OpenByChrome(url, *config, CREATE_BREAKAWAY_FROM_JOB);
 
 	if (browser != L"ie")
-		return OpenByModernBrowser(browser, url, *config);
+		return app.OpenByModernBrowser(browser, url, *config);
 
-	if (!OpenByExistingIE(url))
+	if (!app.OpenByExistingIE(url))
 		return OpenIE(url);
 
 	return true;
@@ -90,7 +90,7 @@ static void TalkResponse(const char *msg, ...)
 	va_end(args);
 }
 
-static int HandleTalkQuery(wchar_t *wcmd, const Config *config)
+static int HandleTalkQuery(const BrowserSelector &app, wchar_t *wcmd, const Config *config)
 {
 	wchar_t *space;
 
@@ -118,10 +118,10 @@ static int HandleTalkQuery(wchar_t *wcmd, const Config *config)
 	 */
 	wstring url(space + 1);
 
-	wstring browser = ::GetBrowserNameToOpenURL(url, *config);
+	wstring browser = app.GetBrowserNameToOpenURL(url, *config);
 	if (browser == origin) {
 		TalkResponse("{\"status\":\"OK\",\"open\":0}");
-	} else if (BrowserOpen(browser, url, config)) {
+	} else if (BrowserOpen(app, browser, url, config)) {
 		TalkResponse("{\"status\":\"OK\",\"open\":1,\"close_tab\":%d}", config->m_closeEmptyTab);
 	} else {
 		fprintf(stderr, "cannot open '%ls' with '%ls'", url.c_str(), browser.c_str());
@@ -138,7 +138,7 @@ static int HandleTalkConfig(wchar_t *wcmd, const Config *config)
 	return 0;
 }
 
-static int HandleTalkProtocol(const Config *config)
+static int HandleTalkProtocol(const BrowserSelector &app, const Config *config)
 {
 	int len;
 	int ret = -1;
@@ -186,7 +186,7 @@ static int HandleTalkProtocol(const Config *config)
 
 	switch (wcmd[0]) {
 	case L'Q':
-		ret = HandleTalkQuery(wcmd, config);
+		ret = HandleTalkQuery(app, wcmd, config);
 		break;
 	case L'C':
 		ret = HandleTalkConfig(wcmd, config);
@@ -204,5 +204,6 @@ int main(int argc, char *argv[])
 {
 	Config config;
 	config.LoadAll();
-	return HandleTalkProtocol(&config);
+	BrowserSelector app;
+	return HandleTalkProtocol(app, &config);
 }

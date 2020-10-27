@@ -796,362 +796,376 @@ static bool isInSystemPath(const std::wstring &browserName)
 	return !path.empty();
 }
 
-static bool isValidBrowserName(const std::wstring &browserName, const Config &config)
+class BrowserSelector
 {
-	if (browserName.empty())
-		return false;
-	if (browserName == L"firefox" && !config.m_firefoxCommand.empty())
-		return true;
-	return isInSystemPath(browserName);
-}
-
-static std::wstring ensureValidBrowserName(
-	const Config &config,
-	const std::wstring *name = nullptr)
-{
-	if (name && isValidBrowserName(*name, config)) {
-		return *name;
-	} else if (name && name->empty() && isValidBrowserName(config.m_secondBrowser, config)) {
-		if (config.m_debug > 0)
-			DebugLog(L"Use second browser: %ls", config.m_secondBrowser.c_str());
-		return config.m_secondBrowser;
-	} else if (isValidBrowserName(config.m_defaultBrowser, config)) {
-		if (config.m_debug > 0)
-			DebugLog(L"Use default browser: %ls", config.m_defaultBrowser.c_str());
-		return config.m_defaultBrowser;
-	} else {
-		if (config.m_debug > 0)
-			DebugLog(L"Fall back to IE");
-		return std::wstring(L"ie");
-	}
-}
-
-static bool matchSimpleWildCard(const std::wstring &url, const std::wstring &pattern)
-{
-	static CComAutoCriticalSection symMatchSection;
-	symMatchSection.Lock();
-	BOOL matched = SymMatchStringW(url.c_str(), pattern.c_str(), FALSE);
-	symMatchSection.Unlock();
-	return matched ? true : false;
-}
-
-static bool matchRegex(const std::wstring &url, const std::wstring &pattern, const Config &config)
-{
-	std::string urlASCII, patternASCII;
-	for (DWORD i = 0; i < url.size(); i++) {
-		int ch = url[i];
-		urlASCII += ch;
-	}
-	for (DWORD i = 0; i < pattern.size(); i++) {
-		int ch = pattern[i];
-		patternASCII += ch;
+public:
+	BrowserSelector()
+	{
 	}
 
-	try {
-		std::regex re(patternASCII);
-		std::smatch match;
-		return std::regex_match(urlASCII, match, re);
-	} catch (std::regex_error &e) {
-		if (config.m_debug > 0)
-			DebugLog(
-				L"Failed to compile the regex! pattern: %ls, message: %ls",
-				pattern.c_str(), e.what());
-		return false;
-	}
-}
-
-static bool matchZone(const std::wstring &url, const std::wstring &zoneName, const Config &config)
-{
-	static const wchar_t *zones[] = {L"local", L"intra", L"trusted", L"internet", L"restricted"};
-	DWORD index = -1;
-	HRESULT ret;
-	CComPtr<IInternetSecurityManager> securityManager;
-
-	/* It is safe to call CoInitialize() several times, as long as
-	 * we uninitialize COM just as many times.
-	 *
-	 * https://docs.microsoft.com/en-us/windows/win32/api/objbase/nf-objbase-coinitialize
-	 */
-	ret = CoInitialize(NULL);
-	if (!SUCCEEDED(ret)) {
-		DebugLog(L"Failed to call CoInitialize()");
-		return false;
+	virtual ~BrowserSelector()
+	{
 	}
 
-	ret = securityManager.CoCreateInstance(CLSID_InternetSecurityManager, NULL, CLSCTX_INPROC_SERVER);
-	if (!SUCCEEDED(ret)) {
-		DebugLog(L"Failed to initialize COM Object");
+	bool isValidBrowserName(const std::wstring &browserName, const Config &config) const
+	{
+		if (browserName.empty())
+			return false;
+		if (browserName == L"firefox" && !config.m_firefoxCommand.empty())
+			return true;
+		return isInSystemPath(browserName);
+	}
+
+	std::wstring ensureValidBrowserName(
+		const Config &config,
+		const std::wstring *name = nullptr) const
+	{
+		if (name && isValidBrowserName(*name, config)) {
+			return *name;
+		} else if (name && name->empty() && isValidBrowserName(config.m_secondBrowser, config)) {
+			if (config.m_debug > 0)
+				DebugLog(L"Use second browser: %ls", config.m_secondBrowser.c_str());
+			return config.m_secondBrowser;
+		} else if (isValidBrowserName(config.m_defaultBrowser, config)) {
+			if (config.m_debug > 0)
+				DebugLog(L"Use default browser: %ls", config.m_defaultBrowser.c_str());
+			return config.m_defaultBrowser;
+		} else {
+			if (config.m_debug > 0)
+				DebugLog(L"Fall back to IE");
+			return std::wstring(L"ie");
+		}
+	}
+
+	static bool matchSimpleWildCard(const std::wstring &url, const std::wstring &pattern)
+	{
+		static CComAutoCriticalSection symMatchSection;
+		symMatchSection.Lock();
+		BOOL matched = SymMatchStringW(url.c_str(), pattern.c_str(), FALSE);
+		symMatchSection.Unlock();
+		return matched ? true : false;
+	}
+
+	bool matchRegex(const std::wstring &url, const std::wstring &pattern, const Config &config) const
+	{
+		std::string urlASCII, patternASCII;
+		for (DWORD i = 0; i < url.size(); i++) {
+			int ch = url[i];
+			urlASCII += ch;
+		}
+		for (DWORD i = 0; i < pattern.size(); i++) {
+			int ch = pattern[i];
+			patternASCII += ch;
+		}
+
+		try {
+			std::regex re(patternASCII);
+			std::smatch match;
+			return std::regex_match(urlASCII, match, re);
+		}
+		catch (std::regex_error &e) {
+			if (config.m_debug > 0)
+				DebugLog(
+					L"Failed to compile the regex! pattern: %ls, message: %ls",
+					pattern.c_str(), e.what());
+			return false;
+		}
+	}
+
+	bool matchZone(const std::wstring &url, const std::wstring &zoneName, const Config &config) const
+	{
+		static const wchar_t *zones[] = { L"local", L"intra", L"trusted", L"internet", L"restricted" };
+		DWORD index = -1;
+		HRESULT ret;
+		CComPtr<IInternetSecurityManager> securityManager;
+
+		/* It is safe to call CoInitialize() several times, as long as
+		 * we uninitialize COM just as many times.
+		 *
+		 * https://docs.microsoft.com/en-us/windows/win32/api/objbase/nf-objbase-coinitialize
+		 */
+		ret = CoInitialize(NULL);
+		if (!SUCCEEDED(ret)) {
+			DebugLog(L"Failed to call CoInitialize()");
+			return false;
+		}
+
+		ret = securityManager.CoCreateInstance(CLSID_InternetSecurityManager, NULL, CLSCTX_INPROC_SERVER);
+		if (!SUCCEEDED(ret)) {
+			DebugLog(L"Failed to initialize COM Object");
+			CoUninitialize();
+			return false;
+		}
+
+		/* Map URL to Internet Zone */
+		ret = securityManager->MapUrlToZone(url.c_str(), &index, 0);
+
+		/* Let's clean up COM here. */
+		securityManager.Release();
 		CoUninitialize();
-		return false;
+
+		if (!SUCCEEDED(ret)) {
+			DebugLog(L"Failed to map '%ls' to zone", url.c_str());
+			return false;
+		}
+
+		if (index < 0 || 4 < index) {
+			DebugLog(L"Unknown zone %i for '%ls'", index, url.c_str());
+			return false;
+		}
+
+		return zoneName == zones[index];
 	}
 
-	/* Map URL to Internet Zone */
-	ret = securityManager->MapUrlToZone(url.c_str(), &index, 0);
-
-	/* Let's clean up COM here. */
-	securityManager.Release();
-	CoUninitialize();
-
-	if (!SUCCEEDED(ret)) {
-		DebugLog(L"Failed to map '%ls' to zone", url.c_str());
-		return false;
+	bool matchURL(const std::wstring &url, const std::wstring &pattern, const Config &config) const
+	{
+		if (config.m_useRegex > 0)
+			return matchRegex(url, pattern, config);
+		else
+			return matchSimpleWildCard(url, pattern);
 	}
 
-	if (index < 0 || 4 < index) {
-		DebugLog(L"Unknown zone %i for '%ls'", index, url.c_str());
-		return false;
-	}
+	std::wstring GetBrowserNameToOpenURL(
+		const std::wstring &url,
+		const Config &config) const
+	{
+		if (url.empty())
+			return ensureValidBrowserName(config);
 
-	return zoneName == zones[index];
-}
+		SwitchingPatterns::const_iterator it;
 
-static bool matchURL(const std::wstring &url, const std::wstring &pattern, const Config &config)
-{
-	if (config.m_useRegex > 0)
-		return matchRegex(url, pattern, config);
-	else
-		return matchSimpleWildCard(url, pattern);
-}
-
-static std::wstring GetBrowserNameToOpenURL(
-	const std::wstring &url,
-	const Config &config)
-{
-	if (url.empty())
-		return ensureValidBrowserName(config);
-
-	SwitchingPatterns::const_iterator it;
-
-	for (it = config.m_urlPatterns.begin(); it != config.m_urlPatterns.end(); it++) {
-		const std::wstring &urlPattern = it->first;
-		bool matched = matchURL(url, urlPattern, config);
-		if (!matched)
-			continue;
-		if (config.m_debug > 0)
-			DebugLog(L"Matched URL pattern: %ls Browser: %ls",
-				it->first.c_str(), it->second.c_str());
-		return ensureValidBrowserName(config, &it->second);
-	}
-
-	CUrl cURL;
-	cURL.CrackUrl(url.c_str());
-	LPCTSTR hostName = cURL.GetHostName();
-
-	if (hostName && *hostName) {
-		for (it = config.m_hostNamePatterns.begin(); it != config.m_hostNamePatterns.end(); it++) {
-			const std::wstring &hostNamePattern = it->first;
-			bool matched = matchURL(hostName, hostNamePattern, config);
+		for (it = config.m_urlPatterns.begin(); it != config.m_urlPatterns.end(); it++) {
+			const std::wstring &urlPattern = it->first;
+			bool matched = matchURL(url, urlPattern, config);
 			if (!matched)
 				continue;
 			if (config.m_debug > 0)
-				DebugLog(L"Matched hostname pattern: %ls Browser: %ls",
+				DebugLog(L"Matched URL pattern: %ls Browser: %ls",
 					it->first.c_str(), it->second.c_str());
 			return ensureValidBrowserName(config, &it->second);
 		}
-	}
 
-	for (it = config.m_zonePatterns.begin(); it != config.m_zonePatterns.end(); it++) {
-		const std::wstring &zone = it->first;
-		bool matched = matchZone(url, zone, config);
-		if (!matched)
-			continue;
+		CUrl cURL;
+		cURL.CrackUrl(url.c_str());
+		LPCTSTR hostName = cURL.GetHostName();
+
+		if (hostName && *hostName) {
+			for (it = config.m_hostNamePatterns.begin(); it != config.m_hostNamePatterns.end(); it++) {
+				const std::wstring &hostNamePattern = it->first;
+				bool matched = matchURL(hostName, hostNamePattern, config);
+				if (!matched)
+					continue;
+				if (config.m_debug > 0)
+					DebugLog(L"Matched hostname pattern: %ls Browser: %ls",
+						it->first.c_str(), it->second.c_str());
+				return ensureValidBrowserName(config, &it->second);
+			}
+		}
+
+		for (it = config.m_zonePatterns.begin(); it != config.m_zonePatterns.end(); it++) {
+			const std::wstring &zone = it->first;
+			bool matched = matchZone(url, zone, config);
+			if (!matched)
+				continue;
+			if (config.m_debug > 0)
+				DebugLog(L"Matched Zone pattern: %ls Browser: %ls",
+					it->first.c_str(), it->second.c_str());
+			return ensureValidBrowserName(config, &it->second);
+		}
+
 		if (config.m_debug > 0)
-			DebugLog(L"Matched Zone pattern: %ls Browser: %ls",
-				it->first.c_str(), it->second.c_str());
-		return ensureValidBrowserName(config, &it->second);
+			DebugLog(L"Unmatched: %ls", url.c_str());
+
+		return ensureValidBrowserName(config);
 	}
-
-	if (config.m_debug > 0)
-		DebugLog(L"Unmatched: %ls", url.c_str());
-
-	return ensureValidBrowserName(config);
-}
-
-/*
- * Create a new string buffer with std::wstring.
- */
-static wchar_t *CreateStringBufferW(std::wstring &str)
-{
-	size_t len = str.length() + 1;
-	wchar_t *buf;
-
-	buf = (wchar_t *) calloc(1, sizeof(wchar_t) * len);
-	if (buf == NULL)
-		return NULL;
-
-	if (wcscpy_s(buf, len, str.c_str())) {
-		free(buf);
-		return NULL;
-	}
-	return buf;
-}
-
-/*
- * Get the executable path to launch Firefox.
- *
- * This supports environmental variables in FirefoxCommand.
- * (e.g. "%ProgramFiles%\Mozilla Firefox\firefox.exe")
- */
-static std::wstring GetFirefoxCommand(const Config &config)
-{
-	std::wstring cmd = config.m_firefoxCommand;
-	wchar_t path[MAX_PATH];
-
-	if (cmd.empty())
-		return std::wstring(L"firefox.exe");
-
-	if (!ExpandEnvironmentStringsW(cmd.c_str(), path, MAX_PATH)) {
-		DebugLog(L"Failed to expand envs (err=%i)", GetLastError());
-		DebugLog(L"Falling back to '%s'...", cmd.c_str());
-		return cmd;
-	}
-	if (config.m_debug > 0)
-		DebugLog(L"Expanded FirefoxCommand to '%s'", path);
-
-	return std::wstring(path);
-}
-
-/*
- * Open the given URL with Google Chrome.
- *
- * "flags" is passed to CreateProcess() as dwCreationFlags.
- * Just use 0 except when you specially need other flags.
- */
-bool OpenByChrome(const std::wstring &url, const Config &config, int flags)
-{
-	std::wstring cmd;
-	std::wstring args(L"");
-	wchar_t *buf;
-	PROCESS_INFORMATION pi;
-	STARTUPINFO si;
-
-	ZeroMemory(&si, sizeof(si));
-	si.cb = sizeof(si);
-	ZeroMemory(&pi, sizeof(pi));
-
-	LoadBrowserPath(cmd, _T("chrome"));
-
-	args += L"\"";
-	args += cmd;
-	args += L"\" -- \"";
-	args += url;
-	args += L"\"";
-
-	buf = CreateStringBufferW(args);
-	if (buf == NULL)
-		return false;
-
-	if (!CreateProcess(cmd.c_str(), buf, NULL, NULL, FALSE, flags, NULL, NULL, &si, &pi)) {
-		DebugLog(L"CreateProcess failed (err=%i, cmd=%ls)", GetLastError(), cmd.c_str());
-		free(buf);
-		return false;
-	}
-
-	if (config.m_debug > 0)
-		DebugLog(L"Launch chrome.exe (pid=%i)", pi.dwProcessId);
 
 	/*
-	 * Chrome seems to crash if the parent process exits too
-	 * early. Let's wait 1.5 sec for startup.
+	 * Create a new string buffer with std::wstring.
 	 */
-	WaitForSingleObject(pi.hProcess, 1500);
+	static wchar_t *CreateStringBufferW(std::wstring &str)
+	{
+		size_t len = str.length() + 1;
+		wchar_t *buf;
 
-	CloseHandle(pi.hProcess);
-	CloseHandle(pi.hThread);
-	free(buf);
-	return true;
-}
+		buf = (wchar_t *)calloc(1, sizeof(wchar_t) * len);
+		if (buf == NULL)
+			return NULL;
 
-bool OpenByModernBrowser(
-	const std::wstring &browserName,
-	const std::wstring &url,
-	const Config &config,
-	bool bypassElevationDialog = false)
-{
-	std::wstring command;
-	std::wstring args(std::wstring(L"\"") + url + std::wstring(L"\""));
+		if (wcscpy_s(buf, len, str.c_str())) {
+			free(buf);
+			return NULL;
+		}
+		return buf;
+	}
 
-	if (bypassElevationDialog) {
-		// Avoid showing the elevation warning dialog of IE. BrowserSelector.exe is
-		// registered as Policy == 3 (don't show the dialog) by the installer.
-		command = L"BrowserSelector.exe";
-		args += std::wstring(L" --browser=") + browserName;
-	} else {
-		if (browserName == L"firefox") {
-			command = GetFirefoxCommand(config);
-		} else if (browserName == L"chrome") {
-			return OpenByChrome(url, config, 0);
+	/*
+	 * Get the executable path to launch Firefox.
+	 *
+	 * This supports environmental variables in FirefoxCommand.
+	 * (e.g. "%ProgramFiles%\Mozilla Firefox\firefox.exe")
+	 */
+	std::wstring GetFirefoxCommand(const Config &config) const
+	{
+		std::wstring cmd = config.m_firefoxCommand;
+		wchar_t path[MAX_PATH];
+
+		if (cmd.empty())
+			return std::wstring(L"firefox.exe");
+
+		if (!ExpandEnvironmentStringsW(cmd.c_str(), path, MAX_PATH)) {
+			DebugLog(L"Failed to expand envs (err=%i)", GetLastError());
+			DebugLog(L"Falling back to '%s'...", cmd.c_str());
+			return cmd;
+		}
+		if (config.m_debug > 0)
+			DebugLog(L"Expanded FirefoxCommand to '%s'", path);
+
+		return std::wstring(path);
+	}
+
+	/*
+	 * Open the given URL with Google Chrome.
+	 *
+	 * "flags" is passed to CreateProcess() as dwCreationFlags.
+	 * Just use 0 except when you specially need other flags.
+	 */
+	bool OpenByChrome(const std::wstring &url, const Config &config, int flags) const
+	{
+		std::wstring cmd;
+		std::wstring args(L"");
+		wchar_t *buf;
+		PROCESS_INFORMATION pi;
+		STARTUPINFO si;
+
+		ZeroMemory(&si, sizeof(si));
+		si.cb = sizeof(si);
+		ZeroMemory(&pi, sizeof(pi));
+
+		LoadBrowserPath(cmd, _T("chrome"));
+
+		args += L"\"";
+		args += cmd;
+		args += L"\" -- \"";
+		args += url;
+		args += L"\"";
+
+		buf = CreateStringBufferW(args);
+		if (buf == NULL)
+			return false;
+
+		if (!CreateProcess(cmd.c_str(), buf, NULL, NULL, FALSE, flags, NULL, NULL, &si, &pi)) {
+			DebugLog(L"CreateProcess failed (err=%i, cmd=%ls)", GetLastError(), cmd.c_str());
+			free(buf);
+			return false;
+		}
+
+		if (config.m_debug > 0)
+			DebugLog(L"Launch chrome.exe (pid=%i)", pi.dwProcessId);
+
+		/*
+		 * Chrome seems to crash if the parent process exits too
+		 * early. Let's wait 1.5 sec for startup.
+		 */
+		WaitForSingleObject(pi.hProcess, 1500);
+
+		CloseHandle(pi.hProcess);
+		CloseHandle(pi.hThread);
+		free(buf);
+		return true;
+	}
+
+	bool OpenByModernBrowser(
+		const std::wstring &browserName,
+		const std::wstring &url,
+		const Config &config,
+		bool bypassElevationDialog = false) const
+	{
+		std::wstring command;
+		std::wstring args(std::wstring(L"\"") + url + std::wstring(L"\""));
+
+		if (bypassElevationDialog) {
+			// Avoid showing the elevation warning dialog of IE. BrowserSelector.exe is
+			// registered as Policy == 3 (don't show the dialog) by the installer.
+			command = L"BrowserSelector.exe";
+			args += std::wstring(L" --browser=") + browserName;
+		} else {
+			if (browserName == L"firefox") {
+				command = GetFirefoxCommand(config);
+			} else if (browserName == L"chrome") {
+				return OpenByChrome(url, config, 0);
+			}
+		}
+
+		HINSTANCE hInstance = 0;
+		if (!command.empty())
+			hInstance = ::ShellExecuteW(
+				NULL, // HWND
+				L"open",
+				command.c_str(),
+				args.c_str(),
+				NULL, // Directory
+				SW_SHOW);
+
+		if (reinterpret_cast<int>(hInstance) > 32) {
+			return true;
+		} else {
+			DebugLog(L"Failed to launch: code=%d, browser=%ls, url=%ls", hInstance, browserName.c_str(), url.c_str());
+			return false;
 		}
 	}
 
-	HINSTANCE hInstance = 0;
-	if (!command.empty())
-		hInstance = ::ShellExecuteW(
-			NULL, // HWND
-			L"open",
-			command.c_str(),
-			args.c_str(),
-			NULL, // Directory
-			SW_SHOW);
-
-	if (reinterpret_cast<int>(hInstance) > 32) {
-		return true;
-	} else {
-		DebugLog(L"Failed to launch: code=%d, browser=%ls, url=%ls", hInstance, browserName.c_str(), url.c_str());
-		return false;
+	/*
+	 * OpenByExistingIE
+	 */
+	static HDDEDATA CALLBACK DDECallback(
+		WORD     wType,
+		WORD     wFmt,
+		HCONV    hConv,
+		HSZ      hsz1,
+		HSZ      hsz2,
+		HDDEDATA hData,
+		DWORD    lData1,
+		DWORD    lData2)
+	{
+		return (HDDEDATA)0;
 	}
-}
 
-/*
- * OpenByExistingIE
- */
-static HDDEDATA CALLBACK DDECallback(
-	WORD     wType,
-	WORD     wFmt,
-	HCONV    hConv,
-	HSZ      hsz1,
-	HSZ      hsz2,
-	HDDEDATA hData,
-	DWORD    lData1,
-	DWORD    lData2)
-{
-	return (HDDEDATA)0;
-}
+	static bool OpenByExistingIE(const std::wstring &url)
+	{
+		DWORD dwDDEID = 0;
 
-static bool OpenByExistingIE(const std::wstring &url)
-{
-	DWORD dwDDEID = 0;
+		UINT err = DdeInitializeW(
+			&dwDDEID,
+			(PFNCALLBACK)MakeProcInstance((FARPROC)DDECallback, ghInstance),
+			CBF_SKIP_ALLNOTIFICATIONS | APPCMD_CLIENTONLY, 0L);
+		if (err != DMLERR_NO_ERROR)
+			return false;
 
-	UINT err = DdeInitializeW(
-		&dwDDEID,
-		(PFNCALLBACK)MakeProcInstance((FARPROC)DDECallback, ghInstance),
-		CBF_SKIP_ALLNOTIFICATIONS | APPCMD_CLIENTONLY, 0L);
-	if (err != DMLERR_NO_ERROR)
-		return false;
+		HSZ hszService = DdeCreateStringHandleW(dwDDEID, L"IEXPLORE", CP_WINUNICODE);
+		HSZ hszTopic = DdeCreateStringHandleW(dwDDEID, L"WWW_OpenURL", CP_WINUNICODE);
+		HCONV hConv = DdeConnect(dwDDEID, hszService, hszTopic, NULL);
+		DdeFreeStringHandle(dwDDEID, hszService);
+		DdeFreeStringHandle(dwDDEID, hszTopic);
 
-	HSZ hszService = DdeCreateStringHandleW(dwDDEID, L"IEXPLORE", CP_WINUNICODE);
-	HSZ hszTopic = DdeCreateStringHandleW(dwDDEID, L"WWW_OpenURL", CP_WINUNICODE);
-	HCONV hConv = DdeConnect(dwDDEID, hszService, hszTopic, NULL);
-	DdeFreeStringHandle(dwDDEID, hszService);
-	DdeFreeStringHandle(dwDDEID, hszTopic);
+		if (!hConv)
+			return false;
 
-	if(!hConv)
-		return false;
+		CString cmd = url.c_str();
+		HDDEDATA hDDEData = DdeClientTransaction(
+			(LPBYTE)url.c_str(),
+			static_cast<DWORD>(((url.size() + 1) * sizeof(wchar_t))),
+			hConv,
+			0,
+			0,
+			XTYP_EXECUTE,
+			10000,
+			NULL);
+		if (hDDEData)
+			DdeFreeDataHandle(hDDEData);
+		DdeDisconnect(hConv);
+		DdeUninitialize(dwDDEID);
 
-	CString cmd = url.c_str();
-	HDDEDATA hDDEData = DdeClientTransaction(
-		(LPBYTE)url.c_str(),
-		static_cast<DWORD>(((url.size() + 1) * sizeof(wchar_t))),
-		hConv,
-		0,
-		0,
-		XTYP_EXECUTE,
-		10000,
-		NULL);
-	if (hDDEData)
-		DdeFreeDataHandle(hDDEData);
-	DdeDisconnect(hConv);
-	DdeUninitialize(dwDDEID);
+		return true;
+	}
 
-	return true;
-}
+};

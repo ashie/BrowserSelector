@@ -4,9 +4,9 @@
 
 using namespace std;
 
-static bool OpenByIE(const wstring &url)
+static bool OpenByIE(BrowserSelector &app,  const wstring &url)
 {
-	bool succeeded = OpenByExistingIE(url);
+	bool succeeded = app.OpenByExistingIE(url);
 	if (!succeeded) {
 		HINSTANCE hInstance = ::ShellExecute(NULL, _T("open"), _T("iexplore.exe"), url.c_str(), NULL, SW_SHOW);
 		succeeded = reinterpret_cast<int>(hInstance) > 32;
@@ -75,17 +75,18 @@ int APIENTRY _tWinMain(
 
 	Config config;
 	config.LoadAll();
+	BrowserSelector app;
 
 	if (browserName.empty())
-		browserName = ::GetBrowserNameToOpenURL(url, config);
+		browserName = app.GetBrowserNameToOpenURL(url, config);
 
 	bool succeeded = false;
 	if (browserName == L"ie") {
-		succeeded = OpenByIE(url);
+		succeeded = OpenByIE(app, url);
 	} else {
-		bool succeeded = OpenByModernBrowser(browserName, url, config);
+		bool succeeded = app.OpenByModernBrowser(browserName, url, config);
 		if (!succeeded && enableIEFallback)
-			succeeded = OpenByIE(url);
+			succeeded = OpenByIE(app, url);
 	}
 
 	return succeeded ? 0 : 1;

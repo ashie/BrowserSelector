@@ -135,7 +135,7 @@ void CBrowserSelector::DoNavigate(BSTR url, VARIANT_BOOL *cancel)
 		return;
 
 	const bool bypassElevationDialog = true;
-	bool succeeded = OpenByModernBrowser(browserName, URL, m_config, bypassElevationDialog);
+	bool succeeded = m_app.OpenByModernBrowser(browserName, URL, m_config, bypassElevationDialog);
 	if (succeeded) {
 		*cancel = VARIANT_TRUE;
 		DebugLog(L"Succeeded to open modern browser.");
@@ -296,5 +296,5 @@ bool STDMETHODCALLTYPE CBrowserSelector::OnMouseUp(IHTMLEventObj *pEventObj)
 
 wstring CBrowserSelector::GetBrowserNameToOpenURL(const wstring &url)
 {
-	return ::GetBrowserNameToOpenURL(url, m_config);
+	return m_app.GetBrowserNameToOpenURL(url, m_config);
 }
