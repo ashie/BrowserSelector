@@ -854,7 +854,7 @@ public:
 		}
 	}
 
-	static bool matchSimpleWildCard(const std::wstring &url, const std::wstring &pattern)
+	bool matchSimpleWildCard(const std::wstring &url, const std::wstring &pattern) const
 	{
 		static CComAutoCriticalSection symMatchSection;
 		symMatchSection.Lock();
