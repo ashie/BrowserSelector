@@ -145,7 +145,6 @@
   <ItemGroup>
     <None Include="BrowserSelector.ico" />
     <None Include="BrowserSelector.png" />
-    <None Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BrowserSelector.h" />
