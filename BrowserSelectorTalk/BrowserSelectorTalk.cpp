@@ -49,6 +49,9 @@ static bool OpenIE(const wstring &url)
 		return false;
 	}
 
+	CloseHandle(pi.hProcess);
+	CloseHandle(pi.hThread);
+
 	return true;
 }
 
