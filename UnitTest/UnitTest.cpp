@@ -59,4 +59,18 @@ namespace UnitTest
 			Assert::IsTrue(matchSimpleWildCard(url, pattern));
 		}
 	};
+
+	TEST_CLASS(Config)
+	{
+	public:
+		TEST_METHOD(DumpAsJson)
+		{
+			DefaultConfig config;
+			std::wstring buf;
+			config.dumpAsJson(buf);
+			Assert::AreEqual(
+				L"{\"DefaultBrowser\":\"ie\",\"SecondBrowser\":\"\",\"FirefoxCommand\":\"\",\"CloseEmptyTab\":1,\"OnlyOnAnchorClick\":0,\"UseRegex\":0,\"URLPatterns\":[],\"HostNamePatterns\":[],\"ZonePatterns\":[]}",
+				buf.c_str());
+		}
+	};
 }
