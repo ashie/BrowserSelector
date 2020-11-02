@@ -790,6 +790,8 @@ static void LoadBrowserPath(std::wstring &path, const std::wstring &browserName)
 		LoadAppPath(path, _T("firefox.exe"));
 	else if (browserName == L"chrome")
 		LoadAppPath(path, _T("chrome.exe"));
+	else if (browserName == L"edge")
+		LoadAppPath(path, _T("msedge.exe"));
 }
 
 static bool isInSystemPath(const std::wstring &browserName)
@@ -1098,6 +1100,9 @@ public:
 				command = GetFirefoxCommand();
 			} else if (browserName == L"chrome") {
 				return OpenByChrome(url, 0);
+			}
+			} else if (browserName == L"edge") {
+				command = std::wstring(L"msedge.exe");
 			}
 		}
 
