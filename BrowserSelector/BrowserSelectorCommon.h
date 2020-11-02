@@ -128,16 +128,19 @@ public:
 		buf += ToJsonString(m_firefoxCommand, strbuf);
 		buf += L",";
 
+		_itow_s(m_closeEmptyTab, tmp, tmpLen, 10);
 		buf += L"\"CloseEmptyTab\":";
-		buf += _itow_s(m_closeEmptyTab, tmp, tmpLen, 10);
+		buf += tmp;
 		buf += L",";
 
+		_itow_s(m_onlyOnAnchorClick, tmp, tmpLen, 10);
 		buf += L"\"OnlyOnAnchorClick\":";
-		buf += _itow_s(m_onlyOnAnchorClick, tmp, tmpLen, 10);
+		buf += tmp;
 		buf += L",";
 
+		_itow_s(m_useRegex, tmp, tmpLen, 10);
 		buf += L"\"UseRegex\":";
-		buf += _itow_s(m_useRegex, tmp, tmpLen, 10);
+		buf += tmp;
 		buf += L",";
 
 		buf += L"\"URLPatterns\":[";
