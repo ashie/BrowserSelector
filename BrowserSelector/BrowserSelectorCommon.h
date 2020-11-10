@@ -1100,7 +1100,6 @@ public:
 				command = GetFirefoxCommand();
 			} else if (browserName == L"chrome") {
 				return OpenByChrome(url, 0);
-			}
 			} else if (browserName == L"edge") {
 				command = std::wstring(L"msedge.exe");
 			}
