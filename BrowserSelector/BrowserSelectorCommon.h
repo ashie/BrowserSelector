@@ -492,7 +492,7 @@ public:
 
 		tmpPath = cachePath + L".tmp";
 
-		unsigned int pos = GetDataFolderPath().size();
+		size_t pos = GetDataFolderPath().size();
 		do
 		{
 			pos = folderPath.find_first_of(L"\\", pos + 1);
@@ -1115,7 +1115,7 @@ public:
 				NULL, // Directory
 				SW_SHOW);
 
-		if (reinterpret_cast<int>(hInstance) > 32) {
+		if (reinterpret_cast<uint64_t>(hInstance) > 32) {
 			return true;
 		} else {
 			ErrorLog(L"Failed to launch: code=%d, browser=%ls, url=%ls", hInstance, browserName.c_str(), url.c_str());
