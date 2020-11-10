@@ -193,6 +193,9 @@
       <PerUserRedirection>true</PerUserRedirection>
       <AdditionalDependencies>dbghelp.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>"%VSAPPIDDIR%%VSAPPIDNAME%" ../BrowserSelector.sln /build "Release|x64"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>

@@ -93,6 +93,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_D7CBFF2134734B61819A19A32DDD4B69"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_DAA3180501C64DB79ACCE6472EF2E91E"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -390,6 +396,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D7CBFF2134734B61819A19A32DDD4B69"
+            {
+            "SourcePath" = "8:..\\x64\\Release\\BrowserSelectorBHO64.dll"
+            "TargetName" = "8:BrowserSelectorBHO64.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_EFD80C7B4A164AA691FA4C75A672BE63"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:2"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_DAA3180501C64DB79ACCE6472EF2E91E"
             {
             "SourcePath" = "8:..\\sample\\BrowserSelectorExample.ini"
@@ -498,7 +524,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:BrowserSelector"
         "ProductCode" = "8:{720CF828-E801-470C-BEDC-AE96CC99E79C}"
-        "PackageCode" = "8:{2FF10635-677B-49EE-872F-123820791C1B}"
+        "PackageCode" = "8:{74F70B17-311D-4AD7-A1A0-2A37D108A974}"
         "UpgradeCode" = "8:{864B7071-7281-4A14-B718-57CB190FE7B7}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
