@@ -11,6 +11,10 @@ HKCR
 			}
 			TypeLib = s '{B0903AD1-5996-46FF-82CA-6E51182651CD}'
 			Version = s '1.0'
+			ForceRemove 'Implemented Categories'
+			{
+				{59fb2056-d625-48d0-a944-1a85b5ab2640}
+			}
 		}
 	}
 }
