@@ -4,6 +4,21 @@ HKLM
 	{
 		NoRemove Microsoft
 		{
+			NoRemove 'Internet Explorer'
+			{
+				NoRemove 'Low Rights'
+				{
+					NoRemove 'ElevationPolicy'
+					{
+						ForceRemove {0DA124F2-E49B-4B8B-A462-EF6305282B40}
+						{
+							AppName = s 'BrowserSelector.exe'
+							AppPath = s '%MODULE_FOLDER%'
+							Policy = d '3'
+						}
+					}
+				}
+			}
 			NoRemove Windows
 			{
 				NoRemove CurrentVersion
