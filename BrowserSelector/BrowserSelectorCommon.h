@@ -604,24 +604,21 @@ public:
 class RegistryConfig : public Config
 {
 public:
-	RegistryConfig(bool systemWide = false)
-		: m_systemWide(systemWide)
+	RegistryConfig(bool systemWide = false, bool force32bit = false)
+		: m_keyParent(systemWide ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER)
+		, m_keyFlags(force32bit ? (KEY_READ | KEY_WOW64_32KEY) : KEY_READ)
 		, m_enableIncludeCache(false)
 	{
-		LoadIntValue(m_debug, L"Debug", m_systemWide);
+		LoadIntValue(m_debug, L"Debug");
 
-		LoadStringValue(m_defaultBrowser,
-			L"DefaultBrowser", m_systemWide);
-		LoadStringValue(m_secondBrowser,
-			L"SecondBrowser", m_systemWide);
-		LoadStringValue(m_firefoxCommand,
-			L"FirefoxCommand", m_systemWide);
-		LoadStringValue(m_includePath,
-			L"Include", m_systemWide);
-		LoadIntValue(m_enableIncludeCache, L"EnableIncludeCache", m_systemWide);
-		LoadIntValue(m_closeEmptyTab, L"CloseEmptyTab", m_systemWide);
-		LoadIntValue(m_onlyOnAnchorClick, L"OnlyOnAnchorClick", m_systemWide);
-		LoadIntValue(m_useRegex, L"UseRegex", m_systemWide);
+		LoadStringValue(m_defaultBrowser, L"DefaultBrowser");
+		LoadStringValue(m_secondBrowser, L"SecondBrowser");
+		LoadStringValue(m_firefoxCommand, L"FirefoxCommand");
+		LoadStringValue(m_includePath, L"Include");
+		LoadIntValue(m_enableIncludeCache, L"EnableIncludeCache");
+		LoadIntValue(m_closeEmptyTab, L"CloseEmptyTab");
+		LoadIntValue(m_onlyOnAnchorClick, L"OnlyOnAnchorClick");
+		LoadIntValue(m_useRegex, L"UseRegex");
 		LoadZonePatterns(m_zonePatterns);
 		LoadHostNamePatterns(m_hostNamePatterns);
 		LoadURLPatterns(m_urlPatterns);
@@ -647,21 +644,17 @@ public:
 
 	virtual std::wstring getName()
 	{
-		if (m_systemWide)
+		if (m_keyParent == HKEY_LOCAL_MACHINE)
 			return std::wstring(L"HKLM");
 		else
 			return std::wstring(L"HKCU");
 	}
 
-	static void LoadStringValue(
-		std::wstring& value,
-		const std::wstring& name,
-		bool systemWide = false)
+	void LoadStringValue(std::wstring& value, const std::wstring& name)
 	{
 		CRegKey reg;
-		HKEY keyParent = systemWide ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER;
 		CString regKeyName(_T("SOFTWARE\\ClearCode\\BrowserSelector"));
-		LONG result = reg.Open(keyParent, regKeyName, KEY_READ);
+		LONG result = reg.Open(m_keyParent, regKeyName, m_keyFlags);
 		if (result == ERROR_SUCCESS) {
 			TCHAR regValue[256];
 			ULONG regValueSize = sizeof(regValue) / sizeof(TCHAR);
@@ -672,15 +665,11 @@ public:
 		reg.Close();
 	}
 
-	static void LoadIntValue(
-		int& value,
-		const std::wstring& name,
-		bool systemWide = false)
+	void LoadIntValue(int& value, const std::wstring& name)
 	{
 		CRegKey reg;
-		HKEY keyParent = systemWide ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER;
 		CString regKeyName(_T("SOFTWARE\\ClearCode\\BrowserSelector"));
-		LONG result = reg.Open(keyParent, regKeyName, KEY_READ);
+		LONG result = reg.Open(m_keyParent, regKeyName, m_keyFlags);
 		if (result == ERROR_SUCCESS) {
 			DWORD v;
 			result = reg.QueryDWORDValue(name.c_str(), v);
@@ -690,17 +679,13 @@ public:
 		reg.Close();
 	}
 
-	void LoadSwitchingPatterns(
-		SwitchingPatterns& patterns,
-		LPCTSTR type,
-		bool systemWide = false)
+	void LoadSwitchingPatterns(SwitchingPatterns& patterns, LPCTSTR type)
 	{
 		CRegKey reg;
-		HKEY keyParent = systemWide ? HKEY_LOCAL_MACHINE : HKEY_CURRENT_USER;
 		CString regKeyName(_T("SOFTWARE\\ClearCode\\BrowserSelector\\"));
 		regKeyName += type;
 
-		LONG result = reg.Open(keyParent, regKeyName, KEY_READ);
+		LONG result = reg.Open(m_keyParent, regKeyName, m_keyFlags);
 
 		for (DWORD idx = 0; result == ERROR_SUCCESS; idx++) {
 			TCHAR valueName[1024];
@@ -723,21 +708,22 @@ public:
 
 	void LoadZonePatterns(SwitchingPatterns& patterns)
 	{
-		LoadSwitchingPatterns(patterns, _T("ZonePatterns"), m_systemWide);
+		LoadSwitchingPatterns(patterns, _T("ZonePatterns"));
 	}
 
 	void LoadHostNamePatterns(SwitchingPatterns& patterns)
 	{
-		LoadSwitchingPatterns(patterns, _T("HostNamePatterns"), m_systemWide);
+		LoadSwitchingPatterns(patterns, _T("HostNamePatterns"));
 	}
 
 	void LoadURLPatterns(SwitchingPatterns& patterns)
 	{
-		LoadSwitchingPatterns(patterns, _T("URLPatterns"), m_systemWide);
+		LoadSwitchingPatterns(patterns, _T("URLPatterns"));
 	}
 
 public:
-	bool m_systemWide;
+	HKEY m_keyParent;
+	REGSAM m_keyFlags;
 	std::wstring m_includePath;
 	int m_enableIncludeCache;
 };
@@ -748,14 +734,25 @@ void Config::LoadAll(HINSTANCE hInstance)
 	DefaultConfig defaultConfig;
 	RegistryConfig systemConfig(systemWide);
 	RegistryConfig userConfig;
+#ifdef _WIN64
+	bool force32bit = true;
+	RegistryConfig systemConfig32(systemWide, force32bit);
+	RegistryConfig userConfig32(!systemWide, force32bit);
+#endif
 	INIFileConfig systemINIFileConfig(INIFileConfig::GetSystemConfigPath(hInstance));
 	INIFileConfig userINIFileConfig(INIFileConfig::GetUserConfigPath());
 
 	std::vector<Config*> configs;
 	configs.push_back(&defaultConfig);
 	configs.push_back(&systemConfig);
+#ifdef _WIN64
+	configs.push_back(&systemConfig32);
+#endif
 	configs.push_back(&systemINIFileConfig);
 	configs.push_back(&userConfig);
+#ifdef _WIN64
+	configs.push_back(&userConfig32);
+#endif
 	configs.push_back(&userINIFileConfig);
 
 	merge(configs);
