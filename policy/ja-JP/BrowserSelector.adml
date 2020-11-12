@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<policyDefinitionResources revision="2.4" schemaVersion="1.0" >
+  <displayName/>
+  <description/>
+  <resources >
+    <stringTable >
+      <string id="BrowserSelector">BrowserSelector</string>
+      <string id="IE">Internet Explorer</string>
+      <string id="Firefox">Firefox</string>
+      <string id="Chrome">Chrome</string>
+      <string id="Edge">Edge</string>
+
+      <string id="DefaultBrowser">Webページを開くデフォルトのブラウザ</string>
+      <string id="SecondBrowser">ブラウザの指定を省略した時に利用するブラウザ (SecondBrowser)</string>
+      <string id="FirefoxCommand">起動するFirefoxの実行ファイルを指定する</string>
+      <string id="FirefoxCommand_Explain">この設定はFirefoxを複数インストールしている環境のみ設定が必要です。</string>
+      <string id="CloseEmptyTab">他のブラウザでページを開いたときに元のタブを閉じる</string>
+      <string id="OnlyOnAnchorClick">リンククリック時のみリダイレクト判定を行う</string>
+      <string id="Include">追加で読み込むリモート設定ファイルのパス</string>
+      <string id="EnableIncludeCache">リモート設定ファイルのキャッシュを生成する</string>
+      <string id="UseRegex">ホスト名やURLのパターンに正規表現を利用する</string>
+      <string id="ZonePatterns">ゾーンによるブラウザ判定</string>
+      <string id="ZonePatterns_Explain">セキュリティゾーンごとに起動するブラウザを設定できます。
+
+例えば「intra|firefox」と設定すると、イントラネットのページはFirefoxで表示されます。
+設定可能なゾーンは、internet、intra、local、trusted、restricted の5種類です。</string>
+      <string id="HostnamePatterns">ホスト名によるパターンマッチ</string>
+      <string id="HostnamePatterns_Explain">ホスト名によるパターンでブラウザを設定できます。
+
+例えば「*.clear-code.com|firefox」と設定すると、指定ホスト配下のページはすべてFirefoxで表示されます。</string>
+      <string id="URLPatterns">URLによるパターンマッチ</string>
+      <string id="URLPatterns_Explain">URLによるパターンでブラウザを設定できます。
+
+例えば「http*://*.clear-code.com/*|firefox」と設定すると、このパターンにマッチするページはFirefoxで表示されます。</string>
+    </stringTable>
+    <presentationTable>
+      <presentation id="DefaultBrowser">
+        <dropdownList refId="DefaultBrowser" noSort="true"/>
+      </presentation>
+      <presentation id="SecondBrowser">
+        <dropdownList refId="SecondBrowser" noSort="true"/>
+      </presentation>
+      <presentation id="FirefoxCommand">
+        <textBox refId="FirefoxCommand">
+          <label>Path: </label>
+        </textBox>
+      </presentation>
+      <presentation id="Include">
+        <textBox refId="Include">
+          <label>Path: </label>
+        </textBox>
+      </presentation>
+      <presentation id="ZonePatterns">
+        <listBox refId="ZonePatterns"/>
+      </presentation>
+      <presentation id="HostnamePatterns">
+        <listBox refId="HostnamePatterns"/>
+      </presentation>
+      <presentation id="URLPatterns">
+        <listBox refId="URLPatterns"/>
+      </presentation>
+    </presentationTable>
+  </resources>
+</policyDefinitionResources>

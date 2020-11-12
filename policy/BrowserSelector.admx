@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<policyDefinitions revision="2.4" schemaVersion="1.0">
+  <policyNamespaces>
+    <target prefix="BrowserSelector" namespace="ClearCode.Policies.BrowserSelector"/>
+    <using prefix="ClearCode" namespace="ClearCode.Policies"/>
+  </policyNamespaces>
+  <resources minRequiredRevision="2.4"/>
+  <categories>
+    <category displayName="$(string.BrowserSelector)" name="BrowserSelector">
+      <parentCategory ref="ClearCode:ClearCode"/>
+    </category>
+  </categories>
+  <policies>
+    <policy name="DefaultBrowser" class="Both"
+        displayName="$(string.DefaultBrowser)"
+        key="SOFTWARE\ClearCode\BrowserSelector"
+        presentation="$(presentation.DefaultBrowser)">
+      <parentCategory ref="BrowserSelector"/>
+      <supportedOn ref="SUPPORTED_NotSpecified"/>
+      <elements>
+        <enum id="DefaultBrowser" valueName="DefaultBrowser">
+          <item displayName="$(string.IE)">
+            <value>
+              <string>ie</string>
+            </value>
+          </item>
+          <item displayName="$(string.Firefox)">
+            <value>
+              <string>firefox</string>
+            </value>
+          </item>
+          <item displayName="$(string.Chrome)">
+            <value>
+              <string>chrome</string>
+            </value>
+          </item>
+          <item displayName="$(string.Edge)">
+            <value>
+              <string>edge</string>
+            </value>
+          </item>
+        </enum>
+      </elements>
+    </policy>
+    <policy name="SecondBrowser" class="Both"
+        displayName="$(string.SecondBrowser)"
+        key="SOFTWARE\ClearCode\BrowserSelector"
+        presentation="$(presentation.SecondBrowser)">
+      <parentCategory ref="BrowserSelector"/>
+      <supportedOn ref="SUPPORTED_NotSpecified"/>
+      <elements>
+        <enum id="SecondBrowser" valueName="SecondBrowser">
+          <item displayName="$(string.IE)">
+            <value>
+              <string>ie</string>
+            </value>
+          </item>
+          <item displayName="$(string.Firefox)">
+            <value>
+              <string>firefox</string>
+            </value>
+          </item>
+          <item displayName="$(string.Chrome)">
+            <value>
+              <string>chrome</string>
+            </value>
+          </item>
+          <item displayName="$(string.Edge)">
+            <value>
+              <string>edge</string>
+            </value>
+          </item>
+        </enum>
+      </elements>
+    </policy>
+    <policy name="FirefoxCommand" class="Both"
+        displayName="$(string.FirefoxCommand)"
+        explainText="$(string.FirefoxCommand_Explain)"
+        key="SOFTWARE\ClearCode\BrowserSelector"
+        presentation="$(presentation.FirefoxCommand)">
+      <parentCategory ref="BrowserSelector"/>
+      <supportedOn ref="SUPPORTED_NotSpecified"/>
+      <elements>
+        <text id="FirefoxCommand" valueName="FirefoxCommand"/>
+      </elements>
+    </policy>
+    <policy name="CloseEmptyTab" class="Both"
+        displayName="$(string.CloseEmptyTab)"
+        key="SOFTWARE\ClearCode\BrowserSelector"
+        valueName="CloseEmptyTab">
+      <parentCategory ref="BrowserSelector"/>
+      <supportedOn ref="SUPPORTED_NotSpecified"/>
+      <enabledValue>
+        <decimal value="1"/>
+      </enabledValue>
+      <disabledValue>
+        <decimal value="0"/>
+      </disabledValue>
+    </policy>
+    <policy name="OnlyOnAnchorClick" class="Both"
+        displayName="$(string.OnlyOnAnchorClick)"
+        key="SOFTWARE\ClearCode\BrowserSelector"
+        valueName="OnlyOnAnchorClick">
+      <parentCategory ref="BrowserSelector"/>
+      <supportedOn ref="SUPPORTED_NotSpecified"/>
+      <enabledValue>
+        <decimal value="1"/>
+      </enabledValue>
+      <disabledValue>
+        <decimal value="0"/>
+      </disabledValue>
+    </policy>
+    <policy name="Include" class="Both"
+        displayName="$(string.Include)"
+        key="SOFTWARE\ClearCode\BrowserSelector"
+        presentation="$(presentation.Include)">
+      <parentCategory ref="BrowserSelector"/>
+      <supportedOn ref="SUPPORTED_NotSpecified"/>
+      <elements>
+        <text id="Include" valueName="Include"/>
+      </elements>
+    </policy>
+    <policy name="UseRegex" class="Both"
+        displayName="$(string.UseRegex)"
+        key="SOFTWARE\ClearCode\BrowserSelector"
+        valueName="UseRegex">
+      <parentCategory ref="BrowserSelector"/>
+      <supportedOn ref="SUPPORTED_NotSpecified"/>
+      <enabledValue>
+        <decimal value="1"/>
+      </enabledValue>
+      <disabledValue>
+        <decimal value="0"/>
+      </disabledValue>
+    </policy>
+    <policy name="EnableIncludeCache" class="Both"
+        displayName="$(string.EnableIncludeCache)"
+        key="SOFTWARE\ClearCode\BrowserSelector"
+        valueName="EnableIncludeCache">
+      <parentCategory ref="BrowserSelector"/>
+      <supportedOn ref="SUPPORTED_NotSpecified"/>
+      <enabledValue>
+        <decimal value="1"/>
+      </enabledValue>
+      <disabledValue>
+        <decimal value="0"/>
+      </disabledValue>
+    </policy>
+    <policy name="ZonePatterns" class="Both"
+        displayName="$(string.ZonePatterns)"
+        explainText="$(string.ZonePatterns_Explain)"
+        key="SOFTWARE\ClearCode\BrowserSelector\ZonePatterns"
+        presentation="$(presentation.ZonePatterns)">
+      <parentCategory ref="BrowserSelector"/>
+      <supportedOn ref="SUPPORTED_NotSpecified"/>
+      <elements>
+        <list id="ZonePatterns" key="SOFTWARE\ClearCode\BrowserSelector\ZonePatterns" valuePrefix=""/>
+      </elements>
+    </policy>
+    <policy name="HostnamePatterns" class="Both"
+        displayName="$(string.HostnamePatterns)"
+        explainText="$(string.HostnamePatterns_Explain)"
+        key="SOFTWARE\ClearCode\BrowserSelector\HostnamePatterns"
+        presentation="$(presentation.HostnamePatterns)">
+      <parentCategory ref="BrowserSelector"/>
+      <supportedOn ref="SUPPORTED_NotSpecified"/>
+      <elements>
+        <list id="HostnamePatterns" key="SOFTWARE\ClearCode\BrowserSelector\HostnamePatterns" valuePrefix=""/>
+      </elements>
+    </policy>
+    <policy name="URLPatterns" class="Both"
+        displayName="$(string.URLPatterns)"
+        explainText="$(string.URLPatterns_Explain)"
+        key="SOFTWARE\ClearCode\BrowserSelector\URLPatterns"
+        presentation="$(presentation.URLPatterns)">
+      <parentCategory ref="BrowserSelector"/>
+      <supportedOn ref="SUPPORTED_NotSpecified"/>
+      <elements>
+        <list id="URLPatterns" key="SOFTWARE\ClearCode\BrowserSelector\URLPatterns" valuePrefix=""/>
+      </elements>
+    </policy>
+  </policies>
+</policyDefinitions>
