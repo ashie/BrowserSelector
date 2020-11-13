@@ -11,9 +11,9 @@
     </category>
   </categories>
   <policies>
-    <policy name="DefaultBrowser" class="Both"
+    <policy name="DefaultBrowser" class="Machine"
         displayName="$(string.DefaultBrowser)"
-        key="SOFTWARE\ClearCode\BrowserSelector"
+        key="SOFTWARE\WOW6432Node\ClearCode\BrowserSelector"
         presentation="$(presentation.DefaultBrowser)">
       <parentCategory ref="BrowserSelector"/>
       <supportedOn ref="SUPPORTED_NotSpecified"/>
@@ -42,9 +42,9 @@
         </enum>
       </elements>
     </policy>
-    <policy name="SecondBrowser" class="Both"
+    <policy name="SecondBrowser" class="Machine"
         displayName="$(string.SecondBrowser)"
-        key="SOFTWARE\ClearCode\BrowserSelector"
+        key="SOFTWARE\WOW6432Node\ClearCode\BrowserSelector"
         presentation="$(presentation.SecondBrowser)">
       <parentCategory ref="BrowserSelector"/>
       <supportedOn ref="SUPPORTED_NotSpecified"/>
@@ -73,10 +73,10 @@
         </enum>
       </elements>
     </policy>
-    <policy name="FirefoxCommand" class="Both"
+    <policy name="FirefoxCommand" class="Machine"
         displayName="$(string.FirefoxCommand)"
         explainText="$(string.FirefoxCommand_Explain)"
-        key="SOFTWARE\ClearCode\BrowserSelector"
+        key="SOFTWARE\WOW6432Node\ClearCode\BrowserSelector"
         presentation="$(presentation.FirefoxCommand)">
       <parentCategory ref="BrowserSelector"/>
       <supportedOn ref="SUPPORTED_NotSpecified"/>
@@ -84,9 +84,9 @@
         <text id="FirefoxCommand" valueName="FirefoxCommand"/>
       </elements>
     </policy>
-    <policy name="CloseEmptyTab" class="Both"
+    <policy name="CloseEmptyTab" class="Machine"
         displayName="$(string.CloseEmptyTab)"
-        key="SOFTWARE\ClearCode\BrowserSelector"
+        key="SOFTWARE\WOW6432Node\ClearCode\BrowserSelector"
         valueName="CloseEmptyTab">
       <parentCategory ref="BrowserSelector"/>
       <supportedOn ref="SUPPORTED_NotSpecified"/>
@@ -97,9 +97,9 @@
         <decimal value="0"/>
       </disabledValue>
     </policy>
-    <policy name="OnlyOnAnchorClick" class="Both"
+    <policy name="OnlyOnAnchorClick" class="Machine"
         displayName="$(string.OnlyOnAnchorClick)"
-        key="SOFTWARE\ClearCode\BrowserSelector"
+        key="SOFTWARE\WOW6432Node\ClearCode\BrowserSelector"
         valueName="OnlyOnAnchorClick">
       <parentCategory ref="BrowserSelector"/>
       <supportedOn ref="SUPPORTED_NotSpecified"/>
@@ -110,9 +110,9 @@
         <decimal value="0"/>
       </disabledValue>
     </policy>
-    <policy name="Include" class="Both"
+    <policy name="Include" class="Machine"
         displayName="$(string.Include)"
-        key="SOFTWARE\ClearCode\BrowserSelector"
+        key="SOFTWARE\WOW6432Node\ClearCode\BrowserSelector"
         presentation="$(presentation.Include)">
       <parentCategory ref="BrowserSelector"/>
       <supportedOn ref="SUPPORTED_NotSpecified"/>
@@ -120,9 +120,9 @@
         <text id="Include" valueName="Include"/>
       </elements>
     </policy>
-    <policy name="UseRegex" class="Both"
+    <policy name="UseRegex" class="Machine"
         displayName="$(string.UseRegex)"
-        key="SOFTWARE\ClearCode\BrowserSelector"
+        key="SOFTWARE\WOW6432Node\ClearCode\BrowserSelector"
         valueName="UseRegex">
       <parentCategory ref="BrowserSelector"/>
       <supportedOn ref="SUPPORTED_NotSpecified"/>
@@ -133,9 +133,9 @@
         <decimal value="0"/>
       </disabledValue>
     </policy>
-    <policy name="EnableIncludeCache" class="Both"
+    <policy name="EnableIncludeCache" class="Machine"
         displayName="$(string.EnableIncludeCache)"
-        key="SOFTWARE\ClearCode\BrowserSelector"
+        key="SOFTWARE\WOW6432Node\ClearCode\BrowserSelector"
         valueName="EnableIncludeCache">
       <parentCategory ref="BrowserSelector"/>
       <supportedOn ref="SUPPORTED_NotSpecified"/>
@@ -146,37 +146,37 @@
         <decimal value="0"/>
       </disabledValue>
     </policy>
-    <policy name="ZonePatterns" class="Both"
+    <policy name="ZonePatterns" class="Machine"
         displayName="$(string.ZonePatterns)"
         explainText="$(string.ZonePatterns_Explain)"
-        key="SOFTWARE\ClearCode\BrowserSelector\ZonePatterns"
+        key="SOFTWARE\WOW6432Node\ClearCode\BrowserSelector\ZonePatterns"
         presentation="$(presentation.ZonePatterns)">
       <parentCategory ref="BrowserSelector"/>
       <supportedOn ref="SUPPORTED_NotSpecified"/>
       <elements>
-        <list id="ZonePatterns" key="SOFTWARE\ClearCode\BrowserSelector\ZonePatterns" valuePrefix=""/>
+        <list id="ZonePatterns" key="SOFTWARE\WOW6432Node\ClearCode\BrowserSelector\ZonePatterns" valuePrefix=""/>
       </elements>
     </policy>
-    <policy name="HostnamePatterns" class="Both"
+    <policy name="HostnamePatterns" class="Machine"
         displayName="$(string.HostnamePatterns)"
         explainText="$(string.HostnamePatterns_Explain)"
-        key="SOFTWARE\ClearCode\BrowserSelector\HostnamePatterns"
+        key="SOFTWARE\WOW6432Node\ClearCode\BrowserSelector\HostnamePatterns"
         presentation="$(presentation.HostnamePatterns)">
       <parentCategory ref="BrowserSelector"/>
       <supportedOn ref="SUPPORTED_NotSpecified"/>
       <elements>
-        <list id="HostnamePatterns" key="SOFTWARE\ClearCode\BrowserSelector\HostnamePatterns" valuePrefix=""/>
+        <list id="HostnamePatterns" key="SOFTWARE\WOW6432Node\ClearCode\BrowserSelector\HostnamePatterns" valuePrefix=""/>
       </elements>
     </policy>
-    <policy name="URLPatterns" class="Both"
+    <policy name="URLPatterns" class="Machine"
         displayName="$(string.URLPatterns)"
         explainText="$(string.URLPatterns_Explain)"
-        key="SOFTWARE\ClearCode\BrowserSelector\URLPatterns"
+        key="SOFTWARE\WOW6432Node\ClearCode\BrowserSelector\URLPatterns"
         presentation="$(presentation.URLPatterns)">
       <parentCategory ref="BrowserSelector"/>
       <supportedOn ref="SUPPORTED_NotSpecified"/>
       <elements>
-        <list id="URLPatterns" key="SOFTWARE\ClearCode\BrowserSelector\URLPatterns" valuePrefix=""/>
+        <list id="URLPatterns" key="SOFTWARE\WOW6432Node\ClearCode\BrowserSelector\URLPatterns" valuePrefix=""/>
       </elements>
     </policy>
   </policies>
