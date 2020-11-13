@@ -223,9 +223,9 @@ void STDMETHODCALLTYPE CBrowserSelector::OnNewWindow3(
 	}
 }
 
-void STDMETHODCALLTYPE CBrowserSelector::OnQuit(LPDISPATCH pDisp)
+void STDMETHODCALLTYPE CBrowserSelector::OnQuit()
 {
-	DebugLog(L"OnQuit: this=%p, pDisp=%p", this, pDisp);
+	DebugLog(L"OnQuit: this=%p", this);
 	DisconnectDocumentEvents();
 	DisconnectBrowserEvents();
 	DebugLog(L"OnQuit done");
