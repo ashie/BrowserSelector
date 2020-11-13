@@ -21,6 +21,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_112521A380F042CCBEDBA7B4D3763DE7"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_1F7479952FCF4992982BBDF834E5FE6E"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -51,7 +57,19 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_5FC23298C06B421AA0C512E8333D1B2C"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_70862CE947C6440BAC06511E3774EBA4"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_7C21C84AA35148EEBE8E78FA30BB337C"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -106,6 +124,12 @@
         "Entry"
         {
         "MsmKey" = "8:_F9A258588925413AA6114CDB58A0893F"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_FE93BB0C76C44FEBB21DC0492B2CDACE"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -216,6 +240,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_112521A380F042CCBEDBA7B4D3763DE7"
+            {
+            "SourcePath" = "8:..\\policy\\BrowserSelector.admx"
+            "TargetName" = "8:BrowserSelector.admx"
+            "Tag" = "8:"
+            "Folder" = "8:_E06C874C5E654C00BD287B78352A6CA3"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_1F7479952FCF4992982BBDF834E5FE6E"
             {
             "SourcePath" = "8:..\\BrowserSelectorTalk\\manifest\\BrowserSelectorTalkFirefox.json"
@@ -296,12 +340,52 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_5FC23298C06B421AA0C512E8333D1B2C"
+            {
+            "SourcePath" = "8:..\\policy\\ja-JP\\BrowserSelector.adml"
+            "TargetName" = "8:BrowserSelector.adml"
+            "Tag" = "8:"
+            "Folder" = "8:_5D4D9AE0A6024A96922335F398B6D5E6"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_70862CE947C6440BAC06511E3774EBA4"
             {
             "SourcePath" = "8:..\\sample\\policies.json"
             "TargetName" = "8:policies.json"
             "Tag" = "8:"
             "Folder" = "8:_3613CB428E7E46C8B8B34688C6638883"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_7C21C84AA35148EEBE8E78FA30BB337C"
+            {
+            "SourcePath" = "8:..\\policy\\ja-JP\\ClearCode.adml"
+            "TargetName" = "8:ClearCode.adml"
+            "Tag" = "8:"
+            "Folder" = "8:_5D4D9AE0A6024A96922335F398B6D5E6"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -456,6 +540,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_FE93BB0C76C44FEBB21DC0492B2CDACE"
+            {
+            "SourcePath" = "8:..\\policy\\ClearCode.admx"
+            "TargetName" = "8:ClearCode.admx"
+            "Tag" = "8:"
+            "Folder" = "8:_E06C874C5E654C00BD287B78352A6CA3"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
         }
         "FileType"
         {
@@ -503,6 +607,28 @@
                     "Property" = "8:_66650F3C216F4F0CB542196A2CB1C238"
                         "Folders"
                         {
+                        }
+                    }
+                    "{9EF0B969-E518-4E46-987F-47570745A589}:_E06C874C5E654C00BD287B78352A6CA3"
+                    {
+                    "Name" = "8:policy"
+                    "AlwaysCreate" = "11:FALSE"
+                    "Condition" = "8:"
+                    "Transitive" = "11:FALSE"
+                    "Property" = "8:_A774871CC0F24179BEB205E0A8D918D2"
+                        "Folders"
+                        {
+                            "{9EF0B969-E518-4E46-987F-47570745A589}:_5D4D9AE0A6024A96922335F398B6D5E6"
+                            {
+                            "Name" = "8:ja-JP"
+                            "AlwaysCreate" = "11:FALSE"
+                            "Condition" = "8:"
+                            "Transitive" = "11:FALSE"
+                            "Property" = "8:_1114A742968B42E19FEAD6B4463BC53D"
+                                "Folders"
+                                {
+                                }
+                            }
                         }
                     }
                 }

@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BrowserSelectorBHO", "Brows
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4C18C7D1-9F89-4B2D-8026-71E32324F434}"
 	ProjectSection(SolutionItems) = preProject
+		policy\ja-JP\BrowserSelector.adml = policy\ja-JP\BrowserSelector.adml
+		policy\BrowserSelector.admx = policy\BrowserSelector.admx
 		BrowserSelector\BrowserSelectorCommon.h = BrowserSelector\BrowserSelectorCommon.h
 		sample\BrowserSelectorExample.ini = sample\BrowserSelectorExample.ini
 		sample\BrowserSelectorExample.reg = sample\BrowserSelectorExample.reg
@@ -14,6 +16,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		sample\BrowserSelectorRegexExample.ini = sample\BrowserSelectorRegexExample.ini
 		sample\BrowserSelectorWOW64Example.reg = sample\BrowserSelectorWOW64Example.reg
 		sample\chrome.reg = sample\chrome.reg
+		policy\ja-JP\ClearCode.adml = policy\ja-JP\ClearCode.adml
+		policy\ClearCode.admx = policy\ClearCode.admx
 		COPYING.MIT = COPYING.MIT
 		sample\CrashDump.reg = sample\CrashDump.reg
 		sample\policies.json = sample\policies.json
