@@ -91,7 +91,7 @@ private:
 		DWORD flags,
 		BSTR urlContext,
 		BSTR bstrURL);
-	void STDMETHODCALLTYPE OnQuit(void);
+	void STDMETHODCALLTYPE OnQuit();
 	bool STDMETHODCALLTYPE OnMouseDown(IHTMLEventObj *pEventObj);
 	bool STDMETHODCALLTYPE OnMouseUp(IHTMLEventObj *pEventObj);
 
