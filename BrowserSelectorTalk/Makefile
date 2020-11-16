@@ -14,12 +14,14 @@ install: build registry
 	COPY BrowserSelectorTalk.exe "$(DESTDIR)"
 	COPY manifest/BrowserSelectorTalkChrome.json "$(DESTDIR)"
 	COPY manifest/BrowserSelectorTalkFirefox.json "$(DESTDIR)"
+	COPY manifest/BrowserSelectorTalkEdge.json "$(DESTDIR)"
 
-# Both Firefox and Chrome query 32bit view first, and then 64bit view.
+# Firefox, Chrome and Edge query 32bit view first, and then 64bit view.
 # So we can just use WOW3264Node here (even on 64bit app).
 registry:
 	REG ADD "HKLM\Software\Mozilla\NativeMessagingHosts\com.clear_code.browserselector_talk" /f /ve /t REG_SZ /d "$(DESTDIR)\BrowserSelectorTalkFirefox.json"
 	REG ADD "HKLM\Software\Google\Chrome\NativeMessagingHosts\com.clear_code.browserselector_talk" /f /ve /t REG_SZ /d "$(DESTDIR)\BrowserSelectorTalkChrome.json"
+	REG ADD "HKLM\Software\Microsoft\Edge\NativeMessagingHosts\com.clear_code.browserselector_talk" /f /ve /t REG_SZ /d "$(DESTDIR)\BrowserSelectorTalkEdge.json"
 
 test: build
 	.\DummyTalker.exe "Q firefox https://example.com" | .\BrowserSelectorTalk.exe
