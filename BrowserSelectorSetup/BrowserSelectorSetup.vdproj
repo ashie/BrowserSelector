@@ -123,6 +123,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_F8071BB26F19402995A00DFEEFC33C5B"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_F9A258588925413AA6114CDB58A0893F"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -506,6 +512,26 @@
             "TargetName" = "8:BrowserSelectorExample.ini"
             "Tag" = "8:"
             "Folder" = "8:_3613CB428E7E46C8B8B34688C6638883"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_F8071BB26F19402995A00DFEEFC33C5B"
+            {
+            "SourcePath" = "8:..\\BrowserSelectorTalk\\manifest\\BrowserSelectorTalkEdge.json"
+            "TargetName" = "8:BrowserSelectorTalkEdge.json"
+            "Tag" = "8:"
+            "Folder" = "8:_EFD80C7B4A164AA691FA4C75A672BE63"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
