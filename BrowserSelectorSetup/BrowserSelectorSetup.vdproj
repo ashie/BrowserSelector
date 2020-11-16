@@ -676,7 +676,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:BrowserSelector"
         "ProductCode" = "8:{720CF828-E801-470C-BEDC-AE96CC99E79C}"
-        "PackageCode" = "8:{4A0E403D-0377-4DED-A4B5-C1513AD72FED}"
+        "PackageCode" = "8:{B5212D45-5A98-496F-A358-8C9C35520980}"
         "UpgradeCode" = "8:{864B7071-7281-4A14-B718-57CB190FE7B7}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -816,6 +816,56 @@
                                                         }
                                                         "Values"
                                                         {
+                                                        }
+                                                    }
+                                                }
+                                                "Values"
+                                                {
+                                                }
+                                            }
+                                        }
+                                        "Values"
+                                        {
+                                        }
+                                    }
+                                    "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_B04D35C7A48C4E528ED9AB233665600F"
+                                    {
+                                    "Name" = "8:Edge"
+                                    "Condition" = "8:"
+                                    "AlwaysCreate" = "11:FALSE"
+                                    "DeleteAtUninstall" = "11:FALSE"
+                                    "Transitive" = "11:FALSE"
+                                        "Keys"
+                                        {
+                                            "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_E071CBC643F0459C8C02F47143FFF7B9"
+                                            {
+                                            "Name" = "8:NativeMessagingHosts"
+                                            "Condition" = "8:"
+                                            "AlwaysCreate" = "11:FALSE"
+                                            "DeleteAtUninstall" = "11:FALSE"
+                                            "Transitive" = "11:FALSE"
+                                                "Keys"
+                                                {
+                                                    "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_D5CC76AE6C46426A9AA68297D1DD84EB"
+                                                    {
+                                                    "Name" = "8:com.clear_code.browserselector_talk"
+                                                    "Condition" = "8:"
+                                                    "AlwaysCreate" = "11:FALSE"
+                                                    "DeleteAtUninstall" = "11:FALSE"
+                                                    "Transitive" = "11:FALSE"
+                                                        "Keys"
+                                                        {
+                                                        }
+                                                        "Values"
+                                                        {
+                                                            "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_E74A1F60ECA34036A7F6A3AB1BAC9092"
+                                                            {
+                                                            "Name" = "8:"
+                                                            "Condition" = "8:"
+                                                            "Transitive" = "11:FALSE"
+                                                            "ValueTypes" = "3:1"
+                                                            "Value" = "8:[TARGETDIR][ProductName]TalkEdge.json"
+                                                            }
                                                         }
                                                     }
                                                 }
