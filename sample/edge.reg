@@ -1,0 +1,9 @@
+Windows Registry Editor Version 5.00
+
+[HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Edge]
+"ExtensionSettings"="{\"ifacgepgdnnddnckleiinelkadppopgh\":{\"update_url\":\"https://edge.microsoft.com/extensionwebstorebase/v1/crx\",\"installation_mode\":\"force_installed\"}}"
+
+[HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Edge\3rdparty\extensions\ifacgepgdnnddnckleiinelkadppopgh\policy]
+"talkEnabled"=dword:00000001
+"talkServerName"="com.clear_code.browserselector_talk"
+"talkBrowserName"="edge"
