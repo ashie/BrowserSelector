@@ -57,8 +57,10 @@ static bool OpenIE(const wstring &url)
 
 static bool BrowserOpen(const BrowserSelector &app, const wstring browser, const wstring &url)
 {
-	if (browser == L"chrome")
-		return app.OpenByChrome(url, CREATE_BREAKAWAY_FROM_JOB);
+	std::wstring command;
+
+	if (browser == L"chrome" || browser == L"edge")
+		return app.LaunchBrowser(browser, url, CREATE_BREAKAWAY_FROM_JOB);
 
 	if (browser != L"ie")
 		return app.OpenByModernBrowser(browser, url);

@@ -1030,12 +1030,12 @@ public:
 	}
 
 	/*
-	 * Open the given URL with Google Chrome.
+	 * Open the given URL via CreateProcess
 	 *
 	 * "flags" is passed to CreateProcess() as dwCreationFlags.
 	 * Just use 0 except when you specially need other flags.
 	 */
-	bool OpenByChrome(const std::wstring &url, int flags) const
+	bool LaunchBrowser(const std::wstring &browser, const std::wstring &url, int flags) const
 	{
 		std::wstring cmd;
 		std::wstring args(L"");
@@ -1047,7 +1047,7 @@ public:
 		si.cb = sizeof(si);
 		ZeroMemory(&pi, sizeof(pi));
 
-		LoadBrowserPath(cmd, _T("chrome"));
+		LoadBrowserPath(cmd, browser);
 
 		args += L"\"";
 		args += cmd;
@@ -1095,10 +1095,8 @@ public:
 		} else {
 			if (browserName == L"firefox") {
 				command = GetFirefoxCommand();
-			} else if (browserName == L"chrome") {
-				return OpenByChrome(url, 0);
-			} else if (browserName == L"edge") {
-				command = std::wstring(L"msedge.exe");
+			} else if (browserName == L"chrome" || browserName == L"edge") {
+				return LaunchBrowser(browserName, url, 0);
 			}
 		}
 
