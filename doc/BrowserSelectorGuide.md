@@ -113,10 +113,10 @@ BrowserSelectorはEdge/Chrome/Firefox向けに「IEView WE」という連携ア�
     ```ini
     Windows Registry Editor Version 5.00
 
-    [HKEY_LOCAL_MACHINE\Software\Microsoft\Edge\Extensions\nifnmbbelnhfhgeiampkfghakhmgggcf]
-    "update_url"="https://clients2.google.com/service/update2/crx"
+    [HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Edge]
+    "ExtensionSettings"="{\"ifacgepgdnnddnckleiinelkadppopgh\":{\"update_url\":\"https://edge.microsoft.com/extensionwebstorebase/v1/crx\",\"installation_mode\":\"force_installed\"}}"
 
-    [HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Edge\3rdparty\extensions\nifnmbbelnhfhgeiampkfghakhmgggcf\policy]
+    [HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Edge\3rdparty\extensions\ifacgepgdnnddnckleiinelkadppopgh\policy]
     "talkEnabled"=dword:00000001
     "talkServerName"="com.clear_code.browserselector_talk"
     "talkBrowserName"="edge"
@@ -125,10 +125,8 @@ BrowserSelectorはEdge/Chrome/Firefox向けに「IEView WE」という連携ア�
  2. 管理者権限でレジストリ設定を読み込みます。
 
     ```powershell
-    % REG IMPORT edge.reg /reg:32
+    % REG IMPORT edge.reg
     ```
-
- 3. Edgeを起動し、アドオンの有効可否を尋ねられたら「拡張を有効化する」を選択します。
 
 ## ブラウザの動作を確認する
 
@@ -151,10 +149,9 @@ BrowserSelectorはEdge/Chrome/Firefox向けに「IEView WE」という連携ア�
  3. レジストリに登録した設定を削除します。
 
     ```powershell
-    % REG DELETE HKLM\Software\Microsoft\Edge\Extensions\nifnmbbelnhf
-      hgeiampkfghakhmgggcf /reg:32
-    % REG DELETE HKLM\Software\Policies\Microsoft\Edge\3rdparty\exten
-      sions\nifnmbbelnhfhgeiampkfghakhmgggcf /reg:32
+    % REG DELETE HKLM\Software\Policies\Microsoft\Edge /v ExtensionSettings
+    % REG DELETE HKLM\Software\Policies\Microsoft\Edge\3rdparty\extensions\n
+      ifnmbbelnhfhgeiampkfghakhmgggcf\policy
     ```
 
 # 設定項目の一覧
@@ -371,10 +368,10 @@ Edge向けの連携アドオンを導入する場合は、次の手順でイン�
     ```ini
     Windows Registry Editor Version 5.00
 
-    [HKEY_LOCAL_MACHINE\Software\Microsoft\Edge\Extensions\nifnmbbelnhfhgeiampkfghakhmgggcf]
-    "update_url"="https://clients2.google.com/service/update2/crx"
+    [HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Edge]
+    "ExtensionSettings"="{\"ifacgepgdnnddnckleiinelkadppopgh\":{\"update_url\":\"https://edge.microsoft.com/extensionwebstorebase/v1/crx\",\"installation_mode\":\"force_installed\"}}"
 
-    [HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Edge\3rdparty\extensions\nifnmbbelnhfhgeiampkfghakhmgggcf\policy]
+    [HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Edge\3rdparty\extensions\ifacgepgdnnddnckleiinelkadppopgh\policy]
     "talkEnabled"=dword:00000001
     "talkServerName"="com.clear_code.browserselector_talk"
     "talkBrowserName"="edge"
@@ -383,7 +380,7 @@ Edge向けの連携アドオンを導入する場合は、次の手順でイン�
  2. 管理者権限でレジストリ設定を読み込みます。
 
     ```powershell
-    % REG IMPORT edge.reg /reg:32
+    % REG IMPORT edge.reg
     ```
 
  3. Edgeを起動し、IEView WEが導入されていることを確認します。
@@ -410,10 +407,9 @@ Chromeのアドオンを削除する
 Edgeのアドオンを削除する
 
 ```powershell
-% REG DELETE HKLM\Software\Microsoft\Edge\Extensions\nifnmbbelnhfhgeiamp
-  kfghakhmgggcf /reg:32
+% REG DELETE HKLM\Software\Policies\Microsoft\Edge /v ExtensionSettings
 % REG DELETE HKLM\Software\Policies\Microsoft\Edge\3rdparty\extensions\n
-  ifnmbbelnhfhgeiampkfghakhmgggcf /reg:32
+  ifnmbbelnhfhgeiampkfghakhmgggcf\policy
 ```
 
 Firefoxのアドオンを削除する
