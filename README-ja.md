@@ -28,6 +28,7 @@ BrowserSelectorは、FirefoxおよびChrome用ブラウザエクステンショ�
 ### 必要なもの
 
   * Microsoft Visual Studio 2019
+    * v142ビルドツール用C++ MFC (x86およびx64)
   * Visual Studio拡張機能「Microsoft Visual Studio Installer Projects」
     * https://marketplace.visualstudio.com/items?itemName=VisualStudioClient.MicrosoftVisualStudio2017InstallerProjects
 

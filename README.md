@@ -28,6 +28,7 @@ combined, you can smoothly switch between IE and Chrome/Firefox.
 ### Prerequisites
 
   * Microsoft Visual Studio 2019
+    * C++ MFC for v142 build tools (x86 & x64)
   * Visual Studio extension "Microsoft Visual Studio Installer Projects"
     * https://marketplace.visualstudio.com/items?itemName=VisualStudioClient.MicrosoftVisualStudio2017InstallerProjects
 
