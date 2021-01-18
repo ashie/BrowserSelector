@@ -15,6 +15,12 @@
     {
         "Entry"
         {
+        "MsmKey" = "8:_08C129AA0D75499A96B4D65BA05FBFF4"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_0AE7A25D92AC40B5841F49AC20030DDA"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -82,6 +88,12 @@
         "Entry"
         {
         "MsmKey" = "8:_A41BF1FC9A2F4F4B9FF848DAE2CDB401"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_B283AE0F4FEE48C6893CDE34F08A3685"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -226,6 +238,26 @@
         }
         "File"
         {
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_08C129AA0D75499A96B4D65BA05FBFF4"
+            {
+            "SourcePath" = "8:..\\sample\\BrowserSelectorIncludeExample.ini"
+            "TargetName" = "8:BrowserSelectorIncludeExample.ini"
+            "Tag" = "8:"
+            "Folder" = "8:_3613CB428E7E46C8B8B34688C6638883"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_0AE7A25D92AC40B5841F49AC20030DDA"
             {
             "SourcePath" = "8:..\\COPYING.MIT"
@@ -430,6 +462,26 @@
             {
             "SourcePath" = "8:..\\sample\\BrowserSelectorExample.reg"
             "TargetName" = "8:BrowserSelectorExample.reg"
+            "Tag" = "8:"
+            "Folder" = "8:_3613CB428E7E46C8B8B34688C6638883"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_B283AE0F4FEE48C6893CDE34F08A3685"
+            {
+            "SourcePath" = "8:..\\sample\\edge.reg"
+            "TargetName" = "8:edge.reg"
             "Tag" = "8:"
             "Folder" = "8:_3613CB428E7E46C8B8B34688C6638883"
             "Condition" = "8:"
